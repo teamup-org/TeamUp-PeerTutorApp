@@ -1,0 +1,1 @@
+/scripts: Contains all scripting assets for your application, such as database seeding scripts.
