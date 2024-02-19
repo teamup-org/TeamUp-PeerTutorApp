@@ -1,0 +1,1583 @@
+openapi: 3.0.3
+info:
+  title: Database REST API
+  version: 0.0.1
+servers:
+  - url: localhost:3306/project-report
+    description: local server
+paths:
+  /appointment:
+    parameters:
+    - $ref: "#/components/parameters/appointmentDate"
+    - $ref: "#/components/parameters/appointmentId"
+    - $ref: "#/components/parameters/appointmentTypeId"
+    - $ref: "#/components/parameters/endTimeId"
+    - $ref: "#/components/parameters/locationId"
+    - $ref: "#/components/parameters/startTimeId"
+    - $ref: "#/components/parameters/tuteeId"
+    - $ref: "#/components/parameters/tutorId"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/appointmentRow"
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+
+  /appointment_request:
+    parameters:
+    - $ref: "#/components/parameters/appointmentId"
+    - $ref: "#/components/parameters/appointmentRequestId"
+    - $ref: "#/components/parameters/initiatorTypeId"
+    - $ref: "#/components/parameters/requestStatusId"
+    - $ref: "#/components/parameters/requestTypeId"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/appointmentRequestRow"
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+  /appointment_type:
+    parameters:
+    - $ref: "#/components/parameters/appointmentTypeId"
+    - $ref: "#/components/parameters/appointmentTypeName"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/appointmentTypeRow"
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+  /course:
+    parameters:
+    - $ref: "#/components/parameters/courseDept"
+    - $ref: "#/components/parameters/courseId"
+    - $ref: "#/components/parameters/courseName"
+    - $ref: "#/components/parameters/courseNumber"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/courseRow"
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+  /initiator_type:
+    parameters:
+    - $ref: "#/components/parameters/initiatorTypeId"
+    - $ref: "#/components/parameters/initiatorTypeName"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/initiatorTypeRow"
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+  /location:
+    parameters:
+    - $ref: "#/components/parameters/isIndoor"
+    - $ref: "#/components/parameters/isOnCampus"
+    - $ref: "#/components/parameters/isOnline"
+    - $ref: "#/components/parameters/locationId"
+    - $ref: "#/components/parameters/locationName"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/locationRow"
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+  /major:
+    parameters:
+    - $ref: "#/components/parameters/majorId"
+    - $ref: "#/components/parameters/majorName"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/majorRow"          
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+  /rating:
+    parameters:
+    - $ref: "#/components/parameters/numberStars"
+    - $ref: "#/components/parameters/ratingId"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ratingRow"          
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+  /request_status:
+    parameters:
+    - $ref: "#/components/parameters/requestStatusId"
+    - $ref: "#/components/parameters/statusName"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/requestStatusRow"          
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+  /request_type:
+    parameters:
+    - $ref: "#/components/parameters/requestTypeId"
+    - $ref: "#/components/parameters/requestTypeName"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/requestTypeRow"          
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+  /seniority:
+    parameters:
+    - $ref: "#/components/parameters/seniorityId"
+    - $ref: "#/components/parameters/seniorityName"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/seniorityRow"          
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+  /time_increment:
+    parameters:
+    - $ref: "#/components/parameters/timeId"
+    - $ref: "#/components/parameters/timeValue"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/timeIncrementRow"          
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+  /tutee:
+    parameters:
+    - $ref: "#/components/parameters/email"
+    - $ref: "#/components/parameters/firstName"
+    - $ref: "#/components/parameters/lastName"
+    - $ref: "#/components/parameters/majorId"
+    - $ref: "#/components/parameters/phoneNumber"
+    - $ref: "#/components/parameters/seniorityId"
+    - $ref: "#/components/parameters/tuteeId"
+    - $ref: "#/components/parameters/uin"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/tuteeRow"          
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+  /tutor:
+    parameters:
+    - $ref: "#/components/parameters/averageRating"
+    - $ref: "#/components/parameters/bioText"
+    - $ref: "#/components/parameters/email"
+    - $ref: "#/components/parameters/firstName"
+    - $ref: "#/components/parameters/lastName"
+    - $ref: "#/components/parameters/majorId"
+    - $ref: "#/components/parameters/payRate"
+    - $ref: "#/components/parameters/phoneNumber"
+    - $ref: "#/components/parameters/pictureUrl"
+    - $ref: "#/components/parameters/seniorityId"
+    - $ref: "#/components/parameters/tutorId"
+    - $ref: "#/components/parameters/uin"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/tutorRow"          
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+  /tutor_eligibility:
+    parameters:
+    - $ref: "#/components/parameters/courseGrade"
+    - $ref: "#/components/parameters/courseId"
+    - $ref: "#/components/parameters/eligibilityId"
+    - $ref: "#/components/parameters/isEligible"
+    - $ref: "#/components/parameters/tutorId"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/tutorEligibilityRow"          
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+  /tutor_location_preference:
+    parameters:
+    - $ref: "#/components/parameters/locationId"
+    - $ref: "#/components/parameters/locationPreferenceId"
+    - $ref: "#/components/parameters/tutorId"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/tutorLocationPreferenceRow"          
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+  /tutor_review:
+    parameters:
+    - $ref: "#/components/parameters/appointmentId"
+    - $ref: "#/components/parameters/ratingId"
+    - $ref: "#/components/parameters/reviewId"
+    - $ref: "#/components/parameters/reviewText"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/tutorReviewRow"          
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+  /tutor_time_preference:
+    parameters:
+    - $ref: "#/components/parameters/endTimeId"
+    - $ref: "#/components/parameters/startTimeId"
+    - $ref: "#/components/parameters/tutorId"
+    - $ref: "#/components/parameters/tutorTimePreferenceId"
+    post:
+      summary: CREATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/tutorTimePreferenceRow"          
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    put:
+      summary: UPDATE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+    delete:
+      summary: DELETE
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found
+
+# re-usable components
+components:
+  # corresponds to database table attributes
+  schemas:
+    appointmentDate:
+      type: string
+      format: date
+    appointmentId:
+      type: number
+    appointmentRequestId:
+      type: number
+    appointmentTypeId:
+      type: number
+    appointmentTypeName:
+      type: string
+    averageRating:
+      type: number
+    bioText:
+      type: string
+    courseDept:
+      type: string
+    courseGrade:
+      type: string
+    courseId:
+      type: number
+    courseName:
+      type: string
+    courseNumber:
+      type: number
+    eligibilityId:
+      type: number
+    email:
+      type: string
+    endTimeId:
+      type: number
+    firstName:
+      type: string
+    initiatorTypeId:
+      type: number
+    initiatorTypeName:
+      type: string
+    isEligible:
+      type: boolean
+    isIndoor:
+      type: boolean
+    isOnCampus:
+      type: boolean
+    isOnline:
+      type: boolean
+    lastName:
+      type: string
+    locationId:
+      type: number
+    locationPreferenceId:
+      type: number
+    locationName:
+      type: string
+    majorId:
+      type: number
+    majorName:
+      type: string
+    numberStars:
+      type: number
+    payRate:
+      type: number
+    phoneNumber:
+      type: number
+    pictureUrl:
+      type: string
+    ratingId:
+      type: number
+    requestStatusId:
+      type: number
+    requestTypeId:
+      type: number
+    requestTypeName:
+      type: string
+    reviewId:
+      type: number
+    reviewText:
+      type: string
+    seniorityId:
+      type: number
+    seniorityName:
+      type: string
+    startTimeId:
+      type: number
+    statusName:
+      type: string
+    timeId:
+      type: number
+    timeValue:
+      type: string
+      format: date-time
+    tuteeId:
+      type: number
+    tutorId:
+      type: number
+    tutorTimePreferenceId:
+      type: number
+    uin:
+      type: number
+    # corresponds to database row
+    appointmentRow:
+      type: object
+      properties:
+        appointmentDate:
+          $ref: "#/components/schemas/appointmentDate"
+        appointmentId:
+          $ref: "#/components/schemas/appointmentId"
+        appointmentTypeId:
+          $ref: "#/components/schemas/appointmentTypeId"
+        endTimeId:
+          $ref: "#/components/schemas/endTimeId"
+        locationId:
+          $ref: "#/components/schemas/locationId"
+        startTimeId:
+          $ref: "#/components/schemas/startTimeId"
+        tuteeId:
+          $ref: "#/components/schemas/tuteeId"
+        tutorId:
+          $ref: "#/components/schemas/tutorId"
+    appointmentRequestRow:
+      type: object
+      properties:
+        appointmentId:
+          $ref: "#/components/schemas/appointmentId"
+        appointmentRequestId:
+          $ref: "#/components/schemas/appointmentRequestId"
+        initiatorTypeId:
+          $ref: "#/components/schemas/initiatorTypeId"
+        requestStatusId:
+          $ref: "#/components/schemas/requestStatusId"
+        requestTypeId:
+          $ref: "#/components/schemas/requestTypeId"
+    appointmentTypeRow:
+      type: object
+      properties:
+        appointmentTypeId:
+          $ref: "#/components/schemas/appointmentTypeId"
+        appointmentTypeName:
+          $ref: "#/components/schemas/appointmentTypeName"
+    courseRow:
+      type: object
+      properties:
+        courseDept:
+          $ref: "#/components/schemas/courseDept"
+        courseId:
+          $ref: "#/components/schemas/courseId"
+        courseName:
+          $ref: "#/components/schemas/courseName"
+        courseNumber:
+          $ref: "#/components/schemas/courseNumber"
+    initiatorTypeRow:
+      type: object
+      properties:
+        initiatorTypeId:
+          $ref: "#/components/schemas/initiatorTypeId"
+        initiatorTypeName:
+          $ref: "#/components/schemas/initiatorTypeName"
+    locationRow:
+      type: object
+      properties:
+        isIndoor:
+          $ref: "#/components/schemas/isIndoor"
+        isOnCampus:
+          $ref: "#/components/schemas/isOnCampus"
+        isOnline:
+          $ref: "#/components/schemas/isOnline"
+        locationId:
+          $ref: "#/components/schemas/locationId"
+        locationName:
+          $ref: "#/components/schemas/locationName"
+    majorRow:
+      type: object
+      properties:
+        majorId:
+          $ref: "#/components/schemas/majorId"
+        majorName:
+          $ref: "#/components/schemas/majorName"
+    ratingRow:
+      type: object
+      properties:
+        numberStars:
+          $ref: "#/components/schemas/numberStars"
+        ratingId:
+          $ref: "#/components/schemas/ratingId"
+    requestStatusRow:
+      type: object
+      properties:
+        requestStatusId:
+          $ref: "#/components/schemas/requestStatusId"
+        statusName:
+          $ref: "#/components/schemas/statusName"
+    requestTypeRow:
+      type: object
+      properties:
+        requestTypeId:
+          $ref: "#/components/schemas/requestTypeId"
+        requestTypeName:
+          $ref: "#/components/schemas/requestTypeName"
+    seniorityRow:
+      type: object
+      properties:
+        seniorityId:
+          $ref: "#/components/schemas/seniorityId"
+        seniorityName:
+          $ref: "#/components/schemas/seniorityName"
+    timeIncrementRow:
+      type: object
+      properties:
+        timeId:
+          $ref: "#/components/schemas/timeId"
+        timeValue:
+          $ref: "#/components/schemas/timeValue"
+    tuteeRow:
+      type: object
+      properties:
+        email:
+          $ref: "#/components/schemas/email"
+        firstName:
+          $ref: "#/components/schemas/firstName"
+        lastName:
+          $ref: "#/components/schemas/lastName"
+        majorId:
+          $ref: "#/components/schemas/majorId"
+        phoneNumber:
+          $ref: "#/components/schemas/phoneNumber"
+        seniorityId:
+          $ref: "#/components/schemas/seniorityId"
+        tuteeId:
+          $ref: "#/components/schemas/tuteeId"
+        uin:
+          $ref: "#/components/schemas/uin"
+    tutorRow:
+      type: object
+      properties:
+        averageRating:
+          $ref: "#/components/schemas/averageRating"
+        bioText:
+          $ref: "#/components/schemas/bioText"
+        email:
+          $ref: "#/components/schemas/email"
+        firstName:
+          $ref: "#/components/schemas/firstName"
+        lastName:
+          $ref: "#/components/schemas/lastName"
+        majorId:
+          $ref: "#/components/schemas/majorId"
+        payRate:
+          $ref: "#/components/schemas/payRate"
+        phoneNumber:
+          $ref: "#/components/schemas/phoneNumber"
+        pictureUrl:
+          $ref: "#/components/schemas/pictureUrl"
+        seniorityId:
+          $ref: "#/components/schemas/seniorityId"
+        tutorId:
+          $ref: "#/components/schemas/tutorId"
+        uin:
+          $ref: "#/components/schemas/uin"
+    tutorEligibilityRow:
+      type: object
+      properties:
+        courseGrade:
+          $ref: "#/components/schemas/courseGrade"
+        courseId:
+          $ref: "#/components/schemas/courseId"
+        eligibilityId:
+          $ref: "#/components/schemas/eligibilityId"
+        isEligible:
+          $ref: "#/components/schemas/isEligible"
+        tutorId:
+          $ref: "#/components/schemas/tutorId"
+    tutorLocationPreferenceRow:
+      type: object
+      properties:
+        locationId:
+          $ref: "#/components/schemas/locationId"
+        locationPreferenceId:
+          $ref: "#/components/schemas/locationPreferenceId"
+        tutorId:
+          $ref: "#/components/schemas/tutorId"
+    tutorReviewRow:
+      type: object
+      properties:
+        appointmentId:
+          $ref: "#/components/schemas/appointmentId"
+        ratingId:
+          $ref: "#/components/schemas/ratingId"
+        reviewId:
+          $ref: "#/components/schemas/reviewId"
+        reviewText:
+          $ref: "#/components/schemas/reviewText"
+    tutorTimePreferenceRow:
+      type: object
+      properties:
+        endTimeId:
+          $ref: "#/components/schemas/endTimeId"
+        startTimeId:
+          $ref: "#/components/schemas/startTimeId"
+        tutorId:
+          $ref: "#/components/schemas/tutorId"
+        tutorTimePreferenceId:
+          $ref: "#/components/schemas/tutorTimePreferenceId"
+  # parameters for HTTP requests
+  parameters:
+    appointmentDate:
+      in: query
+      name: appointmentDate
+      required: false
+      schema:
+        $ref: "#/components/schemas/appointmentDate"
+    appointmentId:
+      in: query
+      name: appointmentId
+      required: false
+      schema:
+        $ref: "#/components/schemas/appointmentId"
+    appointmentRequestId:
+      in: query
+      name: appointmentRequestId
+      required: false
+      schema:
+        $ref: "#/components/schemas/appointmentRequestId"
+    appointmentTypeId:
+      in: query
+      name: appointmentTypeId
+      required: false
+      schema:
+        $ref: "#/components/schemas/appointmentTypeId"
+    appointmentTypeName:
+      in: query
+      name: appointmentTypeName
+      required: false
+      schema:
+        $ref: "#/components/schemas/appointmentTypeName"
+    averageRating:
+      in: query
+      name: averageRating
+      required: false
+      schema:
+        $ref: "#/components/schemas/averageRating"
+    bioText:
+      in: query
+      name: bioText
+      required: false
+      schema:
+        $ref: "#/components/schemas/bioText"
+    courseDept:
+      in: query
+      name: courseDept
+      required: false
+      schema:
+        $ref: "#/components/schemas/courseDept"
+    courseGrade:
+      in: query
+      name: courseGrade
+      required: false
+      schema:
+        $ref: "#/components/schemas/courseGrade"
+    courseId:
+      in: query
+      name: courseId
+      required: false
+      schema:
+        $ref: "#/components/schemas/courseId"
+    courseName:
+      in: query
+      name: courseName
+      required: false
+      schema:
+        $ref: "#/components/schemas/courseName"
+    courseNumber:
+      in: query
+      name: courseNumber
+      required: false
+      schema:
+        $ref: "#/components/schemas/courseNumber"
+    eligibilityId:
+      in: query
+      name: eligibilityId
+      required: false
+      schema:
+        $ref: "#/components/schemas/eligibilityId"
+    email:
+      in: query
+      name: email
+      required: false
+      schema:
+        $ref: "#/components/schemas/email"
+    endTimeId:
+      in: query
+      name: endTimeId
+      required: false
+      schema:
+        $ref: "#/components/schemas/endTimeId"
+    firstName:
+      in: query
+      name: firstName
+      required: false
+      schema:
+        $ref: "#/components/schemas/firstName"
+    initiatorTypeId:
+      in: query
+      name: initiatorTypeId
+      required: false
+      schema:
+        $ref: "#/components/schemas/initiatorTypeId"
+    initiatorTypeName:
+      in: query
+      name: initiatorTypeName
+      required: false
+      schema:
+        $ref: "#/components/schemas/initiatorTypeName"
+    isEligible:
+      in: query
+      name: isEligible
+      required: false
+      schema:
+        $ref: "#/components/schemas/isEligible"
+    isIndoor:
+      in: query
+      name: isIndoor
+      required: false
+      schema:
+        $ref: "#/components/schemas/isIndoor"
+    isOnCampus:
+      in: query
+      name: isOnCampus
+      required: false
+      schema:
+        $ref: "#/components/schemas/isOnCampus"
+    isOnline:
+      in: query
+      name: isOnline
+      required: false
+      schema:
+        $ref: "#/components/schemas/isOnline"
+    lastName:
+      in: query
+      name: lastName
+      required: false
+      schema:
+        $ref: "#/components/schemas/lastName"
+    locationId:
+      in: query
+      name: locationId
+      required: false
+      schema:
+        $ref: "#/components/schemas/locationId"
+    locationPreferenceId:
+      in: query
+      name: locationPreferenceId
+      required: false
+      schema:
+        $ref: "#/components/schemas/locationPreferenceId"
+    locationName:
+      in: query
+      name: locationName
+      required: false
+      schema:
+        $ref: "#/components/schemas/locationName"
+    majorId:
+      in: query
+      name: majorId
+      required: false
+      schema:
+        $ref: "#/components/schemas/majorId"
+    majorName:
+      in: query
+      name: majorName
+      required: false
+      schema:
+        $ref: "#/components/schemas/majorName"
+    numberStars:
+      in: query
+      name: numberStars
+      required: false
+      schema:
+        $ref: "#/components/schemas/numberStars"
+    payRate:
+      in: query
+      name: payRate
+      required: false
+      schema:
+        $ref: "#/components/schemas/payRate"
+    phoneNumber:
+      in: query
+      name: phoneNumber
+      required: false
+      schema:
+        $ref: "#/components/schemas/phoneNumber"
+    pictureUrl:
+      in: query
+      name: pictureUrl
+      required: false
+      schema:
+        $ref: "#/components/schemas/pictureUrl"
+    ratingId:
+      in: query
+      name: ratingId
+      required: false
+      schema:
+        $ref: "#/components/schemas/ratingId"
+    requestStatusId:
+      in: query
+      name: requestStatusId
+      required: false
+      schema:
+        $ref: "#/components/schemas/requestStatusId"
+    requestTypeId:
+      in: query
+      name: requestTypeId
+      required: false
+      schema:
+        $ref: "#/components/schemas/requestTypeId"
+    requestTypeName:
+      in: query
+      name: requestTypeName
+      required: false
+      schema:
+        $ref: "#/components/schemas/requestTypeName"
+    reviewId:
+      in: query
+      name: reviewId
+      required: false
+      schema:
+        $ref: "#/components/schemas/reviewId"
+    reviewText:
+      in: query
+      name: reviewText
+      required: false
+      schema:
+        $ref: "#/components/schemas/reviewText"
+    seniorityId:
+      in: query
+      name: seniorityId
+      required: false
+      schema:
+        $ref: "#/components/schemas/seniorityId"
+    seniorityName:
+      in: query
+      name: seniorityName
+      required: false
+      schema:
+        $ref: "#/components/schemas/seniorityName"
+    startTimeId:
+      in: query
+      name: startTimeId
+      required: false
+      schema:
+        $ref: "#/components/schemas/startTimeId"
+    statusName:
+      in: query
+      name: statusName
+      required: false
+      schema:
+        $ref: "#/components/schemas/statusName"
+    timeId:
+      in: query
+      name: statusName
+      required: false
+      schema:
+        $ref: "#/components/schemas/timeId"
+    timeValue:
+      in: query
+      name: timeValue
+      required: false
+      schema:
+        $ref: "#/components/schemas/timeValue"
+    tuteeId:
+      in: query
+      name: tuteeId
+      required: false
+      schema:
+        $ref: "#/components/schemas/tuteeId"
+    tutorId:
+      in: query
+      name: tutorId
+      required: false
+      schema:
+        $ref: "#/components/schemas/tutorId"
+    tutorTimePreferenceId:
+      in: query
+      name: tutorTimePreferenceId
+      required: false
+      schema:
+        $ref: "#/components/schemas/tutorTimePreferenceId"
+    uin:
+      in: query
+      name: uin
+      required: false
+      schema:
+        $ref: "#/components/schemas/uin"
+
+
+
+      
