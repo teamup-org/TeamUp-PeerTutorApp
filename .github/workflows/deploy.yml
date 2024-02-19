@@ -3,7 +3,7 @@ name: Theo - CI/CD
 on:
   push:
     branches:
-      - main  
+      - deploy  
 
 jobs:
   deploy:
