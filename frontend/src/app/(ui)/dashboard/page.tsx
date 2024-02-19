@@ -1,5 +1,6 @@
 import ResponsiveAppBar from '../app-bar';
 
+import { Box, Container, Paper, Typography } from '@mui/material';
 import { Dashboard, School, CalendarMonth } from '@mui/icons-material';
 
 const links = [
@@ -15,7 +16,15 @@ export default function DashboardPage() {
         <ResponsiveAppBar position="static" display={{ xs: 'none', md: 'flex' }} links={links} />
       </header>
       <main>
-        Test
+        <Box position="relative" sx={{top: 50}}>
+          <Container maxWidth="sm">
+            <Paper elevation={4} sx={{mt:5}}>
+              <Typography variant="h2" align="center">
+                Dashboard
+              </Typography>
+            </Paper>
+          </Container>
+        </Box>
       </main>
     </>
   );
