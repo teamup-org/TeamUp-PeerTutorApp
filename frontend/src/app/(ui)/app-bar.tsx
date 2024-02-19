@@ -20,8 +20,6 @@ import MenuItem from '@mui/material/MenuItem';
 
 import TheoLogo from './theo-logo';
 
-const settings = ['Profile', 'Log Out'];
-
 export default function ResponsiveAppBar(props: any) {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -132,9 +130,9 @@ export default function ResponsiveAppBar(props: any) {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
+                {props.settings.map((setting: any) => (
+                  <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
+                    <Button component={Link} href={setting.href}>{setting.name}</Button>
                   </MenuItem>
                 ))}
               </Menu>

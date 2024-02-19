@@ -9,11 +9,16 @@ const links = [
   { name: 'My Schedule', href: '/dashboard/schedule', icon: CalendarMonth },
 ];
 
+const settings = [
+  { name: 'Profile', href: '/dashboard/profile', icon: Dashboard },
+  { name: 'Log Out', href: '/', icon: Dashboard },
+];
+
 export default function DashboardPage() {
   return (
     <>
       <header>
-        <ResponsiveAppBar position="static" display={{ xs: 'none', md: 'flex' }} links={links} />
+        <ResponsiveAppBar position="static" display={{ xs: 'none', md: 'flex' }} links={links} settings={settings} />
       </header>
       <main>
         <Box position="relative" sx={{top: 50}}>
