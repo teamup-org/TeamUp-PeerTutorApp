@@ -4,10 +4,19 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
-  /*const providers = [
-    CredentialsProvider(...),
-    GoogleProvider(...),
-  ]*/
+  const providers = [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
+    }),
+  ]
   
   const isDefaultSigninPage = req.method === "GET" && req.query.nextauth.includes("signin")
 
