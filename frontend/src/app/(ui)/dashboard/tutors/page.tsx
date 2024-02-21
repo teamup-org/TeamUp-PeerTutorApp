@@ -17,6 +17,14 @@ const settings = [
 ];
 
 export default function TutorPage() {
+  const printTutors = () => {
+    return tutors.map((tutor: Tutor) => (
+      <Grid item xs={12} md={4} key={tutor.id}>
+        <TutorCard tutor={tutor}/>
+      </Grid>
+    ));
+  }
+
   return (
     <>
       <header>
@@ -26,13 +34,7 @@ export default function TutorPage() {
         <Box position="fixed" marginTop="5%" >
           <Container maxWidth="xl">
             <Grid container direction="row" justifyItems="flex-start" alignItems="flex-start" spacing={2} >
-              { 
-                tutors.map((tutor: any) => (
-                  <Grid item md={4}>
-                    <TutorCard tutor={tutor} />
-                  </Grid>
-                ))
-              }
+              { printTutors() }
             </Grid>
           </Container>
         </Box>
