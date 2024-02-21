@@ -1,5 +1,6 @@
 import ResponsiveAppBar from '../../app-bar';
 import TutorCard from '../../tutor-card';
+import tutors from '../../../(lib)/placeholder-data';
 
 import { Box, Container, Paper, Typography } from '@mui/material';
 import { Dashboard, School, CalendarMonth } from '@mui/icons-material';
@@ -16,19 +17,26 @@ const settings = [
 ];
 
 export default function TutorPage() {
+  const printTutors = () => {
+    for (var tutor in tutors) {
+      <TutorCard />
+    }
+  }
+
   return (
     <>
       <header>
         <ResponsiveAppBar position="static" display={{ xs: 'none', md: 'flex' }} links={links} settings={settings} />
       </header>
       <main>
-        <Box position="relative" sx={{top: 50}}>
+        <Box position="relative" marginTop="5%" >
           <Container maxWidth="sm">
-            
-              <Typography variant="h2" align="center">
-                <TutorCard/>
-              </Typography>
-            
+            { 
+              /*
+              for (var tutor in tutors) => (
+                <TutorCard />
+              ) */
+            }
           </Container>
         </Box>
       </main>
