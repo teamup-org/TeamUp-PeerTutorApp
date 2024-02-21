@@ -1,8 +1,8 @@
 import ResponsiveAppBar from '../../app-bar';
 import TutorCard from '../../tutor-card';
-import tutors from '../../../(lib)/placeholder-data';
+import { tutors } from '../../../(lib)/placeholder-data';
 
-import { Box, Container, Paper, Typography } from '@mui/material';
+import { Box, Container, Grid } from '@mui/material';
 import { Dashboard, School, CalendarMonth } from '@mui/icons-material';
 
 const links = [
@@ -17,26 +17,23 @@ const settings = [
 ];
 
 export default function TutorPage() {
-  const printTutors = () => {
-    for (var tutor in tutors) {
-      <TutorCard />
-    }
-  }
-
   return (
     <>
       <header>
         <ResponsiveAppBar position="static" display={{ xs: 'none', md: 'flex' }} links={links} settings={settings} />
       </header>
       <main>
-        <Box position="relative" marginTop="5%" >
-          <Container maxWidth="sm">
-            { 
-              /*
-              for (var tutor in tutors) => (
-                <TutorCard />
-              ) */
-            }
+        <Box position="fixed" marginTop="5%" >
+          <Container maxWidth="xl">
+            <Grid container direction="row" justifyItems="flex-start" alignItems="flex-start" spacing={2} >
+              { 
+                tutors.map((tutor: any) => (
+                  <Grid item md={4}>
+                    <TutorCard tutor={tutor} />
+                  </Grid>
+                ))
+              }
+            </Grid>
           </Container>
         </Box>
       </main>
