@@ -1,18 +1,11 @@
-cd /home/ec2-user/teamup-app
+cd /home/ec2-user/teamup-app/frontend
 
-# Stop the PM2 process
-# pm2 stop nextjs-app
-#
-# # Pull the latest changes from your repository
-# git checkout deploy
-# git pull origin deploy
-#
-# # Install any new dependencies
+# # Install dependencies (if needed)
 npm i
 #
 # # Build the Next.js application
 npm run build
 #
-# # Restart the Next.js application with PM2
-pm2 restart theo
+# # Start the Next.js application with PM2
+pm2 start npm --name "theo" -- start
 #
