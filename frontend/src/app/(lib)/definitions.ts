@@ -17,6 +17,6 @@ type Tutor = {
   rating: number,
   rating_count: number,
   title: string,
-  courses: string[],
+  courses: {id: number, course: string}[],
   description: string,
 };

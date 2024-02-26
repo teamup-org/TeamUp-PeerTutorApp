@@ -10,7 +10,7 @@ export const tutors: Tutor[] = [
     rating: 4,
     rating_count: 12,
     title: 'Texas A&M UG Tutor',
-    courses: ['CSCE410', 'CSCE420'],
+    courses: [{id: 0, course: 'CSCE410'}, {id: 1, course: 'CSCE420'}],
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
   },
 
@@ -22,7 +22,31 @@ export const tutors: Tutor[] = [
     rating: 4.5,
     rating_count: 60,
     title: 'Texas A&M CSCE Tutor',
-    courses: ['CSCE464', 'CSCE465'],
+    courses: [{id: 0, course: 'CSCE464'}, {id: 1, course: 'CSCE465'}],
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  },
+
+  {
+    id: 2,
+    name: 'Evan Oliai',
+    pfp_url: '',
+    hourly_rate: 42,
+    rating: 4.2,
+    rating_count: 129,
+    title: 'CSCE Tutor',
+    courses: [{id: 0, course: 'CSCE482'}, {id: 1, course: 'CSCE315'}],
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  },
+
+  {
+    id: 3,
+    name: 'Trey Wells',
+    pfp_url: '',
+    hourly_rate: 30,
+    rating: 5,
+    rating_count: 315,
+    title: 'CSCE Tutor',
+    courses: [{id: 0, course: 'CSCE313'}, {id: 1, course: 'CSCE312'}],
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
   },
 ];
