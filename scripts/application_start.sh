@@ -1,13 +1,13 @@
-# cd /home/ec2-user/teamup-app/frontend
+cd /home/ec2-user/teamup-app/frontend
 
 # # Install dependencies (if needed)
-# npm i
+sudo npm i
 #
 # # Build the Next.js application
-# npm run build
+sudo npm run build
 #
 # # Start the Next.js application with PM2
-# pm2 start npm --name "theo" -- start
-#
+sudo pm2 delete all
 
-echo "This is running"
+sudo pm2 start npm --name "theo" -- start
+#
