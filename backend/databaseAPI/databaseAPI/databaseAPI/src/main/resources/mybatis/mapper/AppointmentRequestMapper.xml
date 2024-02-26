@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xyz.tamutheo.databaseAPI.appointmentRequest.AppointmentRequestMapper">
+    <resultMap id="AppointmentRequestResultMap" type="xyz.tamutheo.databaseAPI.appointmentRequest.AppointmentRequestModel">
+        <result property="appointmentRequestId" column="appointment_request_id" />
+        <result property="requestTypeId" column="request_type_id" />
+        <result property="appointmentId" column="appointment_id" />
+        <result property="initiatorTypeId" column="initiator_type_id" />
+        <result property="requestStatusId" column="request_status_id" />
+    </resultMap>
+    <select id="read" resultMap="AppointmentRequestResultMap">
+        SELECT
+        *
+        FROM appointment_request
+        <where>
+            <if test="appointmentId != null">
+                appointment_id = #{appointmentId}
+            </if>
+            <if test="initiatorTypeId != null">
+                AND initiator_type_id = #{initiatorTypeId}
+            </if>
+        </where>
+    </select>
+    <insert id="create" parameterType="xyz.tamutheo.databaseAPI.appointmentRequest.AppointmentRequestModel">
+        INSERT INTO appointment_request
+            (request_type_id, appointment_id, initiator_type_id, request_status_id)
+        VALUES
+            (#{requestTypeId}, #{appointmentId}, #{initiatorTypeId}, #{requestStatusId})
+    </insert>
+    <update id="update" parameterType="map">
+        UPDATE appointment_request
+        SET
+            request_type_id = #{appointmentRequestModelNew.requestTypeId},
+            request_status_id = #{appointmentRequestModelNew.requestStatusId}
+        WHERE
+            appointment_id = #{appointmentRequestModelOld.appointmentId}
+            AND initiator_type_id = #{appointmentRequestModelOld.initiatorTypeId}
+    </update>
+</mapper>

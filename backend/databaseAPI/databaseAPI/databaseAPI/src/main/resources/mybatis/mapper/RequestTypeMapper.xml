@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xyz.tamutheo.databaseAPI.requestType.RequestTypeMapper">
+    <resultMap id="RequestTypeResultMap" type="xyz.tamutheo.databaseAPI.requestType.RequestTypeModel">
+        <result property="requestTypeId" column="request_type_id" />
+        <result property="requestTypeName" column="request_type_name" />
+    </resultMap>
+    <select id="read" resultMap="RequestTypeResultMap">
+        SELECT
+        *
+        FROM request_type
+    </select>
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceMapper">
+    <resultMap id="TutorLocationPreferenceResultMap" type="xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceModel">
+        <result property="locationPreferenceId" column="location_preference_id" />
+        <result property="tutorId" column="tutor_id" />
+        <result property="locationId" column="location_id" />
+    </resultMap>
+    <select id="read" resultMap="TutorLocationPreferenceResultMap">
+        SELECT
+        *
+        FROM tutor_location_preference
+        <where>
+            <if test="tutorId != null">
+                tutor_id = #{tutorId}
+            </if>
+        </where>
+    </select>
+    <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceModel">
+        INSERT INTO tutor_location_preference
+            (tutor_id, location_id)
+        VALUES
+            (#{tutorId}, #{locationId})
+    </insert>
+    <delete id="delete" parameterType="xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceModel">
+        DELETE FROM tutor_location_preference
+        <where>
+            <if test="tutorId != null">
+                tutor_id = #{tutorId}
+            </if>
+            <if test="locationId != null">
+                AND location_id = #{locationId}
+            </if>
+        </where>
+    </delete>
+</mapper>

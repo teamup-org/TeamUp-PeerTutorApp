@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xyz.tamutheo.databaseAPI.tutorTimePreference.TutorTimePreferenceMapper">
+    <resultMap id="TutorTimePreferenceResultMap" type="xyz.tamutheo.databaseAPI.tutorTimePreference.TutorTimePreferenceModel">
+        <result property="tutorTimePreferenceId" column="tutor_time_preference_id" />
+        <result property="tutorId" column="tutor_id" />
+        <result property="startTimeId" column="start_time_id" />
+        <result property="endTimeId" column="end_time_id" />
+    </resultMap>
+    <select id="read" resultMap="TutorTimePreferenceResultMap">
+        SELECT
+        *
+        FROM tutor_time_preference
+        <where>
+            <if test="tutorId != null">
+                tutor_id = #{tutorId}
+            </if>
+        </where>
+    </select>
+    <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutorTimePreference.TutorTimePreferenceModel">
+        INSERT INTO tutor_time_preference
+            (tutor_id, start_time_id, end_time_id)
+        VALUES
+            (#{tutorId}, #{startTimeId}, #{endTimeId})
+    </insert>
+    <delete id="delete" parameterType="xyz.tamutheo.databaseAPI.tutorTimePreference.TutorTimePreferenceModel">
+        DELETE FROM tutor_time_preference
+        <where>
+            <if test="tutorId != null">
+                tutor_id = #{tutorId}
+            </if>
+            <if test="startTimeId != null">
+                AND start_time_id = #{startTimeId}
+            </if>
+            <if test="endTimeId != null">
+                AND end_time_id = #{endTimeId}
+            </if>
+        </where>
+    </delete>
+</mapper>

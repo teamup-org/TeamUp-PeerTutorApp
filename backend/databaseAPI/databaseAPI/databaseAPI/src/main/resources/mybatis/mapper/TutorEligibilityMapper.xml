@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xyz.tamutheo.databaseAPI.tutorEligibility.TutorEligibilityMapper">
+    <resultMap id="TutorEligibilityResultMap" type="xyz.tamutheo.databaseAPI.tutorEligibility.TutorEligibilityModel">
+        <result property="eligibilityId" column="eligibility_id" />
+        <result property="tutorId" column="tutor_id" />
+        <result property="courseId" column="course_id" />
+        <result property="courseGrade" column="course_grade" />
+        <result property="isEligible" column="is_eligible" />
+    </resultMap>
+    <select id="read" resultMap="TutorEligibilityResultMap">
+        SELECT
+        *
+        FROM tutor_eligibility
+        <where>
+            <if test="tutorId != null">
+                tutor_id = #{tutorId}
+            </if>
+        </where>
+    </select>
+    <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutorEligibility.TutorEligibilityModel">
+        INSERT into tutor_eligibility
+            (tutor_id, course_id, course_grade, is_eligible)
+        VALUES
+            (#{tutorId}, #{courseId}, #{courseGrade}, #{isEligible})
+    </insert>
+</mapper>
