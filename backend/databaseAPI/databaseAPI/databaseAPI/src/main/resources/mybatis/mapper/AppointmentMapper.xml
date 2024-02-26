@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xyz.tamutheo.databaseAPI.appointment.AppointmentMapper">
+    <resultMap id="AppointmentResultMap" type="xyz.tamutheo.databaseAPI.appointment.AppointmentModel">
+        <result property="appointmentId" column="appointment_id" />
+        <result property="appointmentTypeId" column="appointment_type_id" />
+        <result property="tutorId" column="tutor_id" />
+        <result property="tuteeId" column="tutee_id" />
+        <result property="appointmentDate" column="appointment_date" />
+        <result property="startTimeId" column="start_time_id" />
+        <result property="endTimeId" column="end_time_id" />
+        <result property="locationId" column="location_id" />
+        <result property="appointmentStatusId" column="appointment_status_id" />
+    </resultMap>
+    <select id="read" resultMap="AppointmentResultMap">
+        SELECT
+        *
+        FROM appointment
+        <where>
+            <if test="tutorId != null">
+                tutor_id = #{tutorId}
+            </if>
+            <if test="tuteeId != null">
+                AND tutee_id = #{tuteeId}
+            </if>
+        </where>
+    </select>
+    <insert id="create" parameterType="xyz.tamutheo.databaseAPI.appointment.AppointmentModel">
+        INSERT INTO appointment
+            (appointment_type_id, tutor_id, tutee_id, appointment_date, start_time_id, end_time_id, location_id, appointment_status_id)
+        VALUES
+            (#{appointmentTypeId}, #{tutorId}, #{tuteeId}, #{appointmentDate}, #{startTimeId}, #{endTimeId}, #{locationId}, #{appointmentStatusId})
+    </insert>
+    <update id="update" parameterType="map">
+        UPDATE appointment
+        SET
+            appointment_type_id = #{appointmentModelNew.appointmentTypeId},
+            tutor_id = #{appointmentModelNew.tutorId},
+            tutee_id = #{appointmentModelNew.tuteeId},
+            appointment_date = #{appointmentModelNew.appointmentDate},
+            start_time_id = #{appointmentModelNew.startTimeId},
+            end_time_id = #{appointmentModelNew.endTimeId},
+            location_id = #{appointmentModelNew.locationId},
+            appointment_status_id = #{appointmentModelNew.appointmentStatusId}
+        WHERE
+            tutor_id = #{appointmentModelOld.tutorId}
+            AND tutee_id = #{appointmentModelOld.tuteeId}
+            AND appointment_date = #{appointmentModelOld.appointmentDate}
+            AND start_time_id = #{appointmentModelOld.startTimeId}
+            AND end_time_id = #{appointmentModelOld.endTimeId}
+    </update>
+</mapper>
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xyz.tamutheo.databaseAPI.rating.RatingMapper">
+    <resultMap id="RatingResultMap" type="xyz.tamutheo.databaseAPI.rating.RatingModel">
+        <result property="ratingId" column="rating_id" />
+        <result property="numberStars" column="number_stars" />
+    </resultMap>
+    <select id="read" resultMap="RatingResultMap">
+        SELECT
+        *
+        FROM rating
+    </select>
+</mapper>

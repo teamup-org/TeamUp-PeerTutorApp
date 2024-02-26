@@ -59,7 +59,7 @@ VALUES
     ("inactive");
 
 INSERT INTO tutor
-    (uin, first_name, last_name, major_id, seniority_id, pay_rate, bio_text, picture_url, phone_number, email, average_rating, active_status)
+    (uin, first_name, last_name, major_id, seniority_id, pay_rate, bio_text, picture_url, phone_number, email, average_rating, active_status_id)
 VALUES
     (123456789, 'john', 'smith', 1, 1, 10.00, 'Hi', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Branden_Loera_Headshot.jpg/394px-Branden_Loera_Headshot.jpg?20231019200804', 1234567890, 'john@gmail.com', 1, 1),
     (234567891, 'maria', 'garcia', 2, 2, 15.00, 'Hello', 'https://upload.wikimedia.org/wikipedia/commons/0/07/Avantika_Headshot.jpg', 3123456789, 'maria@gmail.com', 2, 2),

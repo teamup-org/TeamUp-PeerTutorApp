@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xyz.tamutheo.databaseAPI.tutorReview.TutorReviewMapper">
+    <resultMap id="TutorReviewResultMap" type="xyz.tamutheo.databaseAPI.tutorReview.TutorReviewModel">
+        <result property="reviewId" column="review_id" />
+        <result property="tutorId" column="tutor_id" />
+        <result property="tuteeId" column="tutee_id" />
+        <result property="ratingId" column="rating_id" />
+        <result property="reviewText" column="review_text" />
+    </resultMap>
+    <select id="read" resultMap="TutorReviewResultMap">
+        SELECT
+        *
+        FROM tutor_review
+        <where>
+            <if test="tutorId != null">
+                tutor_id = #{tutorId}
+            </if>
+            <if test="tuteeId != null">
+                AND tutee_id = #{tuteeId}
+            </if>
+        </where>
+    </select>
+    <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutorReview.TutorReviewModel">
+        INSERT INTO tutor_review
+            (tutor_id, tutee_id, rating_id, review_text)
+        VALUES
+            (#{tutorId}, #{tuteeId}, #{ratingId}, #{reviewText})
+    </insert>
+    <update id="update" parameterType="map">
+        UPDATE tutor_review
+        SET
+            rating_id = #{tutorReviewModelNew.ratingId},
+            review_text = #{tutorReviewModelNew.reviewText}
+        WHERE
+            tutor_id = #{tutorReviewModelOld.tutorId}
+            AND tutee_id = #{tutorReviewModelOld.tuteeId}
+    </update>
+    <delete id="delete" parameterType="xyz.tamutheo.databaseAPI.tutorReview.TutorReviewModel">
+        DELETE FROM tutor_review
+        <where>
+            <if test="tutorId != null">
+                tutor_id = #{tutorId}
+            </if>
+            <if test="tuteeId != null">
+                AND tutee_id = #{tuteeId}
+            </if>
+        </where>
+    </delete>
+</mapper>

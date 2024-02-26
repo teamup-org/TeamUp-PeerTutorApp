@@ -75,7 +75,7 @@ CREATE TABLE tutor (
 	phone_number BIGINT NOT NULL,
 	email VARCHAR(30) NOT NULL,
 	average_rating DECIMAL (2,1) NOT NULL,
-    active_status INTEGER NOT NULL,
+    active_status_id INTEGER NOT NULL,
 	PRIMARY KEY(tutor_id)
 );
 
@@ -205,7 +205,7 @@ ALTER TABLE tutor
 ADD CONSTRAINT uq_tutor UNIQUE (uin),
 ADD CONSTRAINT fk_tutor_major_id FOREIGN KEY (major_id) REFERENCES major(major_id),
 ADD CONSTRAINT fk_tutor_seniority_id FOREIGN KEY (seniority_id) REFERENCES seniority(seniority_id),
-ADD CONSTRAINT fk_tutor_seniority_active_status FOREIGN KEY (active_status) REFERENCES active_status(active_status_id),
+ADD CONSTRAINT fk_tutor_seniority_active_status FOREIGN KEY (active_status_id) REFERENCES active_status(active_status_id),
 ADD CONSTRAINT chk_tutor_uin CHECK (uin BETWEEN 100000000 AND 999999999),
 ADD CONSTRAINT chk_tutor_lowercase CHECK ((BINARY(first_name) = BINARY(LOWER(first_name))) AND (BINARY(last_name) = BINARY(LOWER(last_name))) AND (BINARY(email) = BINARY(LOWER(email)))),
 ADD CONSTRAINT chk_tutor_phone_number CHECK (phone_number BETWEEN 1000000000 AND 9999999999),

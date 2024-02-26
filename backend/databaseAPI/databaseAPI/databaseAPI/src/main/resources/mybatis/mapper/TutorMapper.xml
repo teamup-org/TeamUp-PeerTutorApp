@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xyz.tamutheo.databaseAPI.tutor.TutorMapper">
+    <resultMap id="TutorResultMap" type="xyz.tamutheo.databaseAPI.tutor.TutorModel">
+        <result property="tutorId" column="tutor_id" />
+        <result property="uin" column="uin" />
+        <result property="firstName" column="first_name" />
+        <result property="lastName" column="last_name" />
+        <result property="majorId" column="major_id" />
+        <result property="seniorityId" column="seniority_id" />
+        <result property="payRate" column="pay_rate" />
+        <result property="bioText" column="bio_text" />
+        <result property="pictureUrl" column="picture_url" />
+        <result property="phoneNumber" column="phone_number" />
+        <result property="email" column="email" />
+        <result property="averageRating" column="average_rating" />
+        <result property="activeStatusId" column="active_status_id" />
+    </resultMap>
+    <select id="read" resultMap="TutorResultMap">
+        SELECT
+        *
+        FROM tutor
+        <where>
+            <if test="uin != null">
+                uin = #{uin}
+            </if>
+        </where>
+    </select>
+    <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutor.TutorModel">
+        INSERT INTO tutor
+            (uin, first_name, last_name, major_id, seniority_id, pay_rate, bio_text, picture_url, phone_number, email, average_rating, active_status_id)
+        VALUES
+            (#{uin}, #{firstName}, #{lastName}, #{majorId}, #{seniorityId}, #{payRate}, #{bioText}, #{pictureUrl}, #{phoneNumber}, #{email}, #{averageRating}, #{activeStatusId})
+    </insert>
+    <update id="update" parameterType="map">
+        UPDATE tutor
+        SET
+            uin = #{tutorModelNew.uin},
+            first_name = #{tutorModelNew.firstName},
+            last_name = #{tutorModelNew.lastName},
+            major_id = #{tutorModelNew.majorId},
+            seniority_id = #{tutorModelNew.seniorityId},
+            pay_rate = #{tutorModelNew.payRate},
+            bio_text = #{tutorModelNew.bioText},
+            picture_url = #{tutorModelNew.pictureUrl},
+            phone_number = #{tutorModelNew.phoneNumber},
+            email = #{tutorModelNew.email},
+            average_rating = #{tutorModelNew.averageRating},
+            active_status_id = #{tutorModelNew.activeStatusId}
+        WHERE
+            uin = #{tutorModelOld.uin}
+    </update>
+</mapper>
