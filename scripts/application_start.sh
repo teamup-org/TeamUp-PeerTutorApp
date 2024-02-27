@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cd /home/ec2-user/teamup-app/frontend
 
 # # Install dependencies (if needed)
