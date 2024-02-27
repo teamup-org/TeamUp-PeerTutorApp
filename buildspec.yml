@@ -2,4 +2,4 @@ version: 0.2
 phases:
   build:
     commands:
-      - chmod +x /~/teamup-app/scripts/application_start.sh
+      - chmod +x /home/ec2-user/teamup-app/scripts/application_start.sh
