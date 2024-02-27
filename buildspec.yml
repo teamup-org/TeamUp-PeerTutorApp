@@ -1,0 +1,8 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      bash: 3.0
+  build:
+    commands:
+      - chmod +x /~/teamup-app/scripts/application_start.sh
