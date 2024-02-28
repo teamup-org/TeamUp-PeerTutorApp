@@ -9,6 +9,6 @@ hook:
   BeforeInstall:
 
   ApplicationStart:
-    - location: /home/ec2-user/scripts/application_start.sh
+    - location: /home/ec2-user/scripts/startapp.sh
       timeout: 120
       runas: ec2-user
