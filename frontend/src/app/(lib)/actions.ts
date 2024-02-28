@@ -1,4 +1,4 @@
-'use server';
+/* 'use server';
 // Define server database interactivity functions and general server side functions here.
 
 import React, { useEffect, useState } from 'react';
@@ -16,4 +16,4 @@ export default function Home() {
     
   );
 }
-
+*/
