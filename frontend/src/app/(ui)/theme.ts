@@ -2,7 +2,7 @@
 
 import { Nunito_Sans } from 'next/font/google';
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
-import { ThemeContext } from '@emotion/react';
+import { red } from '@mui/material/colors';
 
 const nunito_sans = Nunito_Sans({ subsets: ['latin'], weight: ['600', '700', '800', '900', '1000'], });
 
@@ -57,9 +57,7 @@ const theme = responsiveFontSizes(createTheme({
       main: '#62615C',
     },
 
-    error: {
-      main: '#000000',
-    },
+    error: red,
 
     warning: {
       main: '#000000',

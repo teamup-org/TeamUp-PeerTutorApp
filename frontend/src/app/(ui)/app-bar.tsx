@@ -20,8 +20,6 @@ import MenuItem from '@mui/material/MenuItem';
 
 import TheoLogo from './theo-logo';
 
-const settings = ['Profile', 'Log Out'];
-
 export default function ResponsiveAppBar(props: any) {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -54,7 +52,7 @@ export default function ResponsiveAppBar(props: any) {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
+              color="primary"
             >
               <MenuIcon />
             </IconButton>
@@ -78,10 +76,11 @@ export default function ResponsiveAppBar(props: any) {
             >
             { 
               (props.links).map((link: any) => (
-              <MenuItem key={link.name} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">
-                      <Link href={link.href} style={{ color: 'inherit', textDecoration: 'none' }}>{link.name}</Link>
-                  </Typography>
+              <MenuItem key={link.name} onClick={handleCloseNavMenu} sx={{ p: 0 }}>
+                  <Button key={link.name} component={Link} href={link.href} fullWidth sx={{ p: 3 }}>
+                      <link.icon />
+                      {link.name}
+                  </Button>
               </MenuItem>
               ))
             }
@@ -96,20 +95,19 @@ export default function ResponsiveAppBar(props: any) {
                   <Button
                     key={link.name}
                     onClick={handleCloseNavMenu}
+                    component={Link}
+                    href={link.href}
                     sx={{ my: 2, display: 'block' }}
                   >
-                    <></>
-                    <Link href={link.href} style={{ color: 'inherit', textDecoration: 'none' }}>
-                      <LinkIcon />
-                      {link.name}
-                    </Link>
+                    <LinkIcon />
+                    {link.name}
                   </Button>
                 );
               })
             }
           </Box>
           
-          { (usePathname() === "/dashboard") && (
+          { (usePathname().startsWith("/dashboard")) && (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -132,9 +130,9 @@ export default function ResponsiveAppBar(props: any) {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
+                {props.settings.map((setting: any) => (
+                  <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
+                    <Button component={Link} href={setting.href}>{setting.name}</Button>
                   </MenuItem>
                 ))}
               </Menu>
