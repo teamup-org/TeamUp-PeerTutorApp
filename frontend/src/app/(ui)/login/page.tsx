@@ -3,11 +3,13 @@
 import * as React from 'react';
 
 import Link from 'next/link';
+import { useSession, signIn, signOut } from "next-auth/react"
 
 import {
     Container, Box, Avatar, Typography, TextField, FormControlLabel, Checkbox, Button, Grid,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { getGoogleOAuthURL } from '@/app/(lib)/utils';
 
 export default function SignIn() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -18,6 +20,8 @@ export default function SignIn() {
         password: data.get('password'),
       });
     };
+
+    
 
   return (
     <Container component="main" maxWidth="xs">
@@ -62,11 +66,13 @@ export default function SignIn() {
           />
           <Button
             type="submit"
+            LinkComponent={Link}
+            href={getGoogleOAuthURL()}
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            <Link href="/dashboard" style={{ color: 'inherit', textDecoration: 'none'}}>Sign In</Link>
+            Sign In
           </Button>
           <Grid container>
             <Grid item xs>
