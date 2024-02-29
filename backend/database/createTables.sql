@@ -1,4 +1,5 @@
 DROP TABLE `capstone`.`active_status`, `capstone`.`appointment`, `capstone`.`appointment_request`, `capstone`.`appointment_status`, `capstone`.`appointment_type`, `capstone`.`course`, `capstone`.`initiator_type`, `capstone`.`location`, `capstone`.`major`, `capstone`.`rating`, `capstone`.`request_status`, `capstone`.`request_type`, `capstone`.`seniority`, `capstone`.`time_increment`, `capstone`.`tutee`, `capstone`.`tutor`, `capstone`.`tutor_eligibility`, `capstone`.`tutor_location_preference`, `capstone`.`tutor_review`, `capstone`.`tutor_time_preference`;
+DROP VIEW `capstone`.`tutor_average_rating`;
 
 CREATE TABLE course (
 	course_id INTEGER NOT NULL AUTO_INCREMENT,
@@ -74,7 +75,6 @@ CREATE TABLE tutor (
 	picture_url VARCHAR(2000),
 	phone_number BIGINT NOT NULL,
 	email VARCHAR(30) NOT NULL,
-	average_rating DECIMAL (2,1) NOT NULL,
     active_status_id INTEGER NOT NULL,
 	PRIMARY KEY(tutor_id)
 );
@@ -161,6 +161,13 @@ CREATE TABLE initiator_type (
 	PRIMARY KEY(initiator_type_id)
 );
 
+CREATE VIEW tutor_average_rating AS
+SELECT t.tutor_id, AVG(r.number_stars) AS average_rating
+FROM tutor as t
+INNER JOIN tutor_review AS tr ON t.tutor_id = tr.tutor_id
+INNER JOIN rating AS r ON tr.rating_id = r.rating_id
+GROUP BY tutor_id;
+
 ALTER TABLE course
 ADD CONSTRAINT uq_course UNIQUE (course_name, course_dept, course_number),
 ADD CONSTRAINT chk_course_lowercase CHECK ((BINARY(course_name) = BINARY(LOWER(course_name))) AND (BINARY(course_dept) = BINARY(LOWER(course_dept)))),
@@ -192,6 +199,7 @@ ADD CONSTRAINT fk_tutor_location_preference_tutor_id FOREIGN KEY (tutor_id) REFE
 ADD CONSTRAINT fk_tutor_location_preference_location_id FOREIGN KEY (location_id) REFERENCES location(location_id);
 
 ALTER TABLE tutor_review
+ADD CONSTRAINT uq_tutor_review UNIQUE (tutor_id, tutee_id),
 ADD CONSTRAINT fk_tutor_review_tutor_id FOREIGN KEY (tutor_id) REFERENCES tutor(tutor_id),
 ADD CONSTRAINT fk_tutor_review_tutee_id FOREIGN KEY (tutee_id) REFERENCES tutee(tutee_id),
 ADD CONSTRAINT fk_tutor_review_rating_id FOREIGN KEY (rating_id) REFERENCES rating(rating_id);
@@ -209,8 +217,7 @@ ADD CONSTRAINT fk_tutor_seniority_active_status FOREIGN KEY (active_status_id) R
 ADD CONSTRAINT chk_tutor_uin CHECK (uin BETWEEN 100000000 AND 999999999),
 ADD CONSTRAINT chk_tutor_lowercase CHECK ((BINARY(first_name) = BINARY(LOWER(first_name))) AND (BINARY(last_name) = BINARY(LOWER(last_name))) AND (BINARY(email) = BINARY(LOWER(email)))),
 ADD CONSTRAINT chk_tutor_phone_number CHECK (phone_number BETWEEN 1000000000 AND 9999999999),
-ADD CONSTRAINT chk_tutor_email CHECK (email LIKE '_%@_%._%'),
-ADD CONSTRAINT chk_tutor_average_rating CHECK (average_rating BETWEEN 0 AND 5);
+ADD CONSTRAINT chk_tutor_email CHECK (email LIKE '_%@_%._%');
 
 ALTER TABLE seniority
 ADD CONSTRAINT uq_seniority UNIQUE (seniority_name),
