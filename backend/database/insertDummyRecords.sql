@@ -59,13 +59,13 @@ VALUES
     ("inactive");
 
 INSERT INTO tutor
-    (uin, first_name, last_name, major_id, seniority_id, pay_rate, bio_text, picture_url, phone_number, email, average_rating, active_status_id)
+    (uin, first_name, last_name, major_id, seniority_id, pay_rate, bio_text, picture_url, phone_number, email, active_status_id)
 VALUES
-    (123456789, 'john', 'smith', 1, 1, 10.00, 'Hi', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Branden_Loera_Headshot.jpg/394px-Branden_Loera_Headshot.jpg?20231019200804', 1234567890, 'john@gmail.com', 1, 1),
-    (234567891, 'maria', 'garcia', 2, 2, 15.00, 'Hello', 'https://upload.wikimedia.org/wikipedia/commons/0/07/Avantika_Headshot.jpg', 3123456789, 'maria@gmail.com', 2, 2),
-    (345678912, 'james', 'johnson', 3, 3, 20.00, 'Greetings', 'https://upload.wikimedia.org/wikipedia/commons/d/de/Kenneth_Harris_II.jpg', 9012345678, 'james@gmail.com', 3, 1),
-    (456789123, 'david', 'rodriquez', 4, 4, 25.00, 'Salutations', 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Updated-hs-zameer-rizvi-headshot-1.jpg/510px-Updated-hs-zameer-rizvi-headshot-1.jpg?20231107221652', 8901234567, 'david@gmail.com', 4, 2),
-    (567891234, 'mary', 'martinez', 5, 5, 30.00, 'Howdy', 'https://upload.wikimedia.org/wikipedia/commons/7/77/Melissa_Huang_headshot.jpg', 7890123456, 'mary@gmail.com', 5, 1);
+    (123456789, 'john', 'smith', 1, 1, 10.00, 'Hi', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Branden_Loera_Headshot.jpg/394px-Branden_Loera_Headshot.jpg?20231019200804', 1234567890, 'john@gmail.com', 1),
+    (234567891, 'maria', 'garcia', 2, 2, 15.00, 'Hello', 'https://upload.wikimedia.org/wikipedia/commons/0/07/Avantika_Headshot.jpg', 3123456789, 'maria@gmail.com', 2),
+    (345678912, 'james', 'johnson', 3, 3, 20.00, 'Greetings', 'https://upload.wikimedia.org/wikipedia/commons/d/de/Kenneth_Harris_II.jpg', 9012345678, 'james@gmail.com', 1),
+    (456789123, 'david', 'rodriquez', 4, 4, 25.00, 'Salutations', 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Updated-hs-zameer-rizvi-headshot-1.jpg/510px-Updated-hs-zameer-rizvi-headshot-1.jpg?20231107221652', 8901234567, 'david@gmail.com', 2),
+    (567891234, 'mary', 'martinez', 5, 5, 30.00, 'Howdy', 'https://upload.wikimedia.org/wikipedia/commons/7/77/Melissa_Huang_headshot.jpg', 7890123456, 'mary@gmail.com', 1);
 
 INSERT INTO tutor_location_preference
     (tutor_id, location_id)
@@ -162,7 +162,9 @@ VALUES
     (2, 2, 2, "somewhat bad"),
     (3, 3, 3, "okay"),
     (4, 4, 4, "somewhat okay"),
-    (5, 5, 5, "very good");
+    (5, 5, 5, "very good"),
+    (1, 2, 2, "somewhat bad");
+    
 
 
 
