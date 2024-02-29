@@ -13,7 +13,6 @@
         <result property="pictureUrl" column="picture_url" />
         <result property="phoneNumber" column="phone_number" />
         <result property="email" column="email" />
-        <result property="averageRating" column="average_rating" />
         <result property="activeStatusId" column="active_status_id" />
     </resultMap>
     <select id="read" resultMap="TutorResultMap">
