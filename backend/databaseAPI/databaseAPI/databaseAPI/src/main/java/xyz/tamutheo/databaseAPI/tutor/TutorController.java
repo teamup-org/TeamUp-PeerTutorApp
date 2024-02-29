@@ -25,7 +25,6 @@ public class TutorController {
                        @RequestParam(name = "picture_url") String pictureUrl,
                        @RequestParam(name = "phone_number") Long phoneNumber,
                        @RequestParam(name = "email") String email,
-                       @RequestParam(name = "average_rating") Double averageRating,
                        @RequestParam(name = "active_status_id") Integer activeStatusId){
         TutorModel tutorModel = TutorModel.builder()
                 .uin(uin)
@@ -38,7 +37,6 @@ public class TutorController {
                 .pictureUrl(pictureUrl)
                 .phoneNumber(phoneNumber)
                 .email(email)
-                .averageRating(averageRating)
                 .activeStatusId(activeStatusId)
                 .build();
         this.tutorService.create(tutorModel);
@@ -55,7 +53,6 @@ public class TutorController {
                        @RequestParam(name = "picture_url_new") String pictureUrlNew,
                        @RequestParam(name = "phone_number_new") Long phoneNumberNew,
                        @RequestParam(name = "email_new") String emailNew,
-                       @RequestParam(name = "average_rating_new") Double averageRatingNew,
                        @RequestParam(name = "active_status_id_new") Integer activeStatusIdNew) {
         TutorModel tutorModelOld = TutorModel.builder()
                 .uin(uinOld)
@@ -71,7 +68,6 @@ public class TutorController {
                 .pictureUrl(pictureUrlNew)
                 .phoneNumber(phoneNumberNew)
                 .email(emailNew)
-                .averageRating(averageRatingNew)
                 .activeStatusId(activeStatusIdNew)
                 .build();
         this.tutorService.update(tutorModelOld, tutorModelNew);

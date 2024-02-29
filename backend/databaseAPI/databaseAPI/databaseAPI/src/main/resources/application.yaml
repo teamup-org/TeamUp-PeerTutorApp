@@ -2,18 +2,18 @@ server:
   error:
       include-stacktrace: never
   port: 8080
-# spring:
-#   datasource:
-#     url: jdbc:mysql://localhost:3306/capstone
-#     username: root
-#     password: root
-#     driver-class-name: com.mysql.jdbc.Driver
 spring:
-  datasource:
-    url: jdbc:mysql://teamup.c3cmmicagwi3.us-east-2.rds.amazonaws.com:3306/capstone
-    username: theo
-    password: Capstone482!
-    driver-class-name: com.mysql.jdbc.Driver
+ datasource:
+   url: jdbc:mysql://localhost:3306/capstone
+   username: root
+   password: root
+   driver-class-name: com.mysql.jdbc.Driver
+#spring:
+#  datasource:
+#    url: jdbc:mysql://teamup.c3cmmicagwi3.us-east-2.rds.amazonaws.com:3306/capstone
+#    username: theo
+#    password: Capstone482!
+#    driver-class-name: com.mysql.jdbc.Driver
 logging:
   level:
     root: INFO

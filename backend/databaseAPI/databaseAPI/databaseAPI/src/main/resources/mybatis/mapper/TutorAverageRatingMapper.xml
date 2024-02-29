@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xyz.tamutheo.databaseAPI.tutorAverageRating.TutorAverageRatingMapper">
+    <resultMap id="TutorAverageRatingResultMap" type="xyz.tamutheo.databaseAPI.tutorAverageRating.TutorAverageRatingModel">
+        <result property="tutorId" column="tutor_id" />
+        <result property="averageRating" column="average_rating" />
+    </resultMap>
+    <select id="read" resultMap="TutorAverageRatingResultMap">
+        SELECT
+        *
+        FROM tutor_average_rating
+        <where>
+            <if test="tutorId != null">
+                tutor_id = #{tutorId}
+            </if>
+        </where>
+    </select>
+</mapper>
