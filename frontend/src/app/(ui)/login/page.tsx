@@ -3,25 +3,29 @@
 import * as React from 'react';
 
 import Link from 'next/link';
-import { useSession, signIn, signOut } from "next-auth/react"
+import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth'
+
+import { GoogleSignInButton } from '@/app/(ui)/login/authButtons';
 
 import {
     Container, Box, Avatar, Typography, TextField, FormControlLabel, Checkbox, Button, Grid,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { getGoogleOAuthURL } from '@/app/(lib)/utils';
 
-export default function SignIn() {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      console.log({
-        email: data.get('email'),
-        password: data.get('password'),
-      });
-    };
+export default async function SignIn() {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get('email'),
+      password: data.get('password'),
+    });
+  };
 
-    
+  const session = await getServerSession();
+
+  if (session) return redirect("/dashboard");
 
   return (
     <Container component="main" maxWidth="xs">
@@ -67,25 +71,15 @@ export default function SignIn() {
           <Button
             type="submit"
             LinkComponent={Link}
-            href={getGoogleOAuthURL()}
+            href="/dashboard"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
+
+          <GoogleSignInButton />
         </Box>
       </Box>
     </Container>
