@@ -1,12 +1,6 @@
 'use client';
 
-import * as React from 'react';
-import { useSession } from "next-auth/react"
-import { redirect, useRouter } from "next/navigation"
-
 import Link from 'next/link';
-
-import { GoogleSignInButton } from '@/app/(ui)/login/authButtons';
 
 import {
     Container, Box, Avatar, Typography, TextField, FormControlLabel, Checkbox, Button, Grid, Paper
@@ -14,13 +8,6 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 export default function SignIn() {
-  const router = useRouter();
-
-  const { data: session } = useSession()
-  if (session) {
-    return (<>{router.push('/dashboard')}</>);
-  }
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -31,58 +18,78 @@ export default function SignIn() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            type="submit"
-            LinkComponent={Link}
-            href="/dashboard"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Sign In
-          </Button>
-
-          <GoogleSignInButton />
+    <Container component="main" maxWidth="sm">
+      <Paper elevation={4}>
+        <Box
+          sx={{
+            padding: 4,
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              component={Link}
+              href="/dashboard"
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="#">
+                  Don&apos;t have an account? Sign Up
+                </Link>
+              </Grid>
+            </Grid>
+            {/*<Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+            >
+            </Button> */}
+          </Box>
         </Box>
       </Paper>
     </Container>
