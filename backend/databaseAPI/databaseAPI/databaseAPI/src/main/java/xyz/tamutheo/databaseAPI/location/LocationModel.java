@@ -9,9 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LocationModel {
-    Boolean isIndoor;
-    Boolean isOnCampus;
-    Boolean isOnline;
     Integer locationId;
     String locationName;
 }

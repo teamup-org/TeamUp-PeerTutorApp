@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class TutorAverageRatingModel {
     Integer tutorId;
     Double averageRating;
+    Integer numberOfRatings;
 }

@@ -34,20 +34,20 @@
     <update id="update" parameterType="map">
         UPDATE appointment
         SET
-            appointment_type_id = #{appointmentModelNew.appointmentTypeId},
-            tutor_id = #{appointmentModelNew.tutorId},
-            tutee_id = #{appointmentModelNew.tuteeId},
-            appointment_date = #{appointmentModelNew.appointmentDate},
-            start_time_id = #{appointmentModelNew.startTimeId},
-            end_time_id = #{appointmentModelNew.endTimeId},
-            location_id = #{appointmentModelNew.locationId},
-            appointment_status_id = #{appointmentModelNew.appointmentStatusId}
+            appointment_type_id = #{appointmentListingModelNew.appointmentTypeId},
+            tutor_id = #{appointmentListingModelNew.tutorId},
+            tutee_id = #{appointmentListingModelNew.tuteeId},
+            appointment_date = #{appointmentListingModelNew.appointmentDate},
+            start_time_id = #{appointmentListingModelNew.startTimeId},
+            end_time_id = #{appointmentListingModelNew.endTimeId},
+            location_id = #{appointmentListingModelNew.locationId},
+            appointment_status_id = #{appointmentListingModelNew.appointmentStatusId}
         WHERE
-            tutor_id = #{appointmentModelOld.tutorId}
-            AND tutee_id = #{appointmentModelOld.tuteeId}
-            AND appointment_date = #{appointmentModelOld.appointmentDate}
-            AND start_time_id = #{appointmentModelOld.startTimeId}
-            AND end_time_id = #{appointmentModelOld.endTimeId}
+            tutor_id = #{appointmentListingModelOld.tutorId}
+            AND tutee_id = #{appointmentListingModelOld.tuteeId}
+            AND appointment_date = #{appointmentListingModelOld.appointmentDate}
+            AND start_time_id = #{appointmentListingModelOld.startTimeId}
+            AND end_time_id = #{appointmentListingModelOld.endTimeId}
     </update>
 </mapper>
 
