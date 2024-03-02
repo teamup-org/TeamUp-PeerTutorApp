@@ -3,8 +3,6 @@
 import * as React from 'react';
 
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { getServerSession } from 'next-auth'
 
 import { GoogleSignInButton } from '@/app/(ui)/login/authButtons';
 
@@ -22,10 +20,6 @@ export default async function SignIn() {
       password: data.get('password'),
     });
   };
-
-  const session = await getServerSession();
-
-  if (session) return redirect("/dashboard");
 
   return (
     <Container component="main" maxWidth="xs">

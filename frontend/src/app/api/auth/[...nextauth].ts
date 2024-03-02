@@ -42,39 +42,4 @@ export const authConfig: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
-
-  callbacks: {
-    async jwt({ token, account }) {
-      if (account) {
-        token.accessToken = account.access_token
-      }
-      return token;
-    },
-
-    /*async session({ session, token, user }) {
-      session.accessToken = token.accessToken
-      return session;
-    },
-
-    async signIn({ account, profile }) {
-      if (account?.provider === "google") {
-        return profile.email && profile?.email.endsWidth("@tamu.edu")
-      }
-
-      return true
-    },*/
-  },
 };
-
-export async function loginIsRequiredServer() {
-  const session = await getServerSession(authConfig);
-  if (!session) return redirect("/");
-}
-
-export function loginIsRequiredClient() {
-  if (typeof window !== "undefined") {
-    const session = useSession();
-    const router = useRouter();
-    if (!session) router.push("/");
-  }
-}
