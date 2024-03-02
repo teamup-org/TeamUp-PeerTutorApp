@@ -11,9 +11,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import TheoLogo from './theo-logo';
 import UserMenu from '@/app/(ui)/dashboard/user-menu';
 
-const settings = ['Profile', 'Log Out'];
-
-export default async function ResponsiveAppBar(props: any) {
+export default function ResponsiveAppBar(props: any) {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -37,7 +35,7 @@ export default async function ResponsiveAppBar(props: any) {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
+              color="primary"
             >
               <MenuIcon />
             </IconButton>
@@ -61,10 +59,11 @@ export default async function ResponsiveAppBar(props: any) {
             >
             { 
               (props.links).map((link: any) => (
-              <MenuItem key={link.name} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">
-                      <Link href={link.href} style={{ color: 'inherit', textDecoration: 'none' }}>{link.name}</Link>
-                  </Typography>
+              <MenuItem key={link.name} onClick={handleCloseNavMenu} sx={{ p: 0 }}>
+                  <Button key={link.name} component={Link} href={link.href} fullWidth sx={{ p: 3 }}>
+                      <link.icon />
+                      {link.name}
+                  </Button>
               </MenuItem>
               ))
             }
@@ -79,12 +78,12 @@ export default async function ResponsiveAppBar(props: any) {
                   <Button
                     key={link.name}
                     onClick={handleCloseNavMenu}
+                    component={Link}
+                    href={link.href}
                     sx={{ my: 2, display: 'block' }}
                   >
-                    <Link href={link.href} style={{ color: 'inherit', textDecoration: 'none' }}>
-                      <LinkIcon />
-                      {link.name}
-                    </Link>
+                    <LinkIcon />
+                    {link.name}
                   </Button>
                 );
               })

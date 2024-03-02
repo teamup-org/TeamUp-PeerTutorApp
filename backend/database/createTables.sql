@@ -1,4 +1,4 @@
-DROP TABLE `capstone`.`appointment`, `capstone`.`appointment_request`, `capstone`.`appointment_type`, `capstone`.`course`, `capstone`.`initiator_type`, `capstone`.`location`, `capstone`.`major`, `capstone`.`rating`, `capstone`.`request_status`, `capstone`.`request_type`, `capstone`.`seniority`, `capstone`.`time_increment`, `capstone`.`tutee`, `capstone`.`tutor`, `capstone`.`tutor_eligibility`, `capstone`.`tutor_location_preference`, `capstone`.`tutor_review`, `capstone`.`tutor_time_preference`;
+DROP TABLE `capstone`.`active_status`, `capstone`.`appointment`, `capstone`.`appointment_request`, `capstone`.`appointment_status`, `capstone`.`appointment_type`, `capstone`.`course`, `capstone`.`initiator_type`, `capstone`.`location`, `capstone`.`major`, `capstone`.`rating`, `capstone`.`request_status`, `capstone`.`request_type`, `capstone`.`seniority`, `capstone`.`time_increment`, `capstone`.`tutee`, `capstone`.`tutor`, `capstone`.`tutor_eligibility`, `capstone`.`tutor_location_preference`, `capstone`.`tutor_review`, `capstone`.`tutor_time_preference`;
 
 CREATE TABLE course (
 	course_id INTEGER NOT NULL AUTO_INCREMENT,
@@ -49,10 +49,17 @@ CREATE TABLE tutor_location_preference (
 
 CREATE TABLE tutor_review (
 	review_id INTEGER NOT NULL AUTO_INCREMENT,
-	appointment_id INTEGER NOT NULL,
+	tutor_id INTEGER NOT NULL,
+	tutee_id INTEGER NOT NULL,
 	rating_id INTEGER NOT NULL,
 	review_text VARCHAR(1000),
 	PRIMARY KEY(review_id)
+);
+
+CREATE TABLE active_status (
+	active_status_id INTEGER NOT NULL AUTO_INCREMENT,
+	status_name VARCHAR(20) NOT NULL,
+	PRIMARY KEY (active_status_id)
 );
 
 CREATE TABLE tutor (
@@ -68,6 +75,7 @@ CREATE TABLE tutor (
 	phone_number BIGINT NOT NULL,
 	email VARCHAR(30) NOT NULL,
 	average_rating DECIMAL (2,1) NOT NULL,
+    active_status INTEGER NOT NULL,
 	PRIMARY KEY(tutor_id)
 );
 
@@ -92,6 +100,7 @@ CREATE TABLE appointment (
 	start_time_id INTEGER NOT NULL,
 	end_time_id INTEGER NOT NULL,
 	location_id INTEGER NOT NULL,
+	appointment_status_id INTEGER NOT NULL,
 	PRIMARY KEY(appointment_id)
 );
 
@@ -126,6 +135,12 @@ CREATE TABLE appointment_request (
 	initiator_type_id INTEGER NOT NULL,
 	request_status_id INTEGER NOT NULL,
 	PRIMARY KEY(appointment_request_id)
+);
+
+CREATE TABLE appointment_status (
+	appointment_status_id INTEGER NOT NULL AUTO_INCREMENT,
+	status_name VARCHAR(25) NOT NULL,
+    PRIMARY KEY(appointment_status_id)
 );
 
 CREATE TABLE request_type (
@@ -177,14 +192,20 @@ ADD CONSTRAINT fk_tutor_location_preference_tutor_id FOREIGN KEY (tutor_id) REFE
 ADD CONSTRAINT fk_tutor_location_preference_location_id FOREIGN KEY (location_id) REFERENCES location(location_id);
 
 ALTER TABLE tutor_review
-ADD CONSTRAINT uq_tutor_review UNIQUE (appointment_id),
-ADD CONSTRAINT fk_tutor_review_appointment_id FOREIGN KEY (appointment_id) REFERENCES appointment(appointment_id),
+ADD CONSTRAINT fk_tutor_review_tutor_id FOREIGN KEY (tutor_id) REFERENCES tutor(tutor_id),
+ADD CONSTRAINT fk_tutor_review_tutee_id FOREIGN KEY (tutee_id) REFERENCES tutee(tutee_id),
 ADD CONSTRAINT fk_tutor_review_rating_id FOREIGN KEY (rating_id) REFERENCES rating(rating_id);
+
+ALTER TABLE active_status
+ADD CONSTRAINT uq_active_status UNIQUE (status_name),
+ADD CONSTRAINT chk_active_status_lowercase CHECK (BINARY(status_name) = BINARY(LOWER(status_name)));
+
 
 ALTER TABLE tutor
 ADD CONSTRAINT uq_tutor UNIQUE (uin),
 ADD CONSTRAINT fk_tutor_major_id FOREIGN KEY (major_id) REFERENCES major(major_id),
 ADD CONSTRAINT fk_tutor_seniority_id FOREIGN KEY (seniority_id) REFERENCES seniority(seniority_id),
+ADD CONSTRAINT fk_tutor_seniority_active_status FOREIGN KEY (active_status) REFERENCES active_status(active_status_id),
 ADD CONSTRAINT chk_tutor_uin CHECK (uin BETWEEN 100000000 AND 999999999),
 ADD CONSTRAINT chk_tutor_lowercase CHECK ((BINARY(first_name) = BINARY(LOWER(first_name))) AND (BINARY(last_name) = BINARY(LOWER(last_name))) AND (BINARY(email) = BINARY(LOWER(email)))),
 ADD CONSTRAINT chk_tutor_phone_number CHECK (phone_number BETWEEN 1000000000 AND 9999999999),
@@ -205,7 +226,8 @@ ADD CONSTRAINT fk_appointment_tutor_id FOREIGN KEY (tutor_id) REFERENCES tutor(t
 ADD CONSTRAINT fk_appointment_tutee_id FOREIGN KEY (tutee_id) REFERENCES tutee(tutee_id),
 ADD CONSTRAINT fk_appointment_start_time_id FOREIGN KEY (start_time_id) REFERENCES time_increment(time_id),
 ADD CONSTRAINT fk_appointment_end_time_id FOREIGN KEY (end_time_id) REFERENCES time_increment(time_id),
-ADD CONSTRAINT fk_appointment_location_id FOREIGN KEY (location_id) REFERENCES location(location_id);
+ADD CONSTRAINT fk_appointment_location_id FOREIGN KEY (location_id) REFERENCES location(location_id),
+ADD CONSTRAINT fk_appointment_appointment_status_id FOREIGN KEY (appointment_status_id) REFERENCES appointment_status(appointment_status_id);
 
 ALTER TABLE tutee
 ADD CONSTRAINT uq_tutee UNIQUE (uin),
@@ -230,6 +252,10 @@ ADD CONSTRAINT fk_appointment_request_request_type_id FOREIGN KEY (request_type_
 ADD CONSTRAINT fk_appointment_request_appointment_id FOREIGN KEY (appointment_id) REFERENCES appointment(appointment_id),
 ADD CONSTRAINT fk_appointment_request_initiator_type_id FOREIGN KEY (initiator_type_id) REFERENCES initiator_type(initiator_type_id),
 ADD CONSTRAINT fk_appointment_request_request_status_id FOREIGN KEY (request_status_id) REFERENCES request_status(request_status_id);
+
+ALTER TABLE appointment_status
+ADD CONSTRAINT uq_appointment_status UNIQUE (status_name),
+ADD CONSTRAINT chk_appointment_status_lowercase CHECK (BINARY(status_name) = BINARY(LOWER(status_name)));
 
 ALTER TABLE request_type
 ADD CONSTRAINT uq_request_type_name UNIQUE (request_type_name),

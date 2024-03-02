@@ -1,0 +1,14 @@
+version: 0.0
+os: linux
+files: 
+ - source: /
+   destination: /home/ec2-user/teamup-app
+hook:
+  ApplicationStop:
+
+  BeforeInstall:
+
+  ApplicationStart:
+    - location: /home/ec2-user/scripts/startapp.sh
+      timeout: 120
+      runas: ec2-user

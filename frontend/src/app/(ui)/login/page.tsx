@@ -9,12 +9,11 @@ import Link from 'next/link';
 import { GoogleSignInButton } from '@/app/(ui)/login/authButtons';
 
 import {
-    Container, Box, Avatar, Typography, TextField, FormControlLabel, Checkbox, Button, Grid,
+    Container, Box, Avatar, Typography, TextField, FormControlLabel, Checkbox, Button, Grid, Paper
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 export default function SignIn() {
-
   const router = useRouter();
 
   const { data: session } = useSession()
@@ -85,7 +84,7 @@ export default function SignIn() {
 
           <GoogleSignInButton />
         </Box>
-      </Box>
+      </Paper>
     </Container>
   );
   }

@@ -1,22 +1,16 @@
- import ResponsiveAppBar from '../app-bar';
- import { Dashboard, School, CalendarMonth } from '@mui/icons-material';
- import ProfilePicture from '../profile-picture';
 
- const links = [
-   { name: 'Dashboard', href: '/dashboard', icon: Dashboard },
-   { name: 'Peer Tutors', href: '/dashboard/tutors', icon: School },
-   { name: 'My Schedule', href: '/dashboard/schedule', icon: CalendarMonth },
- ];
+import { Box, Container, Paper, Typography } from '@mui/material';
 
- export default function DashboardPage() {
-   return (
-     <>
-       <header>
-         <ResponsiveAppBar position="static" display={{ xs: 'none', md: 'flex' }} links={links} />
-       </header>
-       <main>
-         Test
-       </main>
-     </>
-   );
+export default function DashboardPage() {
+  return (
+    <Box position="relative" sx={{top: 50}}>
+      <Container maxWidth="sm">
+        <Paper elevation={4} sx={{mt:5}}>
+          <Typography variant="h2" align="center">
+            Dashboard
+          </Typography>
+        </Paper>
+      </Container>
+    </Box>
+  );
 }

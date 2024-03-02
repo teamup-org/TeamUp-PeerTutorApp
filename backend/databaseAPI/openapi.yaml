@@ -53,18 +53,6 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-    delete:
-      summary: DELETE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
-
   /appointment_request:
     parameters:
     - $ref: "#/components/parameters/appointmentId"
@@ -109,30 +97,10 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-    delete:
-      summary: DELETE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
   /appointment_type:
     parameters:
     - $ref: "#/components/parameters/appointmentTypeId"
     - $ref: "#/components/parameters/appointmentTypeName"
-    post:
-      summary: CREATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
     get:
       summary: READ
       responses:
@@ -150,43 +118,12 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-    put:
-      summary: UPDATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
-    delete:
-      summary: DELETE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
   /course:
     parameters:
     - $ref: "#/components/parameters/courseDept"
     - $ref: "#/components/parameters/courseId"
     - $ref: "#/components/parameters/courseName"
     - $ref: "#/components/parameters/courseNumber"
-    post:
-      summary: CREATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
     get:
       summary: READ
       responses:
@@ -204,41 +141,10 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-    put:
-      summary: UPDATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
-    delete:
-      summary: DELETE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
   /initiator_type:
     parameters:
     - $ref: "#/components/parameters/initiatorTypeId"
     - $ref: "#/components/parameters/initiatorTypeName"
-    post:
-      summary: CREATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
     get:
       summary: READ
       responses:
@@ -256,28 +162,6 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-    put:
-      summary: UPDATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
-    delete:
-      summary: DELETE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
   /location:
     parameters:
     - $ref: "#/components/parameters/isIndoor"
@@ -285,15 +169,6 @@ paths:
     - $ref: "#/components/parameters/isOnline"
     - $ref: "#/components/parameters/locationId"
     - $ref: "#/components/parameters/locationName"
-    post:
-      summary: CREATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
     get:
       summary: READ
       responses:
@@ -311,41 +186,10 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-    put:
-      summary: UPDATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
-    delete:
-      summary: DELETE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
   /major:
     parameters:
     - $ref: "#/components/parameters/majorId"
     - $ref: "#/components/parameters/majorName"
-    post:
-      summary: CREATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
     get:
       summary: READ
       responses:
@@ -363,41 +207,10 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-    put:
-      summary: UPDATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
-    delete:
-      summary: DELETE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
   /rating:
     parameters:
     - $ref: "#/components/parameters/numberStars"
     - $ref: "#/components/parameters/ratingId"
-    post:
-      summary: CREATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
     get:
       summary: READ
       responses:
@@ -415,41 +228,10 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-    put:
-      summary: UPDATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
-    delete:
-      summary: DELETE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
   /request_status:
     parameters:
     - $ref: "#/components/parameters/requestStatusId"
-    - $ref: "#/components/parameters/statusName"
-    post:
-      summary: CREATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
+    - $ref: "#/components/parameters/requestStatusName"
     get:
       summary: READ
       responses:
@@ -467,41 +249,10 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-    put:
-      summary: UPDATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
-    delete:
-      summary: DELETE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
   /request_type:
     parameters:
     - $ref: "#/components/parameters/requestTypeId"
     - $ref: "#/components/parameters/requestTypeName"
-    post:
-      summary: CREATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
     get:
       summary: READ
       responses:
@@ -519,41 +270,10 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-    put:
-      summary: UPDATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
-    delete:
-      summary: DELETE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
   /seniority:
     parameters:
     - $ref: "#/components/parameters/seniorityId"
     - $ref: "#/components/parameters/seniorityName"
-    post:
-      summary: CREATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
     get:
       summary: READ
       responses:
@@ -571,41 +291,10 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-    put:
-      summary: UPDATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
-    delete:
-      summary: DELETE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
   /time_increment:
     parameters:
     - $ref: "#/components/parameters/timeId"
     - $ref: "#/components/parameters/timeValue"
-    post:
-      summary: CREATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
     get:
       summary: READ
       responses:
@@ -617,28 +306,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/timeIncrementRow"          
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
-    put:
-      summary: UPDATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
-    delete:
-      summary: DELETE
-      responses:
-        "200":
-          description: OK
         "400":
           description: Bad Request
         "403": 
@@ -683,17 +350,6 @@ paths:
           description: Not Found
     put:
       summary: UPDATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
-    delete:
-      summary: DELETE
       responses:
         "200":
           description: OK
@@ -754,17 +410,6 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-    delete:
-      summary: DELETE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
   /tutor_eligibility:
     parameters:
     - $ref: "#/components/parameters/courseGrade"
@@ -792,28 +437,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/tutorEligibilityRow"          
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
-    put:
-      summary: UPDATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
-    delete:
-      summary: DELETE
-      responses:
-        "200":
-          description: OK
         "400":
           description: Bad Request
         "403": 
@@ -851,17 +474,6 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-    put:
-      summary: UPDATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
     delete:
       summary: DELETE
       responses:
@@ -875,7 +487,8 @@ paths:
           description: Not Found
   /tutor_review:
     parameters:
-    - $ref: "#/components/parameters/appointmentId"
+    - $ref: "#/components/parameters/tutorId"
+    - $ref: "#/components/parameters/tuteeId"
     - $ref: "#/components/parameters/ratingId"
     - $ref: "#/components/parameters/reviewId"
     - $ref: "#/components/parameters/reviewText"
@@ -959,17 +572,6 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-    put:
-      summary: UPDATE
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-        "403": 
-          description: Forbidden
-        "404":
-          description: Not Found
     delete:
       summary: DELETE
       responses:
@@ -981,17 +583,57 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
+  /active_status:
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/activeStatusRow"
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found         
+  /appointment_status:
+    get:
+      summary: READ
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/appointmentStatusRow"
+        "400":
+          description: Bad Request
+        "403": 
+          description: Forbidden
+        "404":
+          description: Not Found     
 
 # re-usable components
 components:
   # corresponds to database table attributes
   schemas:
+    activeStatusId:
+      type: number
     appointmentDate:
       type: string
       format: date
     appointmentId:
       type: number
     appointmentRequestId:
+      type: number
+    appointmentStatusId:
       type: number
     appointmentTypeId:
       type: number
@@ -1069,7 +711,13 @@ components:
       type: string
     startTimeId:
       type: number
-    statusName:
+    statusId:
+      type: number
+    activeStatusName:
+      type: string
+    appointmentStatusName:
+      type: string
+    requestStatusName:
       type: string
     timeId:
       type: number
@@ -1085,6 +733,13 @@ components:
     uin:
       type: number
     # corresponds to database row
+    activeStatusRow:
+      type: object
+      properties:
+        activeStatusId:
+          $ref: "#/components/schemas/activeStatusId"
+        activeStatusName:
+          $ref: "#/components/schemas/activeStatusName"
     appointmentRow:
       type: object
       properties:
@@ -1117,6 +772,13 @@ components:
           $ref: "#/components/schemas/requestStatusId"
         requestTypeId:
           $ref: "#/components/schemas/requestTypeId"
+    appointmentStatusRow:
+      type: object
+      properties:
+        appointmentStatusId:
+          $ref: "#/components/schemas/appointmentStatusId"
+        appointmentStatusName:
+          $ref: "#/components/schemas/appointmentStatusName"
     appointmentTypeRow:
       type: object
       properties:
@@ -1175,7 +837,7 @@ components:
         requestStatusId:
           $ref: "#/components/schemas/requestStatusId"
         statusName:
-          $ref: "#/components/schemas/statusName"
+          $ref: "#/components/schemas/requestStatusName"
     requestTypeRow:
       type: object
       properties:
@@ -1535,12 +1197,12 @@ components:
       required: false
       schema:
         $ref: "#/components/schemas/startTimeId"
-    statusName:
+    requestStatusName:
       in: query
       name: statusName
       required: false
       schema:
-        $ref: "#/components/schemas/statusName"
+        $ref: "#/components/schemas/requestStatusName"
     timeId:
       in: query
       name: statusName
