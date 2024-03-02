@@ -2,6 +2,7 @@
 
 // Some placeholder data for tutors that can be displayed on the peer tutors page
 export const tutors: Tutor[] = [
+  /*
   {
     id: 0,
     name: 'Kyle Lang',
@@ -48,5 +49,5 @@ export const tutors: Tutor[] = [
     title: 'CSCE Tutor',
     courses: [{id: 0, course: 'CSCE313'}, {id: 1, course: 'CSCE312'}],
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-  },
+  }, */
 ];

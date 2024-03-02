@@ -10,13 +10,20 @@ type JSONValue =
   | Array<JSONValue>;
 
 type Tutor = {
-  id: number,
-  name: string,
-  pfp_url: string,
-  hourly_rate: number,
-  rating: number,
-  rating_count: number,
-  title: string,
+  activeStatusId: number,
+  bioText: string,
+  email: string,
+  firstName: string,
+  lastName: string,
+  majorId: number,
+  payRate: number,
+  phoneNumber: number,
+  pictureUrl: string,
+  seniorityId: number,
+  tutorId: number,
+  uin: number,
   courses: {id: number, course: string}[],
-  description: string,
+  rating: number
+  ratingCount: number,
+  locations: string,
 };
