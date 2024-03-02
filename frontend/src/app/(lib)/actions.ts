@@ -1,19 +1,36 @@
-/* 'use server';
 // Define server database interactivity functions and general server side functions here.
 
-import React, { useEffect, useState } from 'react';
+// import { authConfig } from '@/app/api/auth/[...nextauth]';
+// import { getServerSession } from 'next-auth';
 
-export default function Home() {
-  const [products, setProducts] = useState([]);
+// export async function getSessionData() {
+//   var session;
 
-  useEffect(() => {
-    fetch('/api/dummydata')
-      .then((res) => res.json())
-      .then((data) => setProducts(data));
+//   try { 
+//     session = await getServerSession(authConfig);
+//   } catch (error) {
+//     throw error;
+//   }
+
+//   return JSON.stringify(session);
+// }
+
+import { useQuery } from "@tanstack/react-query";
+import { authConfig } from '@/app/api/auth/[...nextauth]';
+import { getServerSession } from 'next-auth';
+
+export function test() {
+  const { data, isError, isFetching, isLoading, refetch } = useQuery({
+    // refetch when any of the following query keys change
+    queryKey: ["test"],
+    // asynchronous fetch
+    queryFn: async () => {
+      const response = await getServerSession(authConfig)
+      console.log(response)
+      return response;
+    },
   });
 
-  return (
-    
-  );
+  // console.log("data", data, "isError", isError, "isFetching", isFetching, "isLoading", isLoading, "refetch", refetch)
+  return { data, isError, isFetching, isLoading, refetch };
 }
-*/

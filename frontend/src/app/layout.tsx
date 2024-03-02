@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@mui/material/styles";
-import theme from "./(ui)/theme";
 import CssBaseline from "@mui/material/CssBaseline";
+import theme from "@/app/(ui)/theme";
+import AuthProvider from '@/app/AuthProvider';
 
 // 
 export const metadata: Metadata = {
@@ -20,9 +21,11 @@ export default function RootLayout({
       <head><meta name="viewport" content="initial-scale=1, width=device-width" /></head>
       
       <body>
-        <ThemeProvider theme={ theme }>
-          <CssBaseline />{children}
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider theme={ theme }>
+            <CssBaseline />{children}
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
