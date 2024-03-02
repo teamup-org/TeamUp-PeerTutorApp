@@ -19,7 +19,7 @@ export default async function SignIn() {
 
   const { data: session } = useSession()
   if (session) {
-    router.push('/dashboard')
+    return router.push('/dashboard')
   }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
