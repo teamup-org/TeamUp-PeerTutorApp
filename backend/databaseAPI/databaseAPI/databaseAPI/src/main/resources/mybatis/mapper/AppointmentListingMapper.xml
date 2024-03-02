@@ -3,12 +3,11 @@
 <mapper namespace="xyz.tamutheo.databaseAPI.custom.appointmentListing.AppointmentListingMapper">
     <resultMap id="AppointmentListingResultMap" type="xyz.tamutheo.databaseAPI.custom.appointmentListing.AppointmentListingModel">
         <result property="appointmentId" column="appointment_id" />
-        <result property="appointmentDate" column="appointment_date" />
+        <result property="startDateTimeValue" column="start_date_time_value" />
+        <result property="endDateTimeValue" column="end_date_time_value" />
         <result property="appointmentStatusName" column="appointment_status_name" />
         <result property="appointmentTypeName" column="appointment_type_name" />
-        <result property="endTimeValue" column="end_time_value" />
         <result property="locationName" column="location_name" />
-        <result property="startTimeValue" column="start_time_value" />
         <result property="tuteeEmail" column="tutee_email" />
         <result property="tuteeFirstName" column="tutee_first_name" />
         <result property="tuteeLastName" column="tutee_last_name" />
@@ -20,7 +19,8 @@
     </resultMap>
     <select id="read" resultMap="AppointmentListingResultMap">
         SELECT a.appointment_id,
-            a.appointment_date,
+            TIMESTAMP(a.appointment_date, sti.time_value) AS start_date_time_value,
+            TIMESTAMP(a.appointment_date, eti.time_value) AS end_date_time_value,
             t.appointment_type_name,
             tutor.first_name AS tutor_first_name,
             tutor.last_name AS tutor_last_name,
@@ -30,8 +30,6 @@
             tutee.last_name AS tutee_last_name,
             tutee.phone_number AS tutee_phone_number,
             tutee.email AS tutee_email,
-            sti.time_value AS start_time_value,
-            eti.time_value AS end_time_value,
             l.location_name,
             s.appointment_status_name
         FROM appointment AS a
