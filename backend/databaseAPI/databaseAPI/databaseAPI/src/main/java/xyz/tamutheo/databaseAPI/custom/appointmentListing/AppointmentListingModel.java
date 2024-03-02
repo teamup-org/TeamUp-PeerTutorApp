@@ -5,8 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -14,12 +13,13 @@ import java.time.LocalTime;
 @Builder
 public class AppointmentListingModel {
     Integer appointmentId;
-    LocalDate appointmentDate;
+    LocalDateTime startDateTimeValue;
+    LocalDateTime endDateTimeValue;
+    String startDateTimeString;
+    String endDateTimeString;
     String appointmentStatusName;
     String appointmentTypeName;
-    LocalTime endTimeValue;
     String locationName;
-    LocalTime startTimeValue;
     String tuteeEmail;
     String tuteeFirstName;
     String tuteeLastName;

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TamuMajorService {
-//    public List<TamuMajorModel> read() {
+//    public List<TamuMajorModel> getMajor() {
 public static void main(String[] args) {
         try {
             // connect to target web page
@@ -17,23 +17,23 @@ public static void main(String[] args) {
             String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36";
             Document document = Jsoup.connect(url).userAgent(userAgent).get();
             // retrieve HTML elements
-//            Elements majorDropDown = document.getElementsByClass("seligo-options");
-//            System.out.println(majorDropDown);
-//            List<TamuMajorModel> tamuMajorModelList = new ArrayList<>();
-//            for (Element majorOption: majorDropDown) {
-////                Element majorDescription = majorOption.select(",test").
-////                TamuMajorModel tamuMajorModel = TamuMajorModel.builder()
-////                        .
-//                System.out.println(majorOption);
-//            }
-            Elements elements = document.body().select("*");
-
-            for (Element element : elements) {
-                System.out.println(element.ownText());
+            List<TamuMajorModel> tamuMajorModelList = new ArrayList<>();
+            Elements majors = document.body().select("#crit-subject").select("option[value~=^(?!\\s*$).+]");
+            for (Element major : majors) {
+                String majorText = major.ownText();
+                String majorAbbreviation = majorText.substring(0, 4);
+                String majorName = majorText.substring(majorText.lastIndexOf("-") + 1).trim();
+                TamuMajorModel tamuMajorModel = TamuMajorModel.builder()
+                        .majorAbbreviation(majorAbbreviation)
+                        .majorName(majorName)
+                        .build();
+                tamuMajorModelList.add(tamuMajorModel);
+            }
+            for (TamuMajorModel tamuMajorModel : tamuMajorModelList) {
+                System.out.println(tamuMajorModel);
             }
         } catch (Exception e) {
             System.err.println(e);
         }
     }
-
 }
