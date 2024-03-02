@@ -4,11 +4,16 @@
     <resultMap id="TutorAverageRatingResultMap" type="xyz.tamutheo.databaseAPI.tutorAverageRating.TutorAverageRatingModel">
         <result property="tutorId" column="tutor_id" />
         <result property="averageRating" column="average_rating" />
+        <result property="numberOfRatings" column="number_of_ratings" />
     </resultMap>
     <select id="read" resultMap="TutorAverageRatingResultMap">
-        SELECT
-        *
-        FROM tutor_average_rating
+        SELECT ar.tutor_id, ar.average_rating, nr.number_of_ratings
+        FROM tutor_average_rating AS ar
+        INNER JOIN
+        (SELECT tutor_id, COUNT(*) AS number_of_ratings
+        FROM tutor_review
+        GROUP BY tutor_id) AS nr
+        ON ar.tutor_id = nr.tutor_id;
         <where>
             <if test="tutorId != null">
                 tutor_id = #{tutorId}

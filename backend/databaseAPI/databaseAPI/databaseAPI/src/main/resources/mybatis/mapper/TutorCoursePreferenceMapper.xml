@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceMapper">
+    <resultMap id="TutorCoursePreferenceResultMap" type="xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceModel">
+        <result property="coursePreferenceId" column="course_preference_id" />
+        <result property="eligibilityId" column="eligibility_id" />
+        <result property="tutorId" column="tutor_id" />
+    </resultMap>
+    <select id="read" resultMap="TutorCoursePreferenceResultMap">
+        SELECT
+        *
+        FROM tutor_course_preference
+        <where>
+            <if test="tutorId != null">
+                tutor_id = #{tutorId}
+            </if>
+        </where>
+    </select>
+    <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceModel">
+        INSERT into tutor_course_preference
+        (eligibility_id, tutor_id)
+        VALUES
+        (#{eligibilityId}, #{tutorId})
+    </insert>
+    <delete id="delete" parameterType="xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceModel">
+        DELETE FROM tutor_course_preference
+        <where>
+            <if test="tutorId != null">
+                tutor_id = #{tutorId}
+            </if>
+            <if test="eligibilityId != null">
+                AND eligibility_id = #{eligibilityId}
+            </if>
+        </where>
+    </delete>
+</mapper>
