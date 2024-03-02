@@ -1,6 +1,8 @@
 'use client';
 
 import * as React from 'react';
+import { useSession } from "next-auth/react"
+import { redirect, useRouter } from "next/navigation"
 
 import Link from 'next/link';
 
@@ -12,6 +14,14 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 export default async function SignIn() {
+
+  const router = useRouter();
+
+  const { data: session } = useSession()
+  if (session) {
+    router.push('/dashboard')
+  }
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
