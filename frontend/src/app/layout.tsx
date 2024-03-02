@@ -3,7 +3,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './(ui)/theme';
 import CssBaseline from '@mui/material/CssBaseline';
 import AuthProvider from '@/app/AuthProvider';
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import QueryProvider from "@/app/QueryProvider";
 // 
 export const metadata: Metadata = {
   title: "Theo Peer Tutoring",
@@ -21,11 +22,13 @@ export default function RootLayout({
       <head><meta name="viewport" content="initial-scale=1, width=device-width" /></head>
       
       <body>
-        <AuthProvider>
-          <ThemeProvider theme={ theme }>
-            <CssBaseline />{children}
-          </ThemeProvider>
-        </AuthProvider>
+        <QueryProvider>
+          <AuthProvider>
+            <ThemeProvider theme={ theme }>
+              <CssBaseline />{children}
+            </ThemeProvider>
+          </AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );
