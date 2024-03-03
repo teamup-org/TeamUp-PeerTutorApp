@@ -9,6 +9,7 @@
         <result property="lastName" column="last_name" />
         <result property="listingTitle" column="listing_title" />
         <result property="majorName" column="major_name" />
+        <result property="majorAbbreviation" column="major_abbreviation" />
         <result property="numberOfRatings" column="number_of_ratings" />
         <result property="payRate" column="pay_rate" />
         <result property="phoneNumber" column="phone_number" />
@@ -19,16 +20,16 @@
         <result property="uin" column="uin" />
     </resultMap>
     <resultMap id="TutorCoursePreferenceResultMap" type="xyz.tamutheo.databaseAPI.custom.tutorListing.nestedModels.TutorCoursePreferenceModel">
-        <result property="courseDept" column="course_dept" />
+        <result property="majorAbbreviation" column="major_abbreviation" />
         <result property="courseGrade" column="course_grade" />
-        <result property="courseName" column="course_name" />
+        <result property="courseTitle" column="course_title" />
         <result property="courseNumber" column="course_number" />
     </resultMap>
     <resultMap id="TutorLocationPreferenceResultMap" type="xyz.tamutheo.databaseAPI.custom.tutorListing.nestedModels.TutorLocationPreferenceModel">
         <result property="locationName" column="location_name" />
     </resultMap>
     <select id="read" resultMap="TutorListingResultMap">
-        SELECT t.tutor_id, t.uin, t.first_name, t.last_name, t.pay_rate, t.bio_text, t.listing_title, t.picture_url, t.phone_number, t.email, m.major_name, s.seniority_name, a.active_status_name, ar.average_rating, nr.number_of_ratings
+        SELECT t.tutor_id, t.uin, t.first_name, t.last_name, t.pay_rate, t.bio_text, t.listing_title, t.picture_url, t.phone_number, t.email, m.major_name, m.major_abbreviation, s.seniority_name, a.active_status_name, ar.average_rating, nr.number_of_ratings
         FROM tutor as t
         INNER JOIN major AS m on t.major_id = m.major_id
         INNER JOIN seniority AS s on t.seniority_id = s.seniority_id
@@ -51,7 +52,7 @@
         WHERE p.tutor_id = #{tutorId};
     </select>
     <select id="getTutorCoursePreferences" parameterType="map" resultMap="TutorCoursePreferenceResultMap">
-        SELECT e.course_grade, c.course_name, c.course_dept, c.course_number
+        SELECT e.course_grade, c.course_title, c.major_abbreviation, c.course_number
         FROM tutor_course_preference AS p
         INNER JOIN tutor_eligible_course AS e ON p.eligibility_id = e.eligibility_id
         INNER JOIN course AS c ON e.course_id = c.course_id
