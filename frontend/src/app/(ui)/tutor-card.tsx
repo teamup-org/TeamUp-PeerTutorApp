@@ -27,7 +27,7 @@ export default function TutorCard(props: any) {
         <Stack direction="column" alignItems="center" spacing={1} minWidth="0%" width="20%">
           <Typography variant="h6"> <center> {props.tutor?.firstName + " " + props.tutor?.lastName} </center> </Typography>
 
-          <Avatar sx={{ width: 100, height: 100, }}/>
+          <Avatar sx={{ width: 100, height: 100,}} src = {props.tutor?.pictureUrl}/>
 
           <Typography variant="h6" width="100%" sx={{ fontWeight: 'bold' }}>
             <center> ${props.tutor?.payRate} / hr </center>
