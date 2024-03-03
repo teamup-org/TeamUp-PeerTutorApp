@@ -14,7 +14,7 @@
         <result property="tuteePhoneNumber" column="tutee_phone_number" />
         <result property="tutorEmail" column="tutor_email" />
         <result property="tutorFirstName" column="tutor_first_name" />
-        <result property="tutorLastname" column="tutor_last_name" />
+        <result property="tutorLastName" column="tutor_last_name" />
         <result property="tutorPhoneNumber" column="tutor_phone_number" />
     </resultMap>
     <select id="read" resultMap="AppointmentListingResultMap">

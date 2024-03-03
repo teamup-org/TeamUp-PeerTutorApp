@@ -23,6 +23,7 @@ public class TutorListingModel {
     List<TutorCoursePreferenceModel> coursePreferences;
     List<TutorLocationPreferenceModel> locationPreferences;
     String majorName;
+    String majorAbbreviation;
     Integer numberOfRatings;
     Double payRate;
     Long phoneNumber;
