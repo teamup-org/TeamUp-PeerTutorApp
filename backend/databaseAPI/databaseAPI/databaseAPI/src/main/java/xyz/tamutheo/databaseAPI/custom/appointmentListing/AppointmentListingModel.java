@@ -26,6 +26,6 @@ public class AppointmentListingModel {
     Long tuteePhoneNumber;
     String tutorEmail;
     String tutorFirstName;
-    String tutorLastname;
+    String tutorLastName;
     Long tutorPhoneNumber;
 }

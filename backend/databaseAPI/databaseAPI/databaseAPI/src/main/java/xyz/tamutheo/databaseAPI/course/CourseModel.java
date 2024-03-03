@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CourseModel {
-    String courseDept;
+    String majorAbbreviation;
     Integer courseId;
-    String courseName;
+    String courseTitle;
     Integer courseNumber;
 }

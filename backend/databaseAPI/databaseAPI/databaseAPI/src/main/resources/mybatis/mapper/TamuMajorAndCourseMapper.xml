@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xyz.tamutheo.databaseAPI.util.tamuMajorAndCourse.TamuMajorAndCourseMapper">
+    <insert id="createMajor" parameterType="map">
+        INSERT IGNORE INTO major
+        SET major_abbreviation = #{majorAbbreviation},
+        major_name = #{majorName};
+    </insert>
+    <insert id="createCourse" parameterType="map">
+        INSERT IGNORE INTO course
+        SET major_abbreviation = #{majorAbbreviation},
+        course_number = #{courseNumber},
+        course_title = #{courseTitle};
+    </insert>
+</mapper>

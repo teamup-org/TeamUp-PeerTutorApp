@@ -3,8 +3,8 @@
 <mapper namespace="xyz.tamutheo.databaseAPI.course.CourseMapper">
     <resultMap id="CourseResultMap" type="xyz.tamutheo.databaseAPI.course.CourseModel">
         <result property="courseId" column="course_id" />
-        <result property="courseName" column="course_name" />
-        <result property="courseDept" column="course_dept" />
+        <result property="courseTitle" column="course_title" />
+        <result property="majorAbbreviation" column="major_abbreviation" />
         <result property="courseNumber" column="course_number" />
     </resultMap>
     <select id="read" resultMap="CourseResultMap">
