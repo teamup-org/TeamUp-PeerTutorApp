@@ -1,6 +1,6 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 
 import * as React from 'react';
 import { Box, Menu, MenuItem, Typography, Tooltip, IconButton, Avatar } from '@mui/material';
@@ -16,6 +16,11 @@ export default function UserMenu() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogOut = async () => {
+    await signOut(); // Call the signOut function provided by useSession
+    setAnchorElUser(null); // Close the menu after signing out
   };
 
   const { data: session, status } = useSession();
@@ -44,10 +49,12 @@ export default function UserMenu() {
       onClose={handleCloseUserMenu}
     >
       {settings.map((setting) => (
-        <MenuItem key={setting} onClick={handleCloseUserMenu}>
-          <Typography textAlign="center">{setting}</Typography>
-        </MenuItem>
-      ))}
+          <MenuItem key={setting} onClick={setting === 'Log Out' ? handleLogOut : handleCloseUserMenu}>
+            <Typography variant="inherit" textAlign="center">
+              {setting}
+            </Typography>
+          </MenuItem>
+        ))}
     </Menu>
   </Box>
   );
