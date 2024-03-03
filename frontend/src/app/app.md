@@ -1,1 +1,0 @@
-/app: Contains all the routes, components, and logic for your application, this is where you'll be mostly working from.
