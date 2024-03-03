@@ -1,10 +1,10 @@
-DROP TABLE `capstone`.`active_status`, `capstone`.`appointment`, `capstone`.`appointment_request`, `capstone`.`appointment_status`, `capstone`.`appointment_type`, `capstone`.`course`, `capstone`.`initiator_type`, `capstone`.`location`, `capstone`.`major`, `capstone`.`rating`, `capstone`.`request_status`, `capstone`.`request_type`, `capstone`.`seniority`, `capstone`.`time_increment`, `capstone`.`tutee`, `capstone`.`tutor`, `capstone`.`tutor_eligibility`, `capstone`.`tutor_location_preference`, `capstone`.`tutor_review`, `capstone`.`tutor_time_preference`;
+DROP TABLE `capstone`.`active_status`, `capstone`.`appointment`, `capstone`.`appointment_request`, `capstone`.`appointment_status`, `capstone`.`appointment_type`, `capstone`.`course`, `capstone`.`initiator_type`, `capstone`.`location`, `capstone`.`major`, `capstone`.`rating`, `capstone`.`request_status`, `capstone`.`request_type`, `capstone`.`seniority`, `capstone`.`time_increment`, `capstone`.`tutee`, `capstone`.`tutor`, `capstone`.`tutor_course_preference`, `capstone`.`tutor_eligible_course`, `capstone`.`tutor_location_preference`, `capstone`.`tutor_review`, `capstone`.`tutor_time_preference`;
 DROP VIEW `capstone`.`tutor_average_rating`;
 
 CREATE TABLE course (
 	course_id INTEGER NOT NULL AUTO_INCREMENT,
-	course_name VARCHAR(100) NOT NULL,
-	course_dept CHAR(4) NOT NULL,
+	course_title VARCHAR(100) NOT NULL,
+	major_abbreviation CHAR(4) NOT NUll,
 	course_number INTEGER NOT NULL,
 	PRIMARY KEY(course_id)
 );
@@ -12,9 +12,6 @@ CREATE TABLE course (
 CREATE TABLE location (
 	location_id INTEGER NOT NULL AUTO_INCREMENT,
 	location_name VARCHAR(100) NOT NULL,
-	is_indoor BOOLEAN NOT NULL,
-	is_oncampus BOOLEAN NOT NULL,
-	is_online BOOLEAN NOT NULL,
 	PRIMARY KEY(location_id)
 );
 
@@ -32,13 +29,19 @@ CREATE TABLE tutor_time_preference (
 	PRIMARY KEY(tutor_time_preference_id)
 );
 
-CREATE TABLE tutor_eligibility (
+CREATE TABLE tutor_eligible_course (
 	eligibility_id INTEGER NOT NULL AUTO_INCREMENT,
 	tutor_id INTEGER NOT NULL,
 	course_id INTEGER NOT NULL,
 	course_grade CHAR(1) NOT NULL,
-	is_eligible BOOLEAN NOT NULL,
 	PRIMARY KEY(eligibility_id)
+);
+
+CREATE TABLE tutor_course_preference (
+	course_preference_id INTEGER NOT NULL AUTO_INCREMENT,
+	tutor_id INTEGER NOT NULL,
+	eligibility_id INTEGER NOT NULL,
+	PRIMARY KEY(course_preference_id)
 );
 
 CREATE TABLE tutor_location_preference (
@@ -59,7 +62,7 @@ CREATE TABLE tutor_review (
 
 CREATE TABLE active_status (
 	active_status_id INTEGER NOT NULL AUTO_INCREMENT,
-	status_name VARCHAR(20) NOT NULL,
+	active_status_name VARCHAR(20) NOT NULL,
 	PRIMARY KEY (active_status_id)
 );
 
@@ -72,10 +75,11 @@ CREATE TABLE tutor (
 	seniority_id INTEGER NOT NULL,
 	pay_rate DECIMAL (6, 2) NOT NULL,
 	bio_text VARCHAR(1000),
+    listing_title VARCHAR(100),
 	picture_url VARCHAR(2000),
 	phone_number BIGINT NOT NULL,
 	email VARCHAR(30) NOT NULL,
-    active_status_id INTEGER NOT NULL,
+    active_status_id INTEGER,
 	PRIMARY KEY(tutor_id)
 );
 
@@ -119,6 +123,7 @@ CREATE TABLE tutee (
 CREATE TABLE major (
 	major_id INTEGER NOT NULL AUTO_INCREMENT,
 	major_name VARCHAR(100) NOT NULL,
+    major_abbreviation CHAR(4) NOT NULL,
 	PRIMARY KEY(major_id)
 );
 
@@ -139,7 +144,7 @@ CREATE TABLE appointment_request (
 
 CREATE TABLE appointment_status (
 	appointment_status_id INTEGER NOT NULL AUTO_INCREMENT,
-	status_name VARCHAR(25) NOT NULL,
+	appointment_status_name VARCHAR(25) NOT NULL,
     PRIMARY KEY(appointment_status_id)
 );
 
@@ -151,7 +156,7 @@ CREATE TABLE request_type (
 
 CREATE TABLE request_status (
 	request_status_id INTEGER NOT NULL AUTO_INCREMENT,
-	status_name VARCHAR(50) NOT NULL,
+	request_status_name VARCHAR(50) NOT NULL,
 	PRIMARY KEY(request_status_id)
 );
 
@@ -168,9 +173,15 @@ INNER JOIN tutor_review AS tr ON t.tutor_id = tr.tutor_id
 INNER JOIN rating AS r ON tr.rating_id = r.rating_id
 GROUP BY tutor_id;
 
+ALTER TABLE major
+ADD CONSTRAINT uq_major_name UNIQUE (major_name),
+ADD CONSTRAINT uq_major_abbreviation UNIQUE (major_abbreviation),
+ADD CONSTRAINT chk_major_lowercase CHECK (BINARY(major_name) = BINARY(LOWER(major_name)));
+
 ALTER TABLE course
-ADD CONSTRAINT uq_course UNIQUE (course_name, course_dept, course_number),
-ADD CONSTRAINT chk_course_lowercase CHECK ((BINARY(course_name) = BINARY(LOWER(course_name))) AND (BINARY(course_dept) = BINARY(LOWER(course_dept)))),
+ADD CONSTRAINT uq_course UNIQUE (course_title, major_abbreviation, course_number),
+ADD CONSTRAINT fk_course_major_abbreviation FOREIGN KEY (major_abbreviation) REFERENCES major(major_abbreviation) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT chk_course_lowercase CHECK ((BINARY(course_title) = BINARY(LOWER(course_title)))),
 ADD CONSTRAINT chk_course_number CHECK (course_number BETWEEN 100 AND 800);
 
 ALTER TABLE location
@@ -183,37 +194,41 @@ ADD CONSTRAINT chk_rating CHECK (number_stars BETWEEN 1 AND 5);
 
 ALTER TABLE tutor_time_preference
 ADD CONSTRAINT uq_tutor_time_preference UNIQUE (tutor_id, start_time_id, end_time_id),
-ADD CONSTRAINT fk_tutor_time_preference_tutor_id FOREIGN KEY (tutor_id) REFERENCES tutor(tutor_id),
-ADD CONSTRAINT fk_tutor_time_preference_start_time_id FOREIGN KEY (start_time_id) REFERENCES time_increment(time_id),
-ADD CONSTRAINT fk_tutor_time_preference_end_time_id FOREIGN KEY (end_time_id) REFERENCES time_increment(time_id);
+ADD CONSTRAINT fk_tutor_time_preference_tutor_id FOREIGN KEY (tutor_id) REFERENCES tutor(tutor_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_tutor_time_preference_start_time_id FOREIGN KEY (start_time_id) REFERENCES time_increment(time_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_tutor_time_preference_end_time_id FOREIGN KEY (end_time_id) REFERENCES time_increment(time_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
-ALTER TABLE tutor_eligibility
-ADD CONSTRAINT uq_tutor_eligibility UNIQUE (tutor_id, course_id, course_grade, is_eligible),
-ADD CONSTRAINT fk_tutor_eligibility_tutor_id FOREIGN KEY (tutor_id) REFERENCES tutor(tutor_id),
-ADD CONSTRAINT fk_tutor_eligibility_course_id FOREIGN KEY (course_id) REFERENCES course(course_id),
-ADD CONSTRAINT chk_tutor_eligibility_course_grade CHECK (course_grade in ('a', 'b', 'c', 'd', 'f', 'w', 'q', 's'));
+ALTER TABLE tutor_eligible_course
+ADD CONSTRAINT uq_tutor_eligible_course UNIQUE (tutor_id, course_id),
+ADD CONSTRAINT fk_tutor_eligible_course_tutor_id FOREIGN KEY (tutor_id) REFERENCES tutor(tutor_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_tutor_eligible_course_eligibility_id FOREIGN KEY (course_id) REFERENCES course(course_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT chk_tutor_eligible_course_course_grade CHECK (course_grade in ('a', 'b', 'c', 'd', 'f', 'w', 'q', 's'));
+
+ALTER TABLE tutor_course_preference
+ADD CONSTRAINT uq_tutor_course_preference UNIQUE (tutor_id, eligibility_id),
+ADD CONSTRAINT fk_tutor_course_preference_tutor_id FOREIGN KEY (tutor_id) REFERENCES tutor(tutor_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_tutor_course_preference_eligibility_id FOREIGN KEY (eligibility_id) REFERENCES tutor_eligible_course(eligibility_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 ALTER TABLE tutor_location_preference
 ADD CONSTRAINT uq_tutor_location_preference UNIQUE (tutor_id, location_id),
-ADD CONSTRAINT fk_tutor_location_preference_tutor_id FOREIGN KEY (tutor_id) REFERENCES tutor(tutor_id),
-ADD CONSTRAINT fk_tutor_location_preference_location_id FOREIGN KEY (location_id) REFERENCES location(location_id);
+ADD CONSTRAINT fk_tutor_location_preference_tutor_id FOREIGN KEY (tutor_id) REFERENCES tutor(tutor_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_tutor_location_preference_location_id FOREIGN KEY (location_id) REFERENCES location(location_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 ALTER TABLE tutor_review
 ADD CONSTRAINT uq_tutor_review UNIQUE (tutor_id, tutee_id),
-ADD CONSTRAINT fk_tutor_review_tutor_id FOREIGN KEY (tutor_id) REFERENCES tutor(tutor_id),
-ADD CONSTRAINT fk_tutor_review_tutee_id FOREIGN KEY (tutee_id) REFERENCES tutee(tutee_id),
-ADD CONSTRAINT fk_tutor_review_rating_id FOREIGN KEY (rating_id) REFERENCES rating(rating_id);
+ADD CONSTRAINT fk_tutor_review_tutor_id FOREIGN KEY (tutor_id) REFERENCES tutor(tutor_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_tutor_review_tutee_id FOREIGN KEY (tutee_id) REFERENCES tutee(tutee_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_tutor_review_rating_id FOREIGN KEY (rating_id) REFERENCES rating(rating_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 ALTER TABLE active_status
-ADD CONSTRAINT uq_active_status UNIQUE (status_name),
-ADD CONSTRAINT chk_active_status_lowercase CHECK (BINARY(status_name) = BINARY(LOWER(status_name)));
-
+ADD CONSTRAINT uq_active_status UNIQUE (active_status_name),
+ADD CONSTRAINT chk_active_status_lowercase CHECK (BINARY(active_status_name) = BINARY(LOWER(active_status_name)));
 
 ALTER TABLE tutor
 ADD CONSTRAINT uq_tutor UNIQUE (uin),
-ADD CONSTRAINT fk_tutor_major_id FOREIGN KEY (major_id) REFERENCES major(major_id),
-ADD CONSTRAINT fk_tutor_seniority_id FOREIGN KEY (seniority_id) REFERENCES seniority(seniority_id),
-ADD CONSTRAINT fk_tutor_seniority_active_status FOREIGN KEY (active_status_id) REFERENCES active_status(active_status_id),
+ADD CONSTRAINT fk_tutor_major_id FOREIGN KEY (major_id) REFERENCES major(major_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_tutor_seniority_id FOREIGN KEY (seniority_id) REFERENCES seniority(seniority_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_tutor_seniority_active_status FOREIGN KEY (active_status_id) REFERENCES active_status(active_status_id) ON UPDATE CASCADE ON DELETE CASCADE,
 ADD CONSTRAINT chk_tutor_uin CHECK (uin BETWEEN 100000000 AND 999999999),
 ADD CONSTRAINT chk_tutor_lowercase CHECK ((BINARY(first_name) = BINARY(LOWER(first_name))) AND (BINARY(last_name) = BINARY(LOWER(last_name))) AND (BINARY(email) = BINARY(LOWER(email)))),
 ADD CONSTRAINT chk_tutor_phone_number CHECK (phone_number BETWEEN 1000000000 AND 9999999999),
@@ -228,26 +243,22 @@ ADD CONSTRAINT uq_time_increment UNIQUE (time_value);
 
 ALTER TABLE appointment
 ADD CONSTRAINT uq_appointment UNIQUE (appointment_type_id, tutor_id, tutee_id, appointment_date, start_time_id, end_time_id, location_id),
-ADD CONSTRAINT fk_appointment_appointment_type_id FOREIGN KEY (appointment_type_id) REFERENCES appointment_type(appointment_type_id),
-ADD CONSTRAINT fk_appointment_tutor_id FOREIGN KEY (tutor_id) REFERENCES tutor(tutor_id),
-ADD CONSTRAINT fk_appointment_tutee_id FOREIGN KEY (tutee_id) REFERENCES tutee(tutee_id),
-ADD CONSTRAINT fk_appointment_start_time_id FOREIGN KEY (start_time_id) REFERENCES time_increment(time_id),
-ADD CONSTRAINT fk_appointment_end_time_id FOREIGN KEY (end_time_id) REFERENCES time_increment(time_id),
-ADD CONSTRAINT fk_appointment_location_id FOREIGN KEY (location_id) REFERENCES location(location_id),
-ADD CONSTRAINT fk_appointment_appointment_status_id FOREIGN KEY (appointment_status_id) REFERENCES appointment_status(appointment_status_id);
+ADD CONSTRAINT fk_appointment_appointment_type_id FOREIGN KEY (appointment_type_id) REFERENCES appointment_type(appointment_type_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_appointment_tutor_id FOREIGN KEY (tutor_id) REFERENCES tutor(tutor_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_appointment_tutee_id FOREIGN KEY (tutee_id) REFERENCES tutee(tutee_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_appointment_start_time_id FOREIGN KEY (start_time_id) REFERENCES time_increment(time_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_appointment_end_time_id FOREIGN KEY (end_time_id) REFERENCES time_increment(time_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_appointment_location_id FOREIGN KEY (location_id) REFERENCES location(location_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_appointment_appointment_status_id FOREIGN KEY (appointment_status_id) REFERENCES appointment_status(appointment_status_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 ALTER TABLE tutee
 ADD CONSTRAINT uq_tutee UNIQUE (uin),
-ADD CONSTRAINT fk_tutee_major_id FOREIGN KEY (major_id) REFERENCES major(major_id),
-ADD CONSTRAINT fk_tutee_seniority_id FOREIGN KEY (seniority_id) REFERENCES seniority(seniority_id),
+ADD CONSTRAINT fk_tutee_major_id FOREIGN KEY (major_id) REFERENCES major(major_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_tutee_seniority_id FOREIGN KEY (seniority_id) REFERENCES seniority(seniority_id) ON UPDATE CASCADE ON DELETE CASCADE,
 ADD CONSTRAINT chk_tutee_uin CHECK (uin BETWEEN 100000000 AND 999999999),
 ADD CONSTRAINT chk_tutee_lowercase CHECK ((BINARY(first_name) = BINARY(LOWER(first_name))) AND (BINARY(last_name) = BINARY(LOWER(last_name))) AND (BINARY(email) = BINARY(LOWER(email)))),
 ADD CONSTRAINT chk_tutee_phone_number CHECK (phone_number BETWEEN 1000000000 AND 9999999999),
 ADD CONSTRAINT chk_tutee_email CHECK (email LIKE '_%@_%._%');
-
-ALTER TABLE major
-ADD CONSTRAINT uq_major_name UNIQUE (major_name),
-ADD CONSTRAINT chk_major_lowercase CHECK (BINARY(major_name) = BINARY(LOWER(major_name)));
 
 ALTER TABLE appointment_type
 ADD CONSTRAINT uq_appointment_type_name UNIQUE (appointment_type_name),
@@ -255,22 +266,22 @@ ADD CONSTRAINT chk_appointment_type_lowercase CHECK (BINARY(appointment_type_nam
 
 ALTER TABLE appointment_request
 ADD CONSTRAINT uq_appointment_request UNIQUE (request_type_id, appointment_id, initiator_type_id),
-ADD CONSTRAINT fk_appointment_request_request_type_id FOREIGN KEY (request_type_id) REFERENCES request_type(request_type_id),
-ADD CONSTRAINT fk_appointment_request_appointment_id FOREIGN KEY (appointment_id) REFERENCES appointment(appointment_id),
-ADD CONSTRAINT fk_appointment_request_initiator_type_id FOREIGN KEY (initiator_type_id) REFERENCES initiator_type(initiator_type_id),
-ADD CONSTRAINT fk_appointment_request_request_status_id FOREIGN KEY (request_status_id) REFERENCES request_status(request_status_id);
+ADD CONSTRAINT fk_appointment_request_request_type_id FOREIGN KEY (request_type_id) REFERENCES request_type(request_type_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_appointment_request_appointment_id FOREIGN KEY (appointment_id) REFERENCES appointment(appointment_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_appointment_request_initiator_type_id FOREIGN KEY (initiator_type_id) REFERENCES initiator_type(initiator_type_id) ON UPDATE CASCADE ON DELETE CASCADE,
+ADD CONSTRAINT fk_appointment_request_request_status_id FOREIGN KEY (request_status_id) REFERENCES request_status(request_status_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 ALTER TABLE appointment_status
-ADD CONSTRAINT uq_appointment_status UNIQUE (status_name),
-ADD CONSTRAINT chk_appointment_status_lowercase CHECK (BINARY(status_name) = BINARY(LOWER(status_name)));
+ADD CONSTRAINT uq_appointment_status UNIQUE (appointment_status_name),
+ADD CONSTRAINT chk_appointment_status_lowercase CHECK (BINARY(appointment_status_name) = BINARY(LOWER(appointment_status_name)));
 
 ALTER TABLE request_type
 ADD CONSTRAINT uq_request_type_name UNIQUE (request_type_name),
 ADD CONSTRAINT chk_request_type_lowercase CHECK (BINARY(request_type_name) = BINARY(LOWER(request_type_name)));
 
 ALTER TABLE request_status
-ADD CONSTRAINT uq_request_status UNIQUE (status_name),
-ADD CONSTRAINT chk_request_status_lowercase CHECK (BINARY(status_name) = BINARY(LOWER(status_name)));
+ADD CONSTRAINT uq_request_status UNIQUE (request_status_name),
+ADD CONSTRAINT chk_request_status_lowercase CHECK (BINARY(request_status_name) = BINARY(LOWER(request_status_name)));
 
 ALTER TABLE initiator_type
 ADD CONSTRAINT uq_initiator_type UNIQUE (initiator_type_name),
