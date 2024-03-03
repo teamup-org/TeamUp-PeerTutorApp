@@ -22,8 +22,9 @@ type Tutor = {
   seniorityId: number,
   tutorId: number,
   uin: number,
-  courses: {id: number, course: string}[],
-  rating: number
-  ratingCount: number,
+  coursePreferences: {id: number, courseDept: string, courseGrade: string, courseName: string, courseNumber: number}[],
+  averageRating: number
+  numberOfRatings: number,
   locations: string,
+  listingTitle: string,
 };

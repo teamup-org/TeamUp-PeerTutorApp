@@ -2,7 +2,7 @@
 
 // author: Brandon Nguyen
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
 const development = "http://localhost:8080";
@@ -32,4 +32,15 @@ export function tableFetch(tableName: string) {
 
   // console.log("before outer return: " + data);
   return { data, isError, isFetching, isLoading, refetch };
+}
+
+export function tableUpdate(tableName: string, field: string, value: any) {
+  const { data, isError } = useMutation({
+    mutationFn: async () => {
+      const response = await axios.put("/" + tableName, (field + '=' + value));
+      return response;
+    },
+  });
+
+  return { data, isError };
 }
