@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MajorModel {
     Integer majorId;
+    String majorAbbreviation;
     String majorName;
 }

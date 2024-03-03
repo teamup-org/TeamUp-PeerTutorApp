@@ -3,6 +3,7 @@
 <mapper namespace="xyz.tamutheo.databaseAPI.major.MajorMapper">
     <resultMap id="MajorResultMap" type="xyz.tamutheo.databaseAPI.major.MajorModel">
         <result property="majorId" column="major_id" />
+        <result property="majorAbbreviation" column="major_abbreviation" />
         <result property="majorName" column="major_name" />
     </resultMap>
     <select id="read" resultMap="MajorResultMap">
