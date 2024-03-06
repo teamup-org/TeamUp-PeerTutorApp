@@ -9,49 +9,52 @@ import {
 } from '@mui/material';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
-import { TableFetch } from '@/app/_lib/data';
+import { CreateTutor } from '@/app/_lib/data';
 import { AnyARecord } from 'dns';
+
+import { useSession, signOut } from 'next-auth/react';
 
 export default function SignUp() {
 
-  const {data, isLoading, isError} = TableFetch("course");
-  const [courseOption, setCourseOption] = useState<{title: string, major: string, number: number} | null>(null);
-
-  const getCourses = () => {
-    return data?.map((course: any) => (
-      { 
-        title: course.courseTitle,
-        major: course.majorAbbreviation,
-        number: course.courseNumber,
-      }
-    ));
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
-
+  // Seniority Selection -------------------------------------------------
+  const seniorityOptions = [
+    { value: '1', label: 'Freshman' },
+    { value: '2', label: 'Sophomore' },
+    { value: '3', label: 'Junior' },
+    { value: '4', label: 'Senior' },
+    { value: '5', label: 'Graduate Student' }
+  ];
+  
   const [seniority, setSeniority] = React.useState('');
-
+  
   const changeSeniority = (event: SelectChangeEvent) => {
     setSeniority(event.target.value as string);
   };
 
-  const changeCourse = (event: SelectChangeEvent) => {
-    const selectedIndex = event.target.value as string;
-    if (selectedIndex) {
-      const index = parseInt(selectedIndex);
-      setCourseOption(data[index]);
-    } else {
-      setCourseOption(null);
-    }
-  };
+  // Google Account Specific Info ----------------------------------------
+
+  const { data: session, status } = useSession();
+
+  // Submission of the peer tutor form -----------------------------------
   
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const registrationData = {
+      firstName: formData.get('firstName') as string,
+      lastName: formData.get('lastName') as string,
+      uin: formData.get('uin') as string,
+      phoneNumber: formData.get('phoneNumber') as string,
+      title: formData.get('title') as string,
+      seniority: seniority,
+      payRate: formData.get('payrate') as string,
+      bioText: "HELLO",
+      email: session?.user?.email as string,
+      pfp: session?.user?.image as string
+    };
+
+    CreateTutor(registrationData);
+  };
 
   return (
     <Container component="main" maxWidth="sm">
@@ -106,16 +109,7 @@ export default function SignUp() {
                   autoComplete="UIN"
                 />
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
-              </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   required
@@ -124,6 +118,17 @@ export default function SignUp() {
                   label="Phone Number"
                   name="phoneNumber"
                   autoComplete="phoneNumber"
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="title"
+                  label="Title (Ex. Computer Science Tutor)"
+                  name="title"
+                  autoComplete="title"
                 />
               </Grid>
 
@@ -136,29 +141,29 @@ export default function SignUp() {
                 label="seniority"
                 onChange={changeSeniority}
               >
-                <MenuItem value={1}>Freshman</MenuItem>
-                <MenuItem value={2}>Sophomore</MenuItem>
-                <MenuItem value={3}>Junior</MenuItem>
-                <MenuItem value={4}>Senior</MenuItem>
-                <MenuItem value={5}>Graduate Student</MenuItem>
+                {seniorityOptions.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
               </Select>
               </Grid>
 
               <Grid item xs={12} sm={6}>
-              <InputLabel htmlFor="payrate">Pay Rate/Hr</InputLabel>
-              <OutlinedInput
-                id="payrate"
-                startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                label="payrate"
-              />
+                <InputLabel htmlFor="payrate">Pay Rate/Hr</InputLabel>
+                <OutlinedInput
+                  name="payrate"
+                  id="payrate"
+                  startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                  label="payrate"
+                />
               </Grid>
+
 
             </Grid>
             <Button
               type="submit"
               fullWidth
-              component={Link}
-              href="/dashboard"
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >

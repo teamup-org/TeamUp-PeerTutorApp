@@ -44,3 +44,26 @@ export function TableUpdate(tableName: string, field: string, value: any) {
 
   return { data, isError };
 }
+
+export function CreateTutor(fields: any) {
+  const { data, isError } = useMutation({
+    mutationFn: async () => {
+      const response = await axios.post("/" + "tutor", {
+        uin: fields.uin,
+        first_name: fields.firstName,
+        last_name: fields.lastName,
+        major_id: 1,
+        seniority_id: fields.seniority,
+        pay_rate: 40.0,
+        bio_text: fields.bioText,
+        picture_url: fields.pfp,
+        phone_number: fields.phoneNumber,
+        email: fields.email,
+        active_status_id: 1
+      }); 
+      return response;
+    },
+  });
+
+  return { data, isError };
+}
