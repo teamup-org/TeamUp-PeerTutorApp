@@ -67,3 +67,25 @@ export function CreateTutor(fields: any) {
 
   return { data, isError };
 }
+
+export const useTutorMutation = () => {
+  return useMutation({
+    mutationFn: async (fields: any) => { const response = axios.post('/tutor', { 
+        //uin: fields.uin,
+        uin: 230004490,
+        first_name: fields.firstName,
+        last_name: fields.lastName,
+        major_id: 1,
+        seniority_id: fields.seniority,
+        pay_rate: 40.0,
+        bio_text: fields.bioText,
+        picture_url: fields.pfp,
+        //phone_number: fields.phoneNumber,
+        phone_number: 2146017139,
+        email: fields.email,
+        active_status_id: 1
+     });
+     return (await response).data;
+     }
+  })
+};
