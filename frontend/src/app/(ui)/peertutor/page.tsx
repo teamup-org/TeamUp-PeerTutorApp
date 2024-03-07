@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
-import { CreateTutor } from '@/app/_lib/data';
+import { CreateTutor, useTutorMutation } from '@/app/_lib/data';
 import { AnyARecord } from 'dns';
 
 import { useSession, signOut } from 'next-auth/react';
@@ -36,6 +36,8 @@ export default function SignUp() {
   const { data: session, status } = useSession();
 
   // Submission of the peer tutor form -----------------------------------
+
+  const { mutate } = useTutorMutation();
   
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -43,7 +45,7 @@ export default function SignUp() {
     const registrationData = {
       firstName: formData.get('firstName') as string,
       lastName: formData.get('lastName') as string,
-      uin: formData.get('uin') as string,
+      uin: parseInt(formData.get('uin') as string), // Convert uin to an integer
       phoneNumber: formData.get('phoneNumber') as string,
       title: formData.get('title') as string,
       seniority: seniority,
@@ -52,8 +54,9 @@ export default function SignUp() {
       email: session?.user?.email as string,
       pfp: session?.user?.image as string
     };
+    
 
-    CreateTutor(registrationData);
+    mutate(registrationData);
   };
 
   return (
