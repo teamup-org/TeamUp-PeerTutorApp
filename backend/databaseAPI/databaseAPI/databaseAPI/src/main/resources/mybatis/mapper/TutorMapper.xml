@@ -27,9 +27,9 @@
     </select>
     <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutor.TutorModel">
         INSERT INTO tutor
-            (uin, first_name, last_name, major_id, seniority_id, pay_rate, bio_text, picture_url, phone_number, email, average_rating, active_status_id)
+            (uin, first_name, last_name, major_id, seniority_id, pay_rate, bio_text, picture_url, phone_number, email, active_status_id)
         VALUES
-            (#{uin}, #{firstName}, #{lastName}, #{majorId}, #{seniorityId}, #{payRate}, #{bioText}, #{pictureUrl}, #{phoneNumber}, #{email}, #{averageRating}, #{activeStatusId})
+            (#{uin}, #{firstName}, #{lastName}, #{majorId}, #{seniorityId}, #{payRate}, #{bioText}, #{pictureUrl}, #{phoneNumber}, #{email}, #{activeStatusId})
     </insert>
     <update id="update" parameterType="map">
         UPDATE tutor
@@ -44,7 +44,6 @@
             picture_url = #{tutorModelNew.pictureUrl},
             phone_number = #{tutorModelNew.phoneNumber},
             email = #{tutorModelNew.email},
-            average_rating = #{tutorModelNew.averageRating},
             active_status_id = #{tutorModelNew.activeStatusId}
         WHERE
             uin = #{tutorModelOld.uin}
