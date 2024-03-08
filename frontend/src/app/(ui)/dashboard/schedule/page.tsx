@@ -6,14 +6,14 @@ import { Box, Container, Paper, Stack, Typography, Button } from '@mui/material'
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 
-import { tableFetch, tableUpdate } from '@/app/_lib/data';
+import { TableFetch, TableUpdate } from '@/app/_lib/data';
 import type { EventClickArg } from '@fullcalendar/core/index.js';
 import type { EventImpl } from '@fullcalendar/core/internal';
 
 import { toTitleCase } from '@/app/_lib/utils';
 
 export default function DashboardPage() {
-  const {data, isLoading, isError} = tableFetch("appointment_listing");
+  const {data, isLoading, isError} = TableFetch("appointment_listing");
   const [selectedEvent, setSelectedEvent] = React.useState<EventImpl>();
 
   const getEvents = () => {
@@ -37,7 +37,7 @@ export default function DashboardPage() {
   document.addEventListener("mousedown", handleClickOutside);
   */
   const handleCancel = () => {
-    const {data, isError} = tableUpdate("appointment_listing", "appointmentStatusName", "cancelled");
+    const {data, isError} = TableUpdate("appointment_listing", "appointmentStatusName", "cancelled");
   };
 
   return (

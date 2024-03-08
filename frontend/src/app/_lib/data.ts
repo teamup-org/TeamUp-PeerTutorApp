@@ -10,7 +10,7 @@ const deployment = "https://tamutheo.xyz/database-api";
 
 axios.defaults.baseURL = development;
 
-export function tableFetch(tableName: string) {
+export function TableFetch(tableName: string) {
   const { data, isError, isFetching, isLoading, refetch } = useQuery({
     // refetch when any of the following query keys change
     queryKey: ["table-data", tableName],
@@ -34,7 +34,7 @@ export function tableFetch(tableName: string) {
   return { data, isError, isFetching, isLoading, refetch };
 }
 
-export function tableUpdate(tableName: string, field: string, value: any) {
+export function TableUpdate(tableName: string, field: string, value: any) {
   const { data, isError } = useMutation({
     mutationFn: async () => {
       const response = await axios.put("/" + tableName, (field + '=' + value));

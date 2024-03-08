@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import TutorCard from '../../tutor-card';
 import { tutors } from '../../../_lib/placeholder-data';
-import { tableFetch } from '@/app/_lib/data';
+import { TableFetch } from '@/app/_lib/data';
 
 import { Box, Container, Grid, Button, Stack, Skeleton } from '@mui/material';
 import SouthIcon from '@mui/icons-material/South';
@@ -13,7 +13,7 @@ import NorthIcon from '@mui/icons-material/North';
 export default function TutorPage() {
   const [sortBy, setSortBy] = useState('firstName');
   const [isAscending, setIsAscending] = useState(true);
-  const {data, isLoading, isError} = tableFetch("tutor_listing");
+  const {data, isLoading, isError} = TableFetch("tutor_listing");
 
   const handleSortChange = (newSortBy: string) => {
     if (newSortBy === sortBy) {
