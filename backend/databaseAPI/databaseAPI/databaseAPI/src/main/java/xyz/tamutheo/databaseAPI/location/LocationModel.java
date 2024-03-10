@@ -9,6 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LocationModel {
-    Integer locationId;
     String locationName;
 }

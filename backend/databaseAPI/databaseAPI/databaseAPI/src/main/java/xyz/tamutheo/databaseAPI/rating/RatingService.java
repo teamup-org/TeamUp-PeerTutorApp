@@ -9,7 +9,15 @@ import java.util.List;
 public class RatingService {
     @Autowired
     private RatingMapper ratingMapper;
-    public List<RatingModel> read() {
-        return this.ratingMapper.read();
+    public List<RatingModel> read(Integer numberStarsEquals,
+                                  Integer numberStarsGreaterThanOrEquals,
+                                  Integer numberStarsLessThanOrEquals,
+                                  Integer limit,
+                                  Integer offset) {
+        return this.ratingMapper.read(numberStarsEquals,
+                numberStarsGreaterThanOrEquals,
+                numberStarsLessThanOrEquals,
+                limit,
+                offset);
     }
 }

@@ -2,35 +2,69 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceMapper">
     <resultMap id="TutorCoursePreferenceResultMap" type="xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceModel">
-        <result property="coursePreferenceId" column="course_preference_id" />
-        <result property="eligibilityId" column="eligibility_id" />
-        <result property="tutorId" column="tutor_id" />
+        <result property="courseGrade" column="course_grade"/>
+        <result property="courseNumber" column="course_number"/>
+        <result property="majorAbbreviation" column="major_abbreviation"/>
+        <result property="tutorEmail" column="tutor_email"/>
     </resultMap>
     <select id="read" resultMap="TutorCoursePreferenceResultMap">
         SELECT
         *
         FROM tutor_course_preference
         <where>
-            <if test="tutorId != null">
-                tutor_id = #{tutorId}
+            <if test="courseGradeInList != null" >
+                AND course_grade in
+                <foreach item="item" index="index" collection="courseGradeInList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="courseNumberEquals != null" >
+                AND course_number = #{courseNumberEquals}
+            </if>
+            <if test="courseNumberGreaterThanOrEquals != null" >
+                AND course_number &gt;= #{courseNumberGreaterThanOrEquals}
+            </if>
+            <if test="courseNumberLessThanOrEquals != null" >
+                AND course_number &lt;= #{courseNumberLessThanOrEquals}
+            </if>
+            <if test="majorAbbreviationContains != null" >
+                <bind name="majorAbbreviationContainsPattern" value = "'%' + majorAbbreviationContains + '%'" />
+                AND LOWER(major_abbreviation) LIKE LOWER(#{majorAbbreviationContainsPattern})
+            </if>
+            <if test="tutorEmailContains != null" >
+                <bind name="tutorEmailContainsPattern" value = "'%' + tutorEmailContains + '%'" />
+                AND LOWER(tutor_email) LIKE LOWER(#{tutorEmailContainsPattern})
             </if>
         </where>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="limit != null and offset != null">
+            OFFSET #{offset}
+        </if>
     </select>
     <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceModel">
         INSERT into tutor_course_preference
-        (eligibility_id, tutor_id)
+            (course_grade, course_number, major_abbreviation, tutor_email)
         VALUES
-        (#{eligibilityId}, #{tutorId})
+            (#{courseGrade}, #{courseNumber}, #{majorAbbreviation}, #{tutorEmail})
     </insert>
     <delete id="delete" parameterType="xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceModel">
         DELETE FROM tutor_course_preference
         <where>
-            <if test="tutorId != null">
-                tutor_id = #{tutorId}
+            <if test="courseNumber != null">
+                AND course_number = #{courseNumber}
             </if>
-            <if test="eligibilityId != null">
-                AND eligibility_id = #{eligibilityId}
+            <if test="majorAbbreviation != null">
+                AND major_abbreviation = #{majorAbbreviation}
+            </if>
+            <if test="tutorEmail != null">
+                AND tutor_email = #{tutorEmail}
             </if>
         </where>
+    </delete>
+    <delete id="deleteAll" parameterType="map">
+        DELETE FROM tutor_course_preference
+        WHERE tutor_email = #{tutorEmailEquals}
     </delete>
 </mapper>

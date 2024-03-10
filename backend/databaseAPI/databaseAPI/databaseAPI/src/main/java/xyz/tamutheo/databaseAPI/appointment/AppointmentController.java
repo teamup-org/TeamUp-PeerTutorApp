@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.time.LocalDate;
 
@@ -13,63 +16,79 @@ public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
 
-    @GetMapping(value = {"", "/"})
-    public List<AppointmentModel> read(@RequestParam(name = "tutor_id", required = false) Integer tutorId,
-                                       @RequestParam(name = "tutee_id", required = false) Integer tuteeId) {
-        return this.appointmentService.read(tutorId, tuteeId);
-    }
-
     @PostMapping(value = {"", "/"})
-    public void create(@RequestParam(name = "appointment_type_id") Integer appointmentTypeId,
-                       @RequestParam(name = "tutor_id") Integer tutorId,
-                       @RequestParam(name = "tutee_id") Integer tuteeId,
-                       @RequestParam(name = "appointment_date") @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate appointmentDate,
-                       @RequestParam(name = "start_time_id") Integer startTimeId,
-                       @RequestParam(name = "end_time_id") Integer endTimeId,
-                       @RequestParam(name = "location_id") Integer locationId,
-                       @RequestParam(name = "appointment_status_id") Integer appointmentStatusId) {
+    public void create(@RequestParam(name = "appointment_size_name", defaultValue = "single") String appointmentSizeName,
+                       @RequestParam(name = "end_date_time") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTimeValue,
+                       @RequestParam(name = "location_name") String locationName,
+                       @RequestParam(name = "tutee_email") String tuteeEmail,
+                       @RequestParam(name = "tutor_email") String tutorEmail,
+                       @RequestParam(name = "start_date_time") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTimeValue) {
         AppointmentModel appointmentModel = AppointmentModel.builder()
-                .appointmentTypeId(appointmentTypeId)
-                .tutorId(tutorId)
-                .tuteeId(tuteeId)
-                .appointmentDate(appointmentDate)
-                .startTimeId(startTimeId)
-                .endTimeId(endTimeId)
-                .locationId(locationId)
-                .appointmentStatusId(appointmentStatusId).build();
+                .appointmentSizeName(appointmentSizeName)
+                .endDateTimeValue(endDateTimeValue)
+                .locationName(locationName)
+                .tuteeEmail(tuteeEmail)
+                .tutorEmail(tutorEmail)
+                .startDateTimeValue(startDateTimeValue)
+                .build();
         this.appointmentService.create(appointmentModel);
     }
-    @PutMapping(value = {"", "/"})
-    public void update(@RequestParam(name = "tutor_id_old") Integer tutorIdOld,
-                       @RequestParam(name = "tutee_id_old") Integer tuteeIdOld,
-                       @RequestParam(name = "appointment_date_old") @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate appointmentDateOld,
-                       @RequestParam(name = "start_time_id_old") Integer startTimeIdOld,
-                       @RequestParam(name = "end_time_id_old") Integer endTimeIdOld,
 
-                       @RequestParam(name = "appointment_type_id_new") Integer appointmentTypeIdNew,
-                       @RequestParam(name = "tutor_id_new") Integer tutorIdNew,
-                       @RequestParam(name = "tutee_id_new") Integer tuteeIdNew,
-                       @RequestParam(name = "appointment_date_new") @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate appointmentDateNew,
-                       @RequestParam(name = "start_time_id_new") Integer startTimeIdNew,
-                       @RequestParam(name = "end_time_id_new") Integer endTimeIdNew,
-                       @RequestParam(name = "location_id_new") Integer locationIdNew,
-                       @RequestParam(name = "appointment_status_id_new") Integer appointmentStatusIdNew) {
+    @GetMapping(value = {"", "/"})
+    public List<AppointmentModel> read(@RequestParam(name = "appointment_id_equals", required = false) Integer appointmentIdEquals,
+                                       @RequestParam(name = "appointment_size_name_contains", required = false) String appointmentSizeNameContains,
+                                       @RequestParam(name = "cancellation_reason_contains", required = false) String cancellationReasonContains,
+                                       @RequestParam(name = "end_date_time_less_than_or_equals", required = false) String endDateTimeLessThanOrEquals,
+                                       @RequestParam(name = "is_cancelled_equals", required = false) Boolean isCancelledEquals,
+                                       @RequestParam(name = "location_name_in", required = false) String locationNameIn,
+                                       @RequestParam(name = "tutee_email_contains", required = false) String tuteeEmailContains,
+                                       @RequestParam(name = "tutor_email_contains", required = false) String tutorEmailContains,
+                                       @RequestParam(name = "start_date_time_greater_than_or_equals", required = false) String startDateTimeGreaterThanOrEquals,
+                                       @RequestParam(name = "limit", required = false) Integer limit,
+                                       @RequestParam(name = "offset", required = false) Integer offset) {
+        List<String> locationNameInList = null;
+        if (locationNameIn != null) {
+            locationNameInList = Arrays.asList(locationNameIn.split(", "));
+            for (int idx = 0; idx < locationNameInList.size(); idx++) {
+                locationNameInList.set(idx, locationNameInList.get(idx).trim());
+            }
+        }
+        return this.appointmentService.read(appointmentIdEquals,
+                appointmentSizeNameContains,
+                cancellationReasonContains,
+                endDateTimeLessThanOrEquals,
+                isCancelledEquals,
+                locationNameInList,
+                tuteeEmailContains,
+                tutorEmailContains,
+                startDateTimeGreaterThanOrEquals,
+                limit,
+                offset);
+    }
+    @PutMapping(value = {"", "/"})
+    public void update(@RequestParam(name = "end_date_time_old") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTimeValueOld,
+                       @RequestParam(name = "tutee_email_old") String tuteeEmailOld,
+                       @RequestParam(name = "tutor_email_old") String tutorEmailOld,
+                       @RequestParam(name = "start_date_time_old") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTimeValueOld,
+                       @RequestParam(name = "appointment_size_name_new", required = false) String appointmentSizeNameNew,
+                       @RequestParam(name = "cancellation_reason_new", required = false) String cancellationReasonNew,
+                       @RequestParam(name = "end_date_time_new", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTimeValueNew,
+                       @RequestParam(name = "is_cancelled_new", required = false) Boolean isCancelledNew,
+                       @RequestParam(name = "location_name_new", required = false) String locationNameNew,
+                       @RequestParam(name = "start_date_time_new", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTimeValueNew) {
         AppointmentModel appointmentModelOld = AppointmentModel.builder()
-                .tutorId(tutorIdOld)
-                .tuteeId(tuteeIdOld)
-                .appointmentDate(appointmentDateOld)
-                .startTimeId(startTimeIdOld)
-                .endTimeId(endTimeIdOld)
+                .endDateTimeValue(endDateTimeValueOld)
+                .tuteeEmail(tuteeEmailOld)
+                .tutorEmail(tutorEmailOld)
+                .startDateTimeValue(startDateTimeValueOld)
                 .build();
         AppointmentModel appointmentModelNew = AppointmentModel.builder()
-                .appointmentTypeId(appointmentTypeIdNew)
-                .tutorId(tutorIdNew)
-                .tuteeId(tuteeIdNew)
-                .appointmentDate(appointmentDateNew)
-                .startTimeId(startTimeIdNew)
-                .endTimeId(endTimeIdNew)
-                .locationId(locationIdNew)
-                .appointmentStatusId(appointmentStatusIdNew)
+                .appointmentSizeName(appointmentSizeNameNew)
+                .cancellationReason(cancellationReasonNew)
+                .isCancelled(isCancelledNew)
+                .endDateTimeValue(endDateTimeValueNew)
+                .locationName(locationNameNew)
+                .startDateTimeValue(startDateTimeValueNew)
                 .build();
         this.appointmentService.update(appointmentModelOld, appointmentModelNew);
     }

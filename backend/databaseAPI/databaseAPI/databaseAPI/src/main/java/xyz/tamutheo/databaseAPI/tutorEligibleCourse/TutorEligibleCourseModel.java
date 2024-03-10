@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TutorEligibleCourseModel {
     Character courseGrade;
-    Integer courseId;
-    Integer eligibilityId;
-    Integer tutorId;
+    Integer courseNumber;
+    String majorAbbreviation;
+    String tutorEmail;
 }

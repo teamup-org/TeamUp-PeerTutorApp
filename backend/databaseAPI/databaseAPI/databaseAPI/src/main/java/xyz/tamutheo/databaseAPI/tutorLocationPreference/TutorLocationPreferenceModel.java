@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TutorLocationPreferenceModel {
-    Integer locationId;
-    Integer locationPreferenceId;
-    Integer tutorId;
+    String locationName;
+    String tutorEmail;
 }

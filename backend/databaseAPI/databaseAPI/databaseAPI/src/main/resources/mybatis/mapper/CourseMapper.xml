@@ -2,14 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="xyz.tamutheo.databaseAPI.course.CourseMapper">
     <resultMap id="CourseResultMap" type="xyz.tamutheo.databaseAPI.course.CourseModel">
-        <result property="courseId" column="course_id" />
-        <result property="courseTitle" column="course_title" />
-        <result property="majorAbbreviation" column="major_abbreviation" />
-        <result property="courseNumber" column="course_number" />
+        <result property="courseNumber" column="course_number"/>
+        <result property="courseTitle" column="course_title"/>
+        <result property="majorAbbreviation" column="major_abbreviation"/>
     </resultMap>
     <select id="read" resultMap="CourseResultMap">
         SELECT
         *
         FROM course
+        <where>
+            <if test="courseNumberEquals != null" >
+                AND course_number = #{courseNumberEquals}
+            </if>
+            <if test="courseNumberLessThanOrEquals != null" >
+                AND course_number &lt;= #{courseNumberLessThanOrEquals}
+            </if>
+            <if test="courseNumberGreaterThanOrEquals != null" >
+                AND course_number &gt;= #{courseNumberGreaterThanOrEquals}
+            </if>
+            <if test="courseTitleContains != null" >
+                <bind name="courseTitleContainsPattern" value = "'%' + courseTitleContains + '%'" />
+                AND LOWER(course_title) LIKE LOWER(#{courseTitleContainsPattern})
+            </if>
+            <if test="majorAbbreviationContains != null" >
+                <bind name="majorAbbreviationContainsPattern" value = "'%' + majorAbbreviationContains + '%'" />
+                AND LOWER(major_abbreviation) LIKE LOWER(#{majorAbbreviationContainsPattern})
+            </if>
+        </where>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="limit != null and offset != null">
+            OFFSET #{offset}
+        </if>
     </select>
 </mapper>

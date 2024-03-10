@@ -9,7 +9,9 @@ import java.util.List;
 public class SeniorityService {
     @Autowired
     private SeniorityMapper seniorityMapper;
-    public List<SeniorityModel> read() {
-        return this.seniorityMapper.read();
+    public List<SeniorityModel> read(List<String> seniorityNameInList,
+                                     Integer limit,
+                                     Integer offset) {
+        return this.seniorityMapper.read( seniorityNameInList, limit, offset);
     }
 }

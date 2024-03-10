@@ -2,38 +2,53 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="xyz.tamutheo.databaseAPI.tutorTimePreference.TutorTimePreferenceMapper">
     <resultMap id="TutorTimePreferenceResultMap" type="xyz.tamutheo.databaseAPI.tutorTimePreference.TutorTimePreferenceModel">
-        <result property="tutorTimePreferenceId" column="tutor_time_preference_id" />
-        <result property="tutorId" column="tutor_id" />
-        <result property="startTimeId" column="start_time_id" />
-        <result property="endTimeId" column="end_time_id" />
+        <result property="endTimeValue" column="end_time"/>
+        <result property="startTimeValue" column="start_time"/>
+        <result property="tutorEmail" column="tutor_email"/>
+        <result property="weekdayName" column="weekday_name"/>
     </resultMap>
+    <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutorTimePreference.TutorTimePreferenceModel">
+        INSERT INTO tutor_time_preference
+        (end_time, start_time, tutor_email, weekday_name)
+        VALUES
+        (#{endTimeValue}, #{startTimeValue}, #{tutorEmail}, #{weekdayName})
+    </insert>
     <select id="read" resultMap="TutorTimePreferenceResultMap">
         SELECT
         *
         FROM tutor_time_preference
         <where>
-            <if test="tutorId != null">
-                tutor_id = #{tutorId}
+            <if test="endTimeLessThanOrEquals != null">
+                AND end_time &lt;= #{endTimeLessThanOrEquals}
+            </if>
+            <if test="startTimeGreaterThanOrEquals != null">
+                AND start_time &gt;= #{startTimeGreaterThanOrEquals}
+            </if>
+            <if test="tutorEmailEquals != null">
+                AND tutor_email = #{tutorEmailEquals}
+            </if>
+            <if test="weekdayNameInList != null">
+                AND weekday_name in
+                <foreach item="item" index="index" collection="weekdayNameInList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
             </if>
         </where>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="limit != null and offset != null">
+            OFFSET #{offset}
+        </if>
     </select>
-    <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutorTimePreference.TutorTimePreferenceModel">
-        INSERT INTO tutor_time_preference
-            (tutor_id, start_time_id, end_time_id)
-        VALUES
-            (#{tutorId}, #{startTimeId}, #{endTimeId})
-    </insert>
-    <delete id="delete" parameterType="xyz.tamutheo.databaseAPI.tutorTimePreference.TutorTimePreferenceModel">
+    <delete id="deleteAll" parameterType="xyz.tamutheo.databaseAPI.tutorTimePreference.TutorTimePreferenceModel">
         DELETE FROM tutor_time_preference
         <where>
-            <if test="tutorId != null">
-                tutor_id = #{tutorId}
+            <if test="tutorEmail != null">
+                AND tutor_email = #{tutorEmail}
             </if>
-            <if test="startTimeId != null">
-                AND start_time_id = #{startTimeId}
-            </if>
-            <if test="endTimeId != null">
-                AND end_time_id = #{endTimeId}
+            <if test="weekdayName != null">
+                AND weekday_name = #{weekdayName}
             </if>
         </where>
     </delete>

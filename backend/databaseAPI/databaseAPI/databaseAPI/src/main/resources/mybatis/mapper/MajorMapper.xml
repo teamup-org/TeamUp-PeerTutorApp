@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="xyz.tamutheo.databaseAPI.major.MajorMapper">
     <resultMap id="MajorResultMap" type="xyz.tamutheo.databaseAPI.major.MajorModel">
-        <result property="majorId" column="major_id" />
         <result property="majorAbbreviation" column="major_abbreviation" />
         <result property="majorName" column="major_name" />
     </resultMap>
@@ -10,5 +9,21 @@
         SELECT
         *
         FROM major
+        <where>
+            <if test="majorAbbreviationContains != null">
+                <bind name="majorAbbreviationContainsPattern" value = "'%' + majorAbbreviationContains + '%'" />
+                AND LOWER(major_abbreviation) LIKE LOWER(#{majorAbbreviationContainsPattern})
+            </if>
+            <if test="majorNameContains != null">
+                <bind name="majorNameContainsPattern" value = "'%' + majorNameContains + '%'" />
+                AND LOWER(major_name) LIKE LOWER(#{majorNameContainsPattern})
+            </if>
+        </where>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="limit != null and offset != null">
+            OFFSET #{offset}
+        </if>
     </select>
 </mapper>

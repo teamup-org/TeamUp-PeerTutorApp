@@ -10,45 +10,64 @@ import java.util.List;
 public class TutorReviewController {
     @Autowired
     private TutorReviewService tutorReviewService;
-    @GetMapping(value = {"", "/"})
-    public List<TutorReviewModel> read(@RequestParam(name = "tutor_id", required = false) Integer tutorId,
-                                       @RequestParam(name = "tutee_id", required = false) Integer tuteeId) {
-        return this.tutorReviewService.read(tutorId, tuteeId);
-    }
     @PostMapping(value = {"", "/"})
-    public void create(@RequestParam(name = "tutor_id") Integer tutorId,
-                       @RequestParam(name = "tutee_id") Integer tuteeId,
-                       @RequestParam(name = "rating_id") Integer ratingId,
-                       @RequestParam(name = "review_text") String reviewText) {
+    public void create(@RequestParam(name = "appointment_id") Integer appointmentId,
+                       @RequestParam(name = "number_stars") Integer numberStars,
+                       @RequestParam(name = "review_text") String reviewText,
+                       @RequestParam(name = "tutee_email") String tuteeEmail,
+                       @RequestParam(name = "tutor_email") String tutorEmail) {
         TutorReviewModel tutorReviewModel = TutorReviewModel.builder()
-                .tutorId(tutorId)
-                .tuteeId(tuteeId)
-                .ratingId(ratingId)
+                .appointmentId(appointmentId)
+                .numberStars(numberStars)
                 .reviewText(reviewText)
+                .tuteeEmail(tuteeEmail)
+                .tutorEmail(tutorEmail)
                 .build();
         this.tutorReviewService.create(tutorReviewModel);
     }
+    @GetMapping(value = {"", "/"})
+    public List<TutorReviewModel> read(@RequestParam(name = "appointment_id_equals", required = false) Integer appointmentIdEquals,
+                                       @RequestParam(name = "number_stars_greater_than_or_equals", required = false) Integer numberStarsGreaterThanOrEquals,
+                                       @RequestParam(name = "number_stars_less_than_or_equals", required = false) Integer numberStarsLessThanOrEquals,
+                                       @RequestParam(name = "review_text_contains", required = false) String reviewTextContains,
+                                       @RequestParam(name = "tutee_email_contains", required = false) String tuteeEmailContains,
+                                       @RequestParam(name = "tutor_email_contains", required = false) String tutorEmailContains,
+                                       @RequestParam(name = "limit", required = false) Integer limit,
+                                       @RequestParam(name = "offset", required = false) Integer offset) {
+        return this.tutorReviewService.read(appointmentIdEquals,
+                numberStarsGreaterThanOrEquals,
+                numberStarsLessThanOrEquals,
+                reviewTextContains,
+                tuteeEmailContains,
+                tutorEmailContains,
+                limit,
+                offset);
+    }
     @PutMapping(value = {"", "/"})
-    public void update(@RequestParam(name = "tutor_id_old") Integer tutorIdOld,
-                       @RequestParam(name = "tutee_id_old") Integer tuteeIdOld,
-                       @RequestParam(name = "rating_id_new") Integer ratingIdNew,
-                       @RequestParam(name = "review_text_new") String reviewTextNew) {
+    public void update(@RequestParam(name = "appointment_id_old") Integer appointmentIdOld,
+                       @RequestParam(name = "tutee_email_old") String tuteeEmailOld,
+                       @RequestParam(name = "tutor_email_old") String tutorEmailOld,
+                       @RequestParam(name = "number_stars_new", required = false) Integer numberStarsNew,
+                       @RequestParam(name = "review_text_new", required = false) String reviewTextNew) {
         TutorReviewModel tutorReviewModelOld = TutorReviewModel.builder()
-                .tutorId(tutorIdOld)
-                .tuteeId(tuteeIdOld)
+                .appointmentId(appointmentIdOld)
+                .tuteeEmail(tuteeEmailOld)
+                .tutorEmail(tutorEmailOld)
                 .build();
         TutorReviewModel tutorReviewModelNew = TutorReviewModel.builder()
-                .ratingId(ratingIdNew)
+                .numberStars(numberStarsNew)
                 .reviewText(reviewTextNew)
                 .build();
         this.tutorReviewService.update(tutorReviewModelOld, tutorReviewModelNew);
     }
     @DeleteMapping(value = {"", "/"})
-    public void delete(@RequestParam(name = "tutor_id") Integer tutorId,
-                       @RequestParam(name = "tutee_id", required = false) Integer tuteeId) {
+    public void delete(@RequestParam(name = "appointment_id") Integer appointmentId,
+                       @RequestParam(name = "tutee_email") String tuteeEmail,
+                       @RequestParam(name = "tutor_email") String tutorEmail) {
         TutorReviewModel tutorReviewModel= TutorReviewModel.builder()
-                .tutorId(tutorId)
-                .tuteeId(tuteeId)
+                .appointmentId(appointmentId)
+                .tuteeEmail(tuteeEmail)
+                .tutorEmail(tutorEmail)
                 .build();
         this.tutorReviewService.delete(tutorReviewModel);
     }
