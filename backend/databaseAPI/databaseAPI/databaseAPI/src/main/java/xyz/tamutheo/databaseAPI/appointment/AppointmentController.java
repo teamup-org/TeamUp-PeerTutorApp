@@ -40,6 +40,7 @@ public class AppointmentController {
                                        @RequestParam(name = "cancellation_reason_contains", required = false) String cancellationReasonContains,
                                        @RequestParam(name = "end_date_time_less_than_or_equals", required = false) String endDateTimeLessThanOrEquals,
                                        @RequestParam(name = "is_cancelled_equals", required = false) Boolean isCancelledEquals,
+                                       @RequestParam(name = "is_confirmed_equals", required = false) Boolean isConfirmedEquals,
                                        @RequestParam(name = "location_name_in", required = false) String locationNameIn,
                                        @RequestParam(name = "tutee_email_contains", required = false) String tuteeEmailContains,
                                        @RequestParam(name = "tutor_email_contains", required = false) String tutorEmailContains,
@@ -58,6 +59,7 @@ public class AppointmentController {
                 cancellationReasonContains,
                 endDateTimeLessThanOrEquals,
                 isCancelledEquals,
+                isConfirmedEquals,
                 locationNameInList,
                 tuteeEmailContains,
                 tutorEmailContains,
@@ -74,6 +76,7 @@ public class AppointmentController {
                        @RequestParam(name = "cancellation_reason_new", required = false) String cancellationReasonNew,
                        @RequestParam(name = "end_date_time_new", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTimeValueNew,
                        @RequestParam(name = "is_cancelled_new", required = false) Boolean isCancelledNew,
+                       @RequestParam(name = "is_confirmed_new", required = false) Boolean isConfirmedNew,
                        @RequestParam(name = "location_name_new", required = false) String locationNameNew,
                        @RequestParam(name = "start_date_time_new", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTimeValueNew) {
         AppointmentModel appointmentModelOld = AppointmentModel.builder()
@@ -86,6 +89,7 @@ public class AppointmentController {
                 .appointmentSizeName(appointmentSizeNameNew)
                 .cancellationReason(cancellationReasonNew)
                 .isCancelled(isCancelledNew)
+                .isConfirmed(isConfirmedNew)
                 .endDateTimeValue(endDateTimeValueNew)
                 .locationName(locationNameNew)
                 .startDateTimeValue(startDateTimeValueNew)

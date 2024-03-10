@@ -135,6 +135,7 @@ CREATE TABLE appointment (
 	tutor_email VARCHAR(30) NOT NULL,
 	appointment_size_name VARCHAR(50) NOT NULL,
     location_name VARCHAR(100) NOT NULL,
+    is_confirmed Boolean NOT NULL DEFAULT FALSE,
     is_cancelled BOOLEAN NOT NULL DEFAULT FALSE,
     cancellation_reason VARCHAR(1000),
 	PRIMARY KEY (appointment_id),
