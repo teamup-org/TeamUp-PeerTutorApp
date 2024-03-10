@@ -2,35 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceMapper">
     <resultMap id="TutorLocationPreferenceResultMap" type="xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceModel">
-        <result property="locationPreferenceId" column="location_preference_id" />
-        <result property="tutorId" column="tutor_id" />
-        <result property="locationId" column="location_id" />
+        <result property="locationName" column="location_name"/>
+        <result property="tutorEmail" column="tutor_email"/>
     </resultMap>
     <select id="read" resultMap="TutorLocationPreferenceResultMap">
         SELECT
         *
         FROM tutor_location_preference
         <where>
-            <if test="tutorId != null">
-                tutor_id = #{tutorId}
+            <if test="locationNameInList != null">
+                AND location_name in
+                <foreach item="item" index="index" collection="locationNameInList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tutorEmailContains != null">
+                <bind name="tutorEmailContainsPattern" value = "'%' + tutorEmailContains + '%'" />
+                AND LOWER(tutor_email) LIKE LOWER(#{tutorEmailContainsPattern})
             </if>
         </where>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="limit != null and offset != null">
+            OFFSET #{offset}
+        </if>
     </select>
     <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceModel">
         INSERT INTO tutor_location_preference
-            (tutor_id, location_id)
+            (location_name, tutor_email)
         VALUES
-            (#{tutorId}, #{locationId})
+            (#{locationName}, #{tutorEmail})
     </insert>
     <delete id="delete" parameterType="xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceModel">
         DELETE FROM tutor_location_preference
         <where>
-            <if test="tutorId != null">
-                tutor_id = #{tutorId}
+            <if test="locationName != null">
+                AND location_name = #{locationName}
             </if>
-            <if test="locationId != null">
-                AND location_id = #{locationId}
+            <if test="tutorEmail != null">
+                AND tutor_email = #{tutorEmail}
             </if>
         </where>
+    </delete>
+    <delete id="deleteAll" parameterType="map">
+        DELETE FROM tutor_location_preference
+        WHERE tutor_email = #{tutorEmailEquals}
     </delete>
 </mapper>

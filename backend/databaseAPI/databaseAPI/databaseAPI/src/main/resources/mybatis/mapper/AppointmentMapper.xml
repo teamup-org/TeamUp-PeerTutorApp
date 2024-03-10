@@ -3,51 +3,135 @@
 <mapper namespace="xyz.tamutheo.databaseAPI.appointment.AppointmentMapper">
     <resultMap id="AppointmentResultMap" type="xyz.tamutheo.databaseAPI.appointment.AppointmentModel">
         <result property="appointmentId" column="appointment_id" />
-        <result property="appointmentTypeId" column="appointment_type_id" />
-        <result property="tutorId" column="tutor_id" />
-        <result property="tuteeId" column="tutee_id" />
-        <result property="appointmentDate" column="appointment_date" />
-        <result property="startTimeId" column="start_time_id" />
-        <result property="endTimeId" column="end_time_id" />
-        <result property="locationId" column="location_id" />
-        <result property="appointmentStatusId" column="appointment_status_id" />
+        <result property="startDateTimeValue" column="start_date_time_value" />
+        <result property="endDateTimeValue" column="end_date_time_value" />
+        <result property="appointmentSizeName" column="appointment_size_name" />
+        <result property="cancellationReason" column="cancellation_reason" />
+        <result property="isCancelled" column="is_cancelled" />
+        <result property="locationName" column="location_name" />
+        <result property="tuteeEmail" column="tutee_email" />
+        <result property="tuteeFirstName" column="tutee_first_name" />
+        <result property="tuteeLastName" column="tutee_last_name" />
+        <result property="tuteePhoneNumber" column="tutee_phone_number" />
+        <result property="tutorEmail" column="tutor_email" />
+        <result property="tutorFirstName" column="tutor_first_name" />
+        <result property="tutorLastName" column="tutor_last_name" />
+        <result property="tutorPhoneNumber" column="tutor_phone_number" />
     </resultMap>
+    <insert id="create" parameterType="xyz.tamutheo.databaseAPI.appointment.AppointmentModel">
+        <bind name="formatPattern" value = "'%Y-%m-%d %T'" />
+        INSERT INTO appointment
+            (appointment_date, appointment_size_name, end_time, location_name, start_time, tutee_email , tutor_email)
+        VALUES
+            (DATE(STR_TO_DATE(#{startDateTimeValue}, #{formatPattern})), #{appointmentSizeName}, TIME(STR_TO_DATE(#{endDateTimeValue}, #{formatPattern})), #{locationName}, TIME(STR_TO_DATE(#{startDateTimeValue}, #{formatPattern})), #{tuteeEmail}, #{tutorEmail})
+    </insert>
     <select id="read" resultMap="AppointmentResultMap">
-        SELECT
-        *
-        FROM appointment
+        SELECT a.appointment_id,
+            a.appointment_size_name,
+            a.cancellation_reason,
+            TIMESTAMP(a.appointment_date, a.end_time) AS end_date_time_value,
+            a.is_cancelled,
+            a.location_name,
+            TIMESTAMP(a.appointment_date, a.start_time) AS start_date_time_value,
+            a.tutee_email AS tutee_email,
+            tutee.first_name AS tutee_first_name,
+            tutee.last_name AS tutee_last_name,
+            tutee.phone_number AS tutee_phone_number,
+            tutor.first_name AS tutor_first_name,
+            tutor.last_name AS tutor_last_name,
+            tutor.phone_number AS tutor_phone_number,
+            a.tutor_email AS tutor_email
+        FROM appointment AS a
+        INNER JOIN tutor ON a.tutor_email = tutor.email
+        INNER JOIN tutee ON a.tutee_email = tutee.email
         <where>
-            <if test="tutorId != null">
-                tutor_id = #{tutorId}
+            <if test="appointmentIdEquals != null">
+                AND a.appointment_id = #{appointmentIdEquals}
             </if>
-            <if test="tuteeId != null">
-                AND tutee_id = #{tuteeId}
+            <if test="appointmentSizeNameContains != null">
+                <bind name="appointmentSizeNameContainsPattern" value = "'%' + appointmentSizeNameContains + '%'" />
+                AND LOWER(a.appointment_size_name) LIKE LOWER(#{appointmentSizeNameContainsPattern})
+            </if>
+            <if test="cancellationReasonContains != null">
+                <bind name="cancellationReasonContainsPattern" value = "'%' + cancellationReasonContains + '%'" />
+                AND LOWER(a.cancellation_reason) LIKE LOWER(#{cancellationReasonContainsPattern})
+            </if>
+            <if test="endDateTimeLessThanOrEquals != null">
+                <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
+                AND TIMESTAMP(a.appointment_date, a.end_time) &lt;= STR_TO_DATE(#{endDateTimeLessThanOrEquals}, #{formatPattern})
+            </if>
+            <if test="isCancelledEquals != null">
+                AND a.is_cancelled = #{isCancelledEquals}
+            </if>
+            <if test="locationNameInList != null">
+                AND a.location_name in
+                <foreach item="item" index="index" collection="locationNameInList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tuteeEmailContains != null">
+                <bind name="tuteeEmailContainsPattern" value = "'%' + tuteeEmailContains + '%'" />
+                AND LOWER(tutee.email) LIKE LOWER(#{tuteeEmailContainsPattern})
+            </if>
+            <if test="tutorEmailContains != null">
+                <bind name="tutorEmailContainsPattern" value = "'%' + tutorEmailContains + '%'" />
+                AND LOWER(tutor.email) LIKE LOWER(#{tutorEmailContainsPattern})
+            </if>
+            <if test="startDateTimeGreaterThanOrEquals != null">
+                <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
+                AND TIMESTAMP(a.appointment_date, a.start_time) &gt;= STR_TO_DATE(#{startDateTimeGreaterThanOrEquals}, #{formatPattern})
             </if>
         </where>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="limit != null and offset != null">
+            OFFSET #{offset}
+        </if>
     </select>
-    <insert id="create" parameterType="xyz.tamutheo.databaseAPI.appointment.AppointmentModel">
-        INSERT INTO appointment
-            (appointment_type_id, tutor_id, tutee_id, appointment_date, start_time_id, end_time_id, location_id, appointment_status_id)
-        VALUES
-            (#{appointmentTypeId}, #{tutorId}, #{tuteeId}, #{appointmentDate}, #{startTimeId}, #{endTimeId}, #{locationId}, #{appointmentStatusId})
-    </insert>
     <update id="update" parameterType="map">
+        <bind name="formatPattern" value = "'%Y-%m-%d%T'" />
         UPDATE appointment
-        SET
-            appointment_type_id = #{appointmentListingModelNew.appointmentTypeId},
-            tutor_id = #{appointmentListingModelNew.tutorId},
-            tutee_id = #{appointmentListingModelNew.tuteeId},
-            appointment_date = #{appointmentListingModelNew.appointmentDate},
-            start_time_id = #{appointmentListingModelNew.startTimeId},
-            end_time_id = #{appointmentListingModelNew.endTimeId},
-            location_id = #{appointmentListingModelNew.locationId},
-            appointment_status_id = #{appointmentListingModelNew.appointmentStatusId}
-        WHERE
-            tutor_id = #{appointmentListingModelOld.tutorId}
-            AND tutee_id = #{appointmentListingModelOld.tuteeId}
-            AND appointment_date = #{appointmentListingModelOld.appointmentDate}
-            AND start_time_id = #{appointmentListingModelOld.startTimeId}
-            AND end_time_id = #{appointmentListingModelOld.endTimeId}
+        <set>
+            <if test="appointmentModelNew.startDateTimeValue != null">
+                appointment_date =  DATE(STR_TO_DATE(#{appointmentModelNew.startDateTimeValue}, #{formatPattern})),
+            </if>
+            <if test="appointmentModelNew.appointmentSizeName != null">
+                appointment_size_name = #{appointmentModelNew.appointmentSizeName},
+            </if>
+            <if test="appointmentModelNew.cancellationReason != null">
+                cancellation_reason = #{appointmentModelNew.cancellationReason},
+            </if>
+            <if test="appointmentModelNew.endDateTimeValue != null">
+                end_time = TIME(STR_TO_DATE(#{appointmentModelNew.endDateTimeValue}, #{formatPattern})),
+            </if>
+            <if test="appointmentModelNew.isCancelled != null">
+                is_cancelled = #{appointmentModelNew.isCancelled},
+            </if>
+            <if test="appointmentModelNew.locationName != null">
+                location_name = #{appointmentModelNew.locationName},
+            </if>
+            <if test="appointmentModelNew.startDateTimeValue != null">
+                start_time = TIME(STR_TO_DATE(#{appointmentModelNew.startDateTimeValue}, #{formatPattern})),
+            </if>
+        </set>
+        <where>
+            <if test="appointmentModelOld.startDateTimeValue != null">
+                AND appointment_date = DATE(STR_TO_DATE(#{appointmentModelOld.startDateTimeValue}, #{formatPattern}))
+            </if>
+            <if test="appointmentModelOld.endDateTimeValue != null">
+                AND end_time = TIME(STR_TO_DATE(#{appointmentModelOld.endDateTimeValue}, #{formatPattern}))
+            </if> 
+            <if test="appointmentModelOld.tuteeEmail != null">
+                AND tutee_email = #{appointmentModelOld.tuteeEmail}
+            </if> 
+            <if test="appointmentModelOld.tutorEmail != null">
+                AND tutor_email = #{appointmentModelOld.tutorEmail}
+            </if> 
+            <if test="appointmentModelOld.startDateTimeValue != null">
+                AND start_time = TIME(STR_TO_DATE(#{appointmentModelOld.startDateTimeValue}, #{formatPattern}))
+            </if> 
+        </where>
     </update>
 </mapper>
 

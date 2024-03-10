@@ -9,7 +9,7 @@ import java.util.List;
 public class MajorService {
     @Autowired
     private MajorMapper majorMapper;
-    public List<MajorModel> read() {
-        return this.majorMapper.read();
+    public List<MajorModel> read(String majorAbbreviationContains, String majorNameContains, Integer limit, Integer offset) {
+        return this.majorMapper.read(majorAbbreviationContains, majorNameContains, limit, offset);
     }
 }

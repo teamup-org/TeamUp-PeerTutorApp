@@ -2,50 +2,182 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="xyz.tamutheo.databaseAPI.tutor.TutorMapper">
     <resultMap id="TutorResultMap" type="xyz.tamutheo.databaseAPI.tutor.TutorModel">
-        <result property="tutorId" column="tutor_id" />
-        <result property="uin" column="uin" />
-        <result property="firstName" column="first_name" />
-        <result property="lastName" column="last_name" />
-        <result property="majorId" column="major_id" />
-        <result property="seniorityId" column="seniority_id" />
-        <result property="payRate" column="pay_rate" />
-        <result property="bioText" column="bio_text" />
-        <result property="pictureUrl" column="picture_url" />
-        <result property="phoneNumber" column="phone_number" />
-        <result property="email" column="email" />
-        <result property="activeStatusId" column="active_status_id" />
+        <result property="activeStatusName" column="active_status_name"/>
+        <result property="averageRating" column="average_rating"/>
+        <result property="bioText" column="bio_text"/>
+        <result property="email" column="email"/>
+        <result property="firstName" column="first_name"/>
+        <result property="lastName" column="last_name"/>
+        <result property="listingTitle" column="listing_title"/>
+        <result property="majorAbbreviation" column="major_abbreviation"/>
+        <result property="numberOfRatings" column="number_of_ratings"/>
+        <result property="payRate" column="pay_rate"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="pictureUrl" column="picture_url"/>
+        <result property="seniorityName" column="seniority_name"/>
     </resultMap>
-    <select id="read" resultMap="TutorResultMap">
-        SELECT
-        *
-        FROM tutor
-        <where>
-            <if test="uin != null">
-                uin = #{uin}
-            </if>
-        </where>
-    </select>
     <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutor.TutorModel">
         INSERT INTO tutor
-            (uin, first_name, last_name, major_id, seniority_id, pay_rate, bio_text, picture_url, phone_number, email, active_status_id)
+        (active_status_name, bio_text, email, first_name, last_name, listing_title, major_abbreviation, pay_rate, phone_number, picture_url, seniority_name)
         VALUES
-            (#{uin}, #{firstName}, #{lastName}, #{majorId}, #{seniorityId}, #{payRate}, #{bioText}, #{pictureUrl}, #{phoneNumber}, #{email}, #{activeStatusId})
+        (#{activeStatusName}, #{bioText}, #{email}, #{firstName}, #{lastName}, #{listingTitle}, #{majorAbbreviation}, #{payRate}, #{phoneNumber}, #{pictureUrl}, #{seniorityName})
     </insert>
+    <select id="read" resultMap="TutorResultMap">
+        SELECT DISTINCT
+            t.active_status_name,
+            t.bio_text,
+            t.email,
+            t.first_name,
+            t.last_name,
+            t.listing_title,
+            t.major_abbreviation,
+            t.pay_rate,
+            t.phone_number,
+            t.picture_url,
+            t.seniority_name,
+            r.average_rating,
+            r.number_of_ratings
+        FROM tutor as t
+        LEFT JOIN tutor_average_rating AS r ON t.email = r.email
+        LEFT JOIN tutor_course_preference AS c ON t.email = c.tutor_email
+        LEFT JOIN tutor_location_preference AS l on t.email = l.tutor_email
+        <where>
+            <if test="activeStatusNameEquals != null">
+                AND active_status_name = #{activeStatusNameEquals}
+            </if>
+            <if test="averageRatingGreaterThanOrEquals != null">
+                AND average_rating &gt;= #{averageRatingGreaterThanOrEquals}
+            </if>
+            <if test="averageRatingLessThanOrEquals != null">
+                AND average_rating &lt;= #{averageRatingLessThanOrEquals}
+            </if>
+            <if test="bioTextContains != null">
+                <bind name="bioTextContainsPattern" value = "'%' + bioTextContains + '%'" />
+                AND LOWER(bio_text) LIKE LOWER(#{bioTextContainsPattern})
+            </if>
+            <if test="emailContains != null">
+                <bind name="emailContainsPattern" value = "'%' + emailContains + '%'" />
+                AND LOWER(t.email) LIKE LOWER(#{emailContainsPattern})
+            </if>
+            <if test="firstNameContains != null">
+                <bind name="firstNameContainsPattern" value = "'%' + firstNameContains + '%'" />
+                AND LOWER(first_name) LIKE LOWER(#{firstNameContainsPattern})
+            </if>
+            <if test="lastNameContains != null">
+                <bind name="lastNameContainsPattern" value = "'%' + lastNameContains + '%'" />
+                AND LOWER(last_name) LIKE LOWER(#{lastNameContainsPattern})
+            </if>
+
+            <if test="listingTitleContains != null">
+                <bind name="listingTitleContainsPattern" value = "'%' + listingTitleContains + '%'" />
+                AND LOWER(listing_title) LIKE LOWER(#{listingTitleContainsPattern})
+            </if>
+            <if test="majorAbbreviationContains != null">
+                <bind name="majorAbbreviationContainsPattern" value = "'%' + majorAbbreviationContains + '%'" />
+                AND LOWER(major_abbreviation) LIKE LOWER(#{majorAbbreviationContainsPattern})
+            </if>
+            <if test="numberOfRatingsGreaterThanOrEquals != null">
+                AND number_of_ratings &gt;= #{numberOfRatingsGreaterThanOrEquals}
+            </if>
+
+            <if test="numberOfRatingsLessThanOrEquals != null">
+                AND number_of_ratings &lt;= #{numberOfRatingsLessThanOrEquals}
+            </if>
+
+            <if test="payRateGreaterThanOrEquals != null">
+                AND pay_rate &gt;= #{payRateGreaterThanOrEquals}
+            </if>
+
+            <if test="payRateLessThanOrEquals != null">
+                AND pay_rate &lt;= #{payRateLessThanOrEquals}
+            </if>
+            <if test="phoneNumberContains != null">
+                <bind name="phoneNumberContainsPattern" value = "'%' + phoneNumberContains + '%'" />
+                AND LOWER(phone_number) LIKE LOWER(#{phoneNumberContainsPattern})
+            </if>
+            <if test="pictureUrlContains != null">
+                <bind name="pictureUrlContainsPattern" value = "'%' + pictureUrlContains + '%'" />
+                AND LOWER(picture_url) LIKE LOWER(#{pictureUrlContainsPattern})
+            </if>
+            <if test="seniorityNameInList != null">
+                AND seniority_name in
+                <foreach item="item" index="index" collection="seniorityNameInList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <!-- tutor_course_preference parameters-->
+            <if test="courseGradeInList != null" >
+                AND c.course_grade in
+                <foreach item="item" index="index" collection="courseGradeInList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="courseNumberEquals != null" >
+                AND c.course_number = #{courseNumberEquals}
+            </if>
+            <if test="courseNumberGreaterThanOrEquals != null" >
+                AND c.course_number &gt;= #{courseNumberGreaterThanOrEquals}
+            </if>
+            <if test="courseNumberLessThanOrEquals != null" >
+                AND c.course_number &lt;= #{courseNumberLessThanOrEquals}
+            </if>
+            <if test="courseMajorAbbreviationContains != null" >
+                <bind name="courseMajorAbbreviationContainsPattern" value = "'%' + courseMajorAbbreviationContains + '%'" />
+                AND LOWER(c.major_abbreviation) LIKE LOWER(#{courseMajorAbbreviationContainsPattern})
+            </if>
+            <!-- tutor_location_preference parameters-->
+            <if test="locationNameInList != null">
+                AND l.location_name in
+                <foreach item="item" index="index" collection="locationNameInList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="limit != null and offset != null">
+            OFFSET #{offset}
+        </if>
+    </select>
     <update id="update" parameterType="map">
         UPDATE tutor
-        SET
-            uin = #{tutorModelNew.uin},
-            first_name = #{tutorModelNew.firstName},
-            last_name = #{tutorModelNew.lastName},
-            major_id = #{tutorModelNew.majorId},
-            seniority_id = #{tutorModelNew.seniorityId},
-            pay_rate = #{tutorModelNew.payRate},
-            bio_text = #{tutorModelNew.bioText},
-            picture_url = #{tutorModelNew.pictureUrl},
-            phone_number = #{tutorModelNew.phoneNumber},
-            email = #{tutorModelNew.email},
-            active_status_id = #{tutorModelNew.activeStatusId}
+        <set>
+            <if test="tutorModelNew.activeStatusName != null">
+                active_status_name = #{tutorModelNew.activeStatusName},
+            </if>
+            <if test="tutorModelNew.bioText != null">
+                bio_text = #{tutorModelNew.bioText},
+            </if>
+            <if test="tutorModelNew.email != null">
+                email = #{tutorModelNew.email},
+            </if>
+            <if test="tutorModelNew.firstName != null">
+                first_name = #{tutorModelNew.firstName},
+            </if>
+            <if test="tutorModelNew.lastName != null">
+                last_name = #{tutorModelNew.lastName},
+            </if>
+            <if test="tutorModelNew.listingTitle != null">
+                listing_title = #{tutorModelNew.listingTitle},
+            </if>
+            <if test="tutorModelNew.majorAbbreviation != null">
+                major_abbreviation = #{tutorModelNew.majorAbbreviation},
+            </if>
+            <if test="tutorModelNew.payRate != null">
+                pay_rate = #{tutorModelNew.payRate},
+            </if>
+            <if test="tutorModelNew.phoneNumber != null">
+                phone_number = #{tutorModelNew.phoneNumber},
+            </if>
+            <if test="tutorModelNew.pictureUrl != null">
+                picture_url = #{tutorModelNew.pictureUrl},
+            </if>
+            <if test="tutorModelNew.seniorityName != null">
+                seniority_name = #{tutorModelNew.seniorityName},
+            </if>
+        </set>
         WHERE
-            uin = #{tutorModelOld.uin}
+            email = #{tutorModelOld.email}
     </update>
 </mapper>

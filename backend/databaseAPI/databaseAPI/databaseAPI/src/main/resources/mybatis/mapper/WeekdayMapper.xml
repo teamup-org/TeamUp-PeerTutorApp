@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xyz.tamutheo.databaseAPI.weekday.WeekdayMapper">
+    <resultMap id="WeekdayResultMap" type="xyz.tamutheo.databaseAPI.weekday.WeekdayModel">
+        <result property="weekdayName" column="weekday_name" />
+    </resultMap>
+    <select id="read" resultMap="WeekdayResultMap">
+        SELECT
+        *
+        FROM weekday
+        <where>
+            <if test="weekdayNameInList != null">
+                AND weekday_name in
+                <foreach item="item" index="index" collection="weekdayNameInList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="limit != null and offset != null">
+            OFFSET #{offset}
+        </if>
+    </select>
+</mapper>

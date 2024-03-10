@@ -9,7 +9,20 @@ import java.util.List;
 public class CourseService {
     @Autowired
     private CourseMapper courseMapper;
-    public List<CourseModel> read() {
-        return this.courseMapper.read();
+
+    public List<CourseModel> read(Integer courseNumberEquals,
+                                  Integer courseNumberLessThanOrEquals,
+                                  Integer courseNumberGreaterThanOrEquals,
+                                  String courseTitleContains,
+                                  String majorAbbreviationContains,
+                                  Integer limit,
+                                  Integer offset) {
+        return this.courseMapper.read(courseNumberEquals,
+                courseNumberLessThanOrEquals,
+                courseNumberGreaterThanOrEquals,
+                courseTitleContains,
+                majorAbbreviationContains,
+                limit,
+                offset);
     }
 }

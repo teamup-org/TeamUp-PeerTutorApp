@@ -2,48 +2,85 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="xyz.tamutheo.databaseAPI.tutorReview.TutorReviewMapper">
     <resultMap id="TutorReviewResultMap" type="xyz.tamutheo.databaseAPI.tutorReview.TutorReviewModel">
-        <result property="reviewId" column="review_id" />
-        <result property="tutorId" column="tutor_id" />
-        <result property="tuteeId" column="tutee_id" />
-        <result property="ratingId" column="rating_id" />
-        <result property="reviewText" column="review_text" />
+        <result property="appointmentId" column="appointment_id"/>
+        <result property="numberStars" column="number_stars"/>
+        <result property="reviewText" column="review_text"/>
+        <result property="tuteeEmail" column="tutee_email"/>
+        <result property="tutorEmail" column="tutor_email"/>
     </resultMap>
+    <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutorReview.TutorReviewModel">
+        INSERT INTO tutor_review
+        (appointment_id, number_stars, review_text, tutee_email, tutor_email)
+        VALUES
+        (#{appointmentId}, #{numberStars}, #{reviewText}, #{tuteeEmail}, #{tutorEmail})
+    </insert>
     <select id="read" resultMap="TutorReviewResultMap">
         SELECT
         *
         FROM tutor_review
         <where>
-            <if test="tutorId != null">
-                tutor_id = #{tutorId}
+            <if test="appointmentIdEquals != null">
+                AND appointment_id = #{appointmentIdEquals}
             </if>
-            <if test="tuteeId != null">
-                AND tutee_id = #{tuteeId}
+            <if test="numberStarsGreaterThanOrEquals != null">
+                AND number_stars &gt;= #{numberStarsGreaterThanOrEquals}
+            </if>
+            <if test="numberStarsLessThanOrEquals != null">
+                AND number_stars &lt;= #{numberStarsLessThanOrEquals}
+            </if>
+            <if test="reviewTextContains != null">
+                <bind name="reviewTextContainsPattern" value = "'%' + reviewTextContains + '%'" />
+                AND LOWER(review_text) LIKE LOWER(#{reviewTextContainsPattern})
+            </if>
+            <if test="tuteeEmailContains != null">
+                <bind name="tuteeEmailContainsPattern" value = "'%' + tuteeEmailContains + '%'" />
+                AND LOWER(tutee_email) LIKE LOWER(#{tuteeEmailContainsPattern})
+            </if>
+            <if test="tutorEmailContains != null">
+                <bind name="tutorEmailContainsPattern" value = "'%' + tutorEmailContains + '%'" />
+                AND LOWER(tutor_email) LIKE LOWER(#{tutorEmailContainsPattern})
             </if>
         </where>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="limit != null and offset != null">
+            OFFSET #{offset}
+        </if>
     </select>
-    <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutorReview.TutorReviewModel">
-        INSERT INTO tutor_review
-            (tutor_id, tutee_id, rating_id, review_text)
-        VALUES
-            (#{tutorId}, #{tuteeId}, #{ratingId}, #{reviewText})
-    </insert>
     <update id="update" parameterType="map">
         UPDATE tutor_review
-        SET
-            rating_id = #{tutorReviewModelNew.ratingId},
-            review_text = #{tutorReviewModelNew.reviewText}
-        WHERE
-            tutor_id = #{tutorReviewModelOld.tutorId}
-            AND tutee_id = #{tutorReviewModelOld.tuteeId}
+        <set>
+            <if test="tutorReviewModelNew.numberStars != null">
+                number_stars = #{tutorReviewModelNew.numberStars},
+            </if>
+            <if test="tutorReviewModelNew.reviewText != null">
+                review_text = #{tutorReviewModelNew.reviewText},
+            </if>
+        </set>
+        <where>
+            <if test="tutorReviewModelOld.appointmentId != null">
+                AND appointment_id = #{tutorReviewModelOld.appointmentId}
+            </if>
+            <if test="tutorReviewModelOld.tuteeEmail != null">
+                AND tutee_email = #{tutorReviewModelOld.tuteeEmail}
+            </if>
+            <if test="tutorReviewModelOld.tutorEmail != null">
+                AND tutor_email = #{tutorReviewModelOld.tutorEmail}
+            </if>
+        </where>
     </update>
     <delete id="delete" parameterType="xyz.tamutheo.databaseAPI.tutorReview.TutorReviewModel">
         DELETE FROM tutor_review
         <where>
-            <if test="tutorId != null">
-                tutor_id = #{tutorId}
+            <if test="appointmentId != null">
+                AND appointment_id = #{appointmentId}
             </if>
-            <if test="tuteeId != null">
-                AND tutee_id = #{tuteeId}
+            <if test="tuteeEmail != null">
+                AND tutee_email = #{tuteeEmail}
+            </if>
+            <if test="tutorEmail != null">
+                AND tutor_email = #{tutorEmail}
             </if>
         </where>
     </delete>

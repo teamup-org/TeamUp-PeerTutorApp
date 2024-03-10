@@ -2,42 +2,87 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="xyz.tamutheo.databaseAPI.tutee.TuteeMapper">
     <resultMap id="TuteeResultMap" type="xyz.tamutheo.databaseAPI.tutee.TuteeModel">
-        <result property="tuteeId" column="tutee_id" /> 
-        <result property="uin" column="uin" /> 
-        <result property="firstName" column="first_name" /> 
-        <result property="lastName" column="last_name" /> 
-        <result property="majorId" column="major_id" /> 
-        <result property="seniorityId" column="seniority_id" /> 
-        <result property="phoneNumber" column="phone_number" /> 
-        <result property="email" column="email" /> 
+        <result property="activeStatusName" column="active_status_name"/>
+        <result property="email" column="email"/>
+        <result property="firstName" column="first_name"/>
+        <result property="lastName" column="last_name"/>
+        <result property="majorAbbreviation" column="major_abbreviation"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="seniorityName" column="seniority_name"/>
     </resultMap>
-    <select id="read" resultMap="TuteeResultMap">
-        SELECT
-        *
-        FROM tutee
-        <where>
-            <if test="uin != null">
-                uin = #{uin}
-            </if>
-        </where>
-    </select>
     <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutee.TuteeModel">
         INSERT INTO tutee
-            (uin, first_name, last_name, major_id, seniority_id, phone_number, email)
+        (active_status_name, email, first_name, last_name, major_abbreviation, phone_number, seniority_name)
         VALUES
-            (#{uin}, #{firstName}, #{lastName}, #{majorId}, #{seniorityId}, #{phoneNumber}, #{email})
+        (#{activeStatusName}, #{email}, #{firstName}, #{lastName}, #{majorAbbreviation}, #{phoneNumber}, #{seniorityName})
     </insert>
+    <select id="read" resultMap="TuteeResultMap">
+        SELECT *
+        FROM tutee
+        <where>
+            <if test="activeStatusNameEquals != null">
+                AND active_status_name = #{activeStatusNameEquals}
+            </if>
+            <if test="emailContains != null">
+                <bind name="emailContainsPattern" value = "'%' + emailContains + '%'" />
+                AND LOWER(email) LIKE LOWER(#{emailContainsPattern})
+            </if>
+            <if test="firstNameContains != null">
+                <bind name="firstNameContainsPattern" value = "'%' + firstNameContains + '%'" />
+                AND LOWER(first_name) LIKE LOWER(#{firstNameContainsPattern})
+            </if>
+            <if test="lastNameContains != null">
+                <bind name="lastNameContainsPattern" value = "'%' + lastNameContains + '%'" />
+                AND LOWER(last_name) LIKE LOWER(#{lastNameContainsPattern})
+            </if>
+            <if test="majorAbbreviationContains != null">
+                <bind name="majorAbbreviationContainsPattern" value = "'%' + majorAbbreviationContains + '%'" />
+                AND LOWER(major_abbreviation) LIKE LOWER(#{majorAbbreviationContainsPattern})
+            </if>
+            <if test="phoneNumberContains != null">
+                <bind name="phoneNumberContainsPattern" value = "'%' + phoneNumberContains + '%'" />
+                AND LOWER(phone_number) LIKE LOWER(#{phoneNumberContainsPattern})
+            </if>
+            <if test="seniorityNameInList != null">
+                AND seniority_name in
+                <foreach item="item" index="index" collection="seniorityNameInList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="limit != null and offset != null">
+            OFFSET #{offset}
+        </if>
+    </select>
     <update id="update" parameterType="map">
         UPDATE tutee
-        SET
-            uin = #{tuteeModelNew.uin},
-            first_name = #{tuteeModelNew.firstName},
-            last_name = #{tuteeModelNew.lastName},
-            major_id = #{tuteeModelNew.majorId},
-            seniority_id = #{tuteeModelNew.seniorityId},
-            phone_number = #{tuteeModelNew.phoneNumber},
-            email = #{tuteeModelNew.email}
+        <set>
+            <if test="tuteeModelNew.activeStatusName != null">
+                active_status_name = #{tuteeModelNew.activeStatusName},
+            </if>
+            <if test="tuteeModelNew.email != null">
+                email = #{tuteeModelNew.email},
+            </if>
+            <if test="tuteeModelNew.firstName != null">
+                first_name = #{tuteeModelNew.firstName},
+            </if>
+            <if test="tuteeModelNew.lastName != null">
+                last_name = #{tuteeModelNew.lastName},
+            </if>
+            <if test="tuteeModelNew.majorAbbreviation != null">
+                major_abbreviation = #{tuteeModelNew.majorAbbreviation},
+            </if>
+            <if test="tuteeModelNew.phoneNumber != null">
+                phone_number = #{tuteeModelNew.phoneNumber},
+            </if>
+            <if test="tuteeModelNew.seniorityName != null">
+                seniority_name = #{tuteeModelNew.seniorityName},
+            </if>
+        </set>
         WHERE
-            uin = #{tuteeModelOld.uin}
+        email = #{tuteeModelOld.email}
     </update>
 </mapper>

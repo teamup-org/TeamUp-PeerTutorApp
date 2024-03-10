@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xyz.tamutheo.databaseAPI.appointmentSize.AppointmentSizeMapper">
+    <resultMap id="AppointmentSizeResultMap" type="xyz.tamutheo.databaseAPI.appointmentSize.AppointmentSizeModel">
+        <result property="appointmentSizeName" column="appointment_size_name" />
+    </resultMap>
+    <select id="read" resultMap="AppointmentSizeResultMap">
+        SELECT
+        *
+        FROM appointment_size
+        <where>
+            <if test="appointmentSizeNameContains != null">
+                <bind name="appointmentSizeNameContainsPattern" value = "'%' + appointmentSizeNameContains + '%'" />
+                AND LOWER(appointment_size_name) LIKE LOWER(#{appointmentSizeNameContainsPattern})
+            </if>
+        </where>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="limit != null and offset != null">
+            OFFSET #{offset}
+        </if>
+    </select>
+</mapper>

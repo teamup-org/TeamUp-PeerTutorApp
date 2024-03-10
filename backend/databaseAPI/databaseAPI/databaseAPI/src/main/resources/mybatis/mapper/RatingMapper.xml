@@ -2,12 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="xyz.tamutheo.databaseAPI.rating.RatingMapper">
     <resultMap id="RatingResultMap" type="xyz.tamutheo.databaseAPI.rating.RatingModel">
-        <result property="ratingId" column="rating_id" />
         <result property="numberStars" column="number_stars" />
     </resultMap>
     <select id="read" resultMap="RatingResultMap">
         SELECT
         *
         FROM rating
+        <where>
+            <if test="numberStarsEquals != null" >
+                AND number_stars = #{numberStarsEquals}
+            </if>
+            <if test="numberStarsGreaterThanOrEquals != null" >
+                AND number_stars &gt;= #{numberStarsGreaterThanOrEquals}
+            </if>
+            <if test="numberStarsLessThanOrEquals != null" >
+                AND number_stars &lt;= #{numberStarsLessThanOrEquals}
+            </if>
+        </where>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="limit != null and offset != null">
+            OFFSET #{offset}
+        </if>
     </select>
 </mapper>

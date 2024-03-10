@@ -2,7 +2,6 @@ package xyz.tamutheo.databaseAPI.util.tamuMajorAndCourse;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import xyz.tamutheo.databaseAPI.appointmentRequest.AppointmentRequestModel;
 import xyz.tamutheo.databaseAPI.course.CourseModel;
 import xyz.tamutheo.databaseAPI.major.MajorModel;
 import xyz.tamutheo.databaseAPI.util.tamuMajorAndCourse.tamuMajor.TamuMajorModel;

@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TutorCoursePreferenceModel {
-    Integer coursePreferenceId;
-    Integer eligibilityId;
-    Integer tutorId;
+    Character courseGrade;
+    Integer courseNumber;
+    String majorAbbreviation;
+    String tutorEmail;
 }

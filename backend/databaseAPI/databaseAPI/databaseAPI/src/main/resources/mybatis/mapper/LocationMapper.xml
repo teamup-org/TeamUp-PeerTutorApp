@@ -2,12 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="xyz.tamutheo.databaseAPI.location.LocationMapper">
     <resultMap id="LocationResultMap" type="xyz.tamutheo.databaseAPI.location.LocationModel">
-        <result property="locationId" column="location_id" />
         <result property="locationName" column="location_name" />
     </resultMap>
     <select id="read" resultMap="LocationResultMap">
         SELECT
         *
         FROM location
+        <where>
+            <if test="locationNameInList != null">
+                AND location_name in
+                <foreach item="item" index="index" collection="locationNameInList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="limit != null and offset != null">
+            OFFSET #{offset}
+        </if>
     </select>
 </mapper>

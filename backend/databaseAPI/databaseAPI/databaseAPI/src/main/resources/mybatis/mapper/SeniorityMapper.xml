@@ -2,13 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="xyz.tamutheo.databaseAPI.seniority.SeniorityMapper">
     <resultMap id="SeniorityResultMap" type="xyz.tamutheo.databaseAPI.seniority.SeniorityModel">
-
-        <result property="seniorityId" column="seniority_id" />
         <result property="seniorityName" column="seniority_name" />
     </resultMap>
     <select id="read" resultMap="SeniorityResultMap">
         SELECT
         *
         FROM seniority
+        <where>
+            <if test="seniorityNameInList != null">
+                AND seniority_name in
+                <foreach item="item" index="index" collection="seniorityNameInList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="limit != null and offset != null">
+            OFFSET #{offset}
+        </if>
     </select>
 </mapper>

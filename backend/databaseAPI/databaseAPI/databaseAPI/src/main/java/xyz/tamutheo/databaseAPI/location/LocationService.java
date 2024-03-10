@@ -9,7 +9,11 @@ import java.util.List;
 public class LocationService {
     @Autowired
     private LocationMapper locationMapper;
-    public List<LocationModel> read() {
-        return this.locationMapper.read();
+    public List<LocationModel> read(List<String> locationNameInList,
+                                    Integer limit,
+                                    Integer offset) {
+        return this.locationMapper.read(locationNameInList,
+                limit,
+                offset);
     }
 }

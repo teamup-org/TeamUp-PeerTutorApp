@@ -9,8 +9,24 @@ import java.util.List;
 public class TuteeService {
     @Autowired
     private TuteeMapper tuteeMapper;
-    public List<TuteeModel> read(Integer uin) {
-        return this.tuteeMapper.read(uin);
+    public List<TuteeModel> read(String activeStatusNameEquals,
+                                 String emailContains,
+                                 String firstNameContains,
+                                 String lastNameContains,
+                                 String majorAbbreviationContains,
+                                 Long phoneNumberContains,
+                                 List<String> seniorityNameInList,
+                                 Integer limit,
+                                 Integer offset) {
+        return this.tuteeMapper.read(activeStatusNameEquals,
+                emailContains,
+                firstNameContains,
+                lastNameContains,
+                majorAbbreviationContains,
+                phoneNumberContains,
+                seniorityNameInList,
+                limit,
+                offset);
     }
     public void create(TuteeModel tuteeModel) {
         this.tuteeMapper.create(tuteeModel);

@@ -4,18 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceModel;
+import xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceModel;
+
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TuteeModel {
+    String activeStatusName;
     String email;
     String firstName;
     String lastName;
-    Integer majorId;
+    String majorAbbreviation;
     Long phoneNumber;
-    Integer seniorityId;
-    Integer tuteeId;
-    Integer uin;
+    String seniorityName;
 }

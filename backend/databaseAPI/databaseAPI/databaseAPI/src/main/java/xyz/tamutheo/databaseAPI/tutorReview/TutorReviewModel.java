@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TutorReviewModel {
-    Integer ratingId;
-    Integer reviewId;
+    Integer appointmentId;
+    Integer numberStars;
     String reviewText;
-    Integer tuteeId;
-    Integer tutorId;
+    String tuteeEmail;
+    String tutorEmail;
 }
