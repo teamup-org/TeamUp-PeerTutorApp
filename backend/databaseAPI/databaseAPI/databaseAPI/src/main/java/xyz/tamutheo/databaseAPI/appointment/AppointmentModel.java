@@ -22,6 +22,7 @@ public class AppointmentModel {
     @JsonIgnore
     LocalDateTime endDateTimeValue;
     Boolean isCancelled;
+    Boolean isConfirmed;
     String locationName;
     String startDateTimeString;
     @JsonIgnore

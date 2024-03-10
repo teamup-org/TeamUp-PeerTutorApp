@@ -8,6 +8,7 @@
         <result property="appointmentSizeName" column="appointment_size_name" />
         <result property="cancellationReason" column="cancellation_reason" />
         <result property="isCancelled" column="is_cancelled" />
+        <result property="isConfirmed" column="is_confirmed" />
         <result property="locationName" column="location_name" />
         <result property="tuteeEmail" column="tutee_email" />
         <result property="tuteeFirstName" column="tutee_first_name" />
@@ -31,6 +32,7 @@
             a.cancellation_reason,
             TIMESTAMP(a.appointment_date, a.end_time) AS end_date_time_value,
             a.is_cancelled,
+            a.is_confirmed,
             a.location_name,
             TIMESTAMP(a.appointment_date, a.start_time) AS start_date_time_value,
             a.tutee_email AS tutee_email,
@@ -62,6 +64,9 @@
             </if>
             <if test="isCancelledEquals != null">
                 AND a.is_cancelled = #{isCancelledEquals}
+            </if>
+            <if test="isConfirmedEquals != null">
+                AND a.is_confirmed = #{isConfirmedEquals}
             </if>
             <if test="locationNameInList != null">
                 AND a.location_name in
@@ -107,6 +112,9 @@
             </if>
             <if test="appointmentModelNew.isCancelled != null">
                 is_cancelled = #{appointmentModelNew.isCancelled},
+            </if>
+            <if test="appointmentModelNew.isConfirmed != null">
+                is_confirmed = #{appointmentModelNew.isConfirmed},
             </if>
             <if test="appointmentModelNew.locationName != null">
                 location_name = #{appointmentModelNew.locationName},

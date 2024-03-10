@@ -16,6 +16,7 @@ public interface AppointmentMapper {
                                 @Param("cancellationReasonContains") String cancellationReasonContains,
                                 @Param("endDateTimeLessThanOrEquals") String endDateTimeLessThanOrEquals,
                                 @Param("isCancelledEquals") Boolean isCancelledEquals,
+                                @Param("isConfirmedEquals") Boolean isConfirmedEquals,
                                 @Param("locationNameInList") List<String> locationNameInList,
                                 @Param("tuteeEmailContains") String tuteeEmailContains,
                                 @Param("tutorEmailContains") String tutorEmailContains,
