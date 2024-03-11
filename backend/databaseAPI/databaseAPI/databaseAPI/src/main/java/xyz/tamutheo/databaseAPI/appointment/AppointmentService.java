@@ -19,14 +19,11 @@ public class AppointmentService {
 
     public void create(AppointmentModel appointmentModel) {
         List<AppointmentModel> appointmentModelList = this.appointmentMapper.overlaps(appointmentModel);
-        System.out.println(appointmentModelList);
         if (!appointmentModelList.isEmpty()) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Requested appointment overlaps with other existing appointments." + appointmentModelList);
+                    HttpStatus.BAD_REQUEST, "Requested appointment overlaps with other existing appointments.");
         }
-        throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "OK");
-//        this.appointmentMapper.create(appointmentModel);
+        this.appointmentMapper.create(appointmentModel);
     }
 
     public List<AppointmentModel> read(Integer appointmentIdEquals,

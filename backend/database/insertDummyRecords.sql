@@ -308,26 +308,24 @@ VALUES
     ('group');
 
 INSERT INTO appointment
-    (appointment_size_name, tutee_email, tutor_email, appointment_date, start_time, end_time, location_name)
+    (appointment_size_name, tutee_email, tutor_email, start_date_time, end_date_time, location_name)
 VALUES
-    ('single', 'amber@gmail.com', 'john@gmail.com', '2024-03-01', '13:00:00', '14:00:00', 'in-person off-campus'),
-    ('single', 'bobby@gmail.com', 'maria@gmail.com', '2024-03-02', '08:00:00', '09:00:00', 'in-person on-campus'),
-    ('single', 'calvin@gmail.com', 'james@gmail.com', '2024-03-03', '22:00:00', '23:00:00', 'online'),
-    ('single', 'denise@gmail.com', 'david@gmail.com', '2024-03-04', '13:00:00', '14:00:00', 'in-person off-campus'),
-    ('single', 'edgar@gmail.com', 'mary@gmail.com', '2024-03-05', '08:00:00', '09:00:00', 'in-person on-campus'),
-    ('single', 'sophia@gmail.com', 'sophie@gmail.com', '2024-03-02', '22:00:00', '23:00:00', 'online'),
-    ('single', 'liam@gmail.com', 'lucas@gmail.com', '2024-03-03', '13:00:00', '14:00:00', 'in-person off-campus'),
-    ('single', 'olivia@gmail.com', 'emma@gmail.com', '2024-03-04', '08:00:00', '09:00:00', 'in-person on-campus'),
-    ('single', 'noah@gmail.com', 'nathan@gmail.com', '2024-03-05', '22:00:00', '23:00:00', 'online'),
-    ('single', 'ava@gmail.com', 'chloe@gmail.com', '2024-03-06', '13:00:00', '14:00:00', 'in-person off-campus'),
-    ('single', 'william@gmail.com', 'louis@gmail.com', '2024-03-07', '08:00:00', '09:00:00', 'in-person on-campus'),
-    ('single', 'isabella@gmail.com', 'lea@gmail.com', '2024-03-08', '22:00:00', '23:00:00', 'online'),
-    ('single', 'james@gmail.com', 'hugo@gmail.com', '2024-03-09', '13:00:00', '14:00:00', 'in-person off-campus'),
-    ('single', 'emma@gmail.com', 'manon@gmail.com', '2024-03-10', '08:00:00', '09:00:00', 'in-person on-campus'),
-    ('single', 'emma@gmail.com', 'gabriel@gmail.com', '2024-03-11', '22:00:00', '23:00:00', 'online'),
-    ('single', 'benjamin@gmail.com', 'gabriel@gmail.com', '2024-03-12', '22:00:00', '23:00:00', 'online');
-
-
+    ('single', 'amber@gmail.com', 'john@gmail.com', '2024-03-01 13:00:00', '2024-03-01 14:00:00', 'in-person off-campus'),
+    ('single', 'bobby@gmail.com', 'maria@gmail.com', '2024-03-02 08:00:00', '2024-03-02 09:00:00', 'in-person on-campus'),
+    ('single', 'calvin@gmail.com', 'james@gmail.com', '2024-03-03 22:00:00', '2024-03-03 23:00:00', 'online'),
+    ('single', 'denise@gmail.com', 'david@gmail.com', '2024-03-04 13:00:00', '2024-03-04 14:00:00', 'in-person off-campus'),
+    ('single', 'edgar@gmail.com', 'mary@gmail.com', '2024-03-05 08:00:00', '2024-03-05 09:00:00', 'in-person on-campus'),
+    ('single', 'sophia@gmail.com', 'sophie@gmail.com', '2024-03-02 22:00:00', '2024-03-02 23:00:00', 'online'),
+    ('single', 'liam@gmail.com', 'lucas@gmail.com', '2024-03-03 13:00:00', '2024-03-03 14:00:00', 'in-person off-campus'),
+    ('single', 'olivia@gmail.com', 'emma@gmail.com', '2024-03-04 08:00:00', '2024-03-04 09:00:00', 'in-person on-campus'),
+    ('single', 'noah@gmail.com', 'nathan@gmail.com', '2024-03-05 22:00:00', '2024-03-05 23:00:00', 'online'),
+    ('single', 'ava@gmail.com', 'chloe@gmail.com', '2024-03-06 13:00:00', '2024-03-06 14:00:00', 'in-person off-campus'),
+    ('single', 'william@gmail.com', 'louis@gmail.com', '2024-03-07 08:00:00', '2024-03-07 09:00:00', 'in-person on-campus'),
+    ('single', 'isabella@gmail.com', 'lea@gmail.com', '2024-03-08 22:00:00', '2024-03-08 23:00:00', 'online'),
+    ('single', 'james@gmail.com', 'hugo@gmail.com', '2024-03-09 13:00:00', '2024-03-09 14:00:00', 'in-person off-campus'),
+    ('single', 'emma@gmail.com', 'manon@gmail.com', '2024-03-10 08:00:00', '2024-03-10 09:00:00', 'in-person on-campus'),
+    ('single', 'emma@gmail.com', 'gabriel@gmail.com', '2024-03-11 22:00:00', '2024-03-11 23:00:00', 'online'),
+    ('single', 'benjamin@gmail.com', 'gabriel@gmail.com', '2024-03-12 22:00:00', '2024-03-12 23:00:00', 'online');
 
 INSERT INTO tutor_review
     (appointment_id, tutee_email, tutor_email, number_stars, review_text)

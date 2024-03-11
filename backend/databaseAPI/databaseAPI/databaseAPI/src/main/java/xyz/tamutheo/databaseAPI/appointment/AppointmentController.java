@@ -17,18 +17,18 @@ public class AppointmentController {
     private AppointmentService appointmentService;
     @PostMapping(value = {"", "/"})
     public void create(@RequestParam(name = "appointment_size_name", defaultValue = "single") String appointmentSizeName,
-                       @RequestParam(name = "end_date_time") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTimeValue,
+                       @RequestParam(name = "end_date_time") String endDateTimeString,
                        @RequestParam(name = "location_name") String locationName,
                        @RequestParam(name = "tutee_email") String tuteeEmail,
                        @RequestParam(name = "tutor_email") String tutorEmail,
-                       @RequestParam(name = "start_date_time") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTimeValue) {
+                       @RequestParam(name = "start_date_time") String startDateTimeString) {
         AppointmentModel appointmentModel = AppointmentModel.builder()
                 .appointmentSizeName(appointmentSizeName)
-                .endDateTimeValue(endDateTimeValue)
+                .endDateTimeString(endDateTimeString)
                 .locationName(locationName)
                 .tuteeEmail(tuteeEmail)
                 .tutorEmail(tutorEmail)
-                .startDateTimeValue(startDateTimeValue)
+                .startDateTimeString(startDateTimeString)
                 .build();
         this.appointmentService.create(appointmentModel);
     }
@@ -66,33 +66,25 @@ public class AppointmentController {
                 offset);
     }
 
-//    @PutMapping(value = {"", "/"})
-//    public void update(@RequestParam(name = "end_date_time_old") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTimeValueOld,
-//                       @RequestParam(name = "tutee_email_old") String tuteeEmailOld,
-//                       @RequestParam(name = "tutor_email_old") String tutorEmailOld,
-//                       @RequestParam(name = "start_date_time_old") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTimeValueOld,
-//                       @RequestParam(name = "appointment_size_name_new", required = false) String appointmentSizeNameNew,
-//                       @RequestParam(name = "cancellation_reason_new", required = false) String cancellationReasonNew,
-//                       @RequestParam(name = "end_date_time_new", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTimeValueNew,
-//                       @RequestParam(name = "is_cancelled_new", required = false) Boolean isCancelledNew,
-//                       @RequestParam(name = "is_confirmed_new", required = false) Boolean isConfirmedNew,
-//                       @RequestParam(name = "location_name_new", required = false) String locationNameNew,
-//                       @RequestParam(name = "start_date_time_new", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTimeValueNew) {
-//        AppointmentModel appointmentModelOld = AppointmentModel.builder()
-//                .endDateTimeString(endDateTimeValueOld != null ? endDateTimeValueOld.toString() : null)
-//                .tuteeEmail(tuteeEmailOld)
-//                .tutorEmail(tutorEmailOld)
-//                .startDateTimeString(startDateTimeValueOld != null ? startDateTimeValueOld.toString() : null)
-//                .build();
-//        AppointmentModel appointmentModelNew = AppointmentModel.builder()
-//                .appointmentSizeName(appointmentSizeNameNew)
-//                .cancellationReason(cancellationReasonNew)
-//                .isCancelled(isCancelledNew)
-//                .isConfirmed(isConfirmedNew)
-//                .endDateTimeString(endDateTimeValueNew != null ? endDateTimeValueNew.toString() : null)
-//                .locationName(locationNameNew)
-//                .startDateTimeString(startDateTimeValueNew != null ? startDateTimeValueNew.toString(): null)
-//                .build();
-//        this.appointmentService.update(appointmentModelOld, appointmentModelNew);
-//    }
+    @PutMapping(value = {"", "/"})
+    public void update(@RequestParam(name = "end_date_time_old") String endDateTimeStringOld,
+                       @RequestParam(name = "tutee_email_old") String tuteeEmailOld,
+                       @RequestParam(name = "tutor_email_old") String tutorEmailOld,
+                       @RequestParam(name = "start_date_time_old") String startDateTimeStringOld,
+                       @RequestParam(name = "cancellation_reason_new", required = false) String cancellationReasonNew,
+                       @RequestParam(name = "is_cancelled_new", required = false) Boolean isCancelledNew,
+                       @RequestParam(name = "is_confirmed_new", required = false) Boolean isConfirmedNew) {
+        AppointmentModel appointmentModelOld = AppointmentModel.builder()
+                .endDateTimeString(endDateTimeStringOld)
+                .tuteeEmail(tuteeEmailOld)
+                .tutorEmail(tutorEmailOld)
+                .startDateTimeString(startDateTimeStringOld)
+                .build();
+        AppointmentModel appointmentModelNew = AppointmentModel.builder()
+                .cancellationReason(cancellationReasonNew)
+                .isCancelled(isCancelledNew)
+                .isConfirmed(isConfirmedNew)
+                .build();
+        this.appointmentService.update(appointmentModelOld, appointmentModelNew);
+    }
 }
