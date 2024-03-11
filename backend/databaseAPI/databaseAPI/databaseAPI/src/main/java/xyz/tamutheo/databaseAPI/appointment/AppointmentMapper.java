@@ -27,6 +27,16 @@ public interface AppointmentMapper {
     void update(@Param("appointmentModelOld") AppointmentModel appointmentModelOld,
                 @Param("appointmentModelNew") AppointmentModel appointmentModelNew);
     List<AppointmentModel> overlaps(AppointmentModel appointmentModel);
+    Integer getTotalNumberEntries(@Param("appointmentIdEquals") Integer appointmentIdEquals,
+                                  @Param("appointmentSizeNameContains") String appointmentSizeNameContains,
+                                  @Param("cancellationReasonContains") String cancellationReasonContains,
+                                  @Param("endDateTimeLessThanOrEquals") String endDateTimeLessThanOrEquals,
+                                  @Param("isCancelledEquals") Boolean isCancelledEquals,
+                                  @Param("isConfirmedEquals") Boolean isConfirmedEquals,
+                                  @Param("locationNameInList") List<String> locationNameInList,
+                                  @Param("tuteeEmailContains") String tuteeEmailContains,
+                                  @Param("tutorEmailContains") String tutorEmailContains,
+                                  @Param("startDateTimeGreaterThanOrEquals") String startDateTimeGreaterThanOrEquals);
 }
 
 

@@ -6,8 +6,11 @@ import xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceMappe
 import xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceModel;
 import xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceMapper;
 import xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceModel;
+import xyz.tamutheo.databaseAPI.util.paginationContainer.PaginationContainerModel;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TutorService {
@@ -18,7 +21,7 @@ public class TutorService {
     @Autowired
     private TutorLocationPreferenceMapper tutorLocationPreferenceMapper;
 
-    public List<TutorModel> read(String activeStatusNameEquals,
+    public PaginationContainerModel read(String activeStatusNameEquals,
                                  Double averageRatingGreaterThanOrEquals,
                                  Double averageRatingLessThanOrEquals,
                                  String bioTextContains,
@@ -42,8 +45,10 @@ public class TutorService {
                                  String courseMajorAbbreviationContains,
                                  // tutor_location_preference parameters
                                  List<String> locationNameInList,
-                                 Integer limit,
-                                 Integer offset) {
+                                 Integer pageNumber,
+                                 Integer numberEntriesPerPage) {
+        Integer limit = numberEntriesPerPage != null ? numberEntriesPerPage : null;
+        Integer offset = (numberEntriesPerPage != null) && (pageNumber != null) ? (pageNumber - 1) * numberEntriesPerPage : null;
         List<TutorModel> tutorModelList = tutorMapper.read(activeStatusNameEquals,
                 averageRatingGreaterThanOrEquals,
                 averageRatingLessThanOrEquals,
@@ -82,7 +87,41 @@ public class TutorService {
                     null));
             tutorModel.setLocationPreferences(tutorLocationPreferenceMapper.read(locationNameInList, currTutorEmail, null, null));
         }
-        return tutorModelList;
+        Integer totalNumberEntries = this.tutorMapper.getTotalNumberEntries(activeStatusNameEquals,
+                averageRatingGreaterThanOrEquals,
+                averageRatingLessThanOrEquals,
+                bioTextContains,
+                emailContains,
+                firstNameContains,
+                lastNameContains,
+                listingTitleContains,
+                majorAbbreviationContains,
+                numberOfRatingsGreaterThanOrEquals,
+                numberOfRatingsLessThanOrEquals,
+                payRateGreaterThanOrEquals,
+                payRateLessThanOrEquals,
+                phoneNumberContains,
+                pictureUrlContains,
+                seniorityNameInList,
+                // tutor_course_preference parameters
+                courseGradeInList,
+                courseNumberEquals,
+                courseNumberGreaterThanOrEquals,
+                courseNumberLessThanOrEquals,
+                courseMajorAbbreviationContains,
+                // tutor_location_preference parameters
+                locationNameInList);
+        Integer totalNumberPages = numberEntriesPerPage != null ? (int) (Math.ceil((double) totalNumberEntries / numberEntriesPerPage)) : 1;
+        Map<String, Integer> metaDataMap = new HashMap<>();
+        metaDataMap.put("totalNumberEntries", totalNumberEntries);
+        metaDataMap.put("totalNumberPages", totalNumberPages);
+        metaDataMap.put("maximumNumberEntriesPerPage", numberEntriesPerPage);
+        metaDataMap.put("pageNumber", pageNumber);
+        PaginationContainerModel paginationContainerModel = PaginationContainerModel.builder()
+                .data(tutorModelList)
+                .metaData(metaDataMap)
+                .build();
+        return paginationContainerModel;
     }
 
     public void create(TutorModel tutorModel) {
