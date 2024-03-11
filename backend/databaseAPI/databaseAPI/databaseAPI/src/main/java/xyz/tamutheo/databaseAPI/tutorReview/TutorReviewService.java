@@ -1,7 +1,10 @@
 package xyz.tamutheo.databaseAPI.tutorReview;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import xyz.tamutheo.databaseAPI.appointment.AppointmentModel;
 import xyz.tamutheo.databaseAPI.util.paginationContainer.PaginationContainerModel;
 
 import java.util.HashMap;
@@ -49,12 +52,41 @@ public class TutorReviewService {
         return paginationContainerModel;
     }
     public void create(TutorReviewModel tutorReviewModel) {
-        this.tutorReviewMapper.create(tutorReviewModel);
+        // check that session is confirmed, is not cancelled, and current time is past session end time
+        List<AppointmentModel> appointmentModelList = this.tutorReviewMapper.getPendingReviews(tutorReviewModel.getAppointmentId(),
+                null,
+                null,
+                null,
+                false,
+                true,
+                null,
+                tutorReviewModel.getTuteeEmail(),
+                tutorReviewModel.getTutorEmail(),
+                null);
+        if (appointmentModelList.size() != 1) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Cannot find review this appointment.");
+        }
+       this.tutorReviewMapper.create(tutorReviewModel);
     }
     public void update(TutorReviewModel tutorReviewModelOld, TutorReviewModel tutorReviewModelNew) {
         this.tutorReviewMapper.update(tutorReviewModelOld, tutorReviewModelNew);
     }
     public void delete(TutorReviewModel tutorReviewModel) {
         this.tutorReviewMapper.delete(tutorReviewModel);
+    }
+    public List<AppointmentModel> getPendingReviews(String tuteeEmail) {
+        // check that session is confirmed, is not cancelled, and current time is past session end time
+        List<AppointmentModel> appointmentModelList = this.tutorReviewMapper.getPendingReviews(null,
+                null,
+                null,
+                null,
+                false,
+                true,
+                null,
+                tuteeEmail,
+                null,
+                null);
+        return appointmentModelList;
     }
 }

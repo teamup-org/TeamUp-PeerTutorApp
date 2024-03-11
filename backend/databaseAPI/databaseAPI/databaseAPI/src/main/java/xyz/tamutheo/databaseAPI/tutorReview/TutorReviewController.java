@@ -2,6 +2,7 @@ package xyz.tamutheo.databaseAPI.tutorReview;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import xyz.tamutheo.databaseAPI.appointment.AppointmentModel;
 import xyz.tamutheo.databaseAPI.util.paginationContainer.PaginationContainerModel;
 
 import java.util.List;
@@ -43,6 +44,10 @@ public class TutorReviewController {
                 tutorEmailContains,
                 pageNumber,
                 numberEntriesPerPage);
+    }
+    @GetMapping(value = {"/pending_reviews"})
+    public List<AppointmentModel> getPendingReviews(@RequestParam(name = "tutee_email") String tuteeEmail) {
+        return this.tutorReviewService.getPendingReviews(tuteeEmail);
     }
     @PutMapping(value = {"", "/"})
     public void update(@RequestParam(name = "appointment_id_old") Integer appointmentIdOld,
