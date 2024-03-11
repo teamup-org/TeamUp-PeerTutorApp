@@ -75,6 +75,7 @@ xyz\tamutheo\databaseAPI\major\MajorModel.class
 xyz\tamutheo\databaseAPI\appointmentSize\AppointmentSizeMapper.class
 xyz\tamutheo\databaseAPI\userActiveStatus\UserActiveStatusService.class
 xyz\tamutheo\databaseAPI\tutor\TutorModel$TutorModelBuilder.class
+xyz\tamutheo\databaseAPI\util\paginationContainer\PaginationContainerModel.class
 xyz\tamutheo\databaseAPI\appointment\AppointmentController.class
 xyz\tamutheo\databaseAPI\tutee\TuteeMapper.class
 xyz\tamutheo\databaseAPI\tutorLocationPreference\TutorLocationPreferenceService.class
@@ -82,6 +83,7 @@ xyz\tamutheo\databaseAPI\util\tamuMajorAndCourse\TamuMajorAndCourseService.class
 xyz\tamutheo\databaseAPI\location\LocationController.class
 xyz\tamutheo\databaseAPI\tutorEligibleCourse\TutorEligibleCourseModel$TutorEligibleCourseModelBuilder.class
 xyz\tamutheo\databaseAPI\course\CourseModel$CourseModelBuilder.class
+xyz\tamutheo\databaseAPI\util\paginationContainer\PaginationContainerModel$PaginationContainerModelBuilder.class
 xyz\tamutheo\databaseAPI\course\CourseService.class
 xyz\tamutheo\databaseAPI\util\tamuMajorAndCourse\tamuCourse\TamuCourseService.class
 xyz\tamutheo\databaseAPI\course\CourseMapper.class

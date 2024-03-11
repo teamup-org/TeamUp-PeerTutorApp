@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceModel;
 import xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceModel;
+import xyz.tamutheo.databaseAPI.util.paginationContainer.PaginationContainerModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,32 +43,32 @@ public class TutorController {
         this.tutorService.create(tutorModel);
     }
     @GetMapping(value = {"", "/"})
-    public List<TutorModel> read(@RequestParam(name = "active_status_name_equals", required = false) String activeStatusNameEquals,
-                                 @RequestParam(name = "average_rating_greater_than_or_equals", required = false) Double averageRatingGreaterThanOrEquals,
-                                 @RequestParam(name = "average_rating_less_than_or_equals", required = false) Double averageRatingLessThanOrEquals,
-                                 @RequestParam(name = "bio_text_contains", required = false) String bioTextContains,
-                                 @RequestParam(name = "email_contains", required = false) String emailContains,
-                                 @RequestParam(name = "first_name_contains", required = false) String firstNameContains,
-                                 @RequestParam(name = "last_name_contains", required = false) String lastNameContains,
-                                 @RequestParam(name = "listing_title_contains", required = false) String listingTitleContains,
-                                 @RequestParam(name = "major_abbreviation_contains", required = false) String majorAbbreviationContains,
-                                 @RequestParam(name = "number_of_ratings_greater_than_or_equals", required = false) Integer numberOfRatingsGreaterThanOrEquals,
-                                 @RequestParam(name = "number_of_ratings_less_than_or_equals", required = false) Integer numberOfRatingsLessThanOrEquals,
-                                 @RequestParam(name = "pay_rate_greater_than_or_equals", required = false) Double payRateGreaterThanOrEquals,
-                                 @RequestParam(name = "pay_rate_less_than_or_equals", required = false) Double payRateLessThanOrEquals,
-                                 @RequestParam(name = "phone_number_contains", required = false) Long phoneNumberContains,
-                                 @RequestParam(name = "picture_url_contains", required = false) String pictureUrlContains,
-                                 @RequestParam(name = "seniority_name_in", required = false) String seniorityNameIn,
-                                 // tutor_course_preference parameters
-                                 @RequestParam(name = "course_grade_in", required = false) String courseGradeIn,
-                                 @RequestParam(name = "course_number_equals", required = false) Integer courseNumberEquals,
-                                 @RequestParam(name = "course_number_greater_than_or_equals", required = false) Integer courseNumberGreaterThanOrEquals,
-                                 @RequestParam(name = "course_number_less_than_or_equals", required = false) Integer courseNumberLessThanOrEquals,
-                                 @RequestParam(name = "course_major_abbreviation_contains", required = false) String courseMajorAbbreviationContains,
-                                 // tutor_location_preference parameters
-                                 @RequestParam(name = "location_name_in", required = false) String locationNameIn,
-                                 @RequestParam(name = "limit", required = false) Integer limit,
-                                 @RequestParam(name = "offset", required = false) Integer offset) {
+    public PaginationContainerModel read(@RequestParam(name = "active_status_name_equals", required = false) String activeStatusNameEquals,
+                                         @RequestParam(name = "average_rating_greater_than_or_equals", required = false) Double averageRatingGreaterThanOrEquals,
+                                         @RequestParam(name = "average_rating_less_than_or_equals", required = false) Double averageRatingLessThanOrEquals,
+                                         @RequestParam(name = "bio_text_contains", required = false) String bioTextContains,
+                                         @RequestParam(name = "email_contains", required = false) String emailContains,
+                                         @RequestParam(name = "first_name_contains", required = false) String firstNameContains,
+                                         @RequestParam(name = "last_name_contains", required = false) String lastNameContains,
+                                         @RequestParam(name = "listing_title_contains", required = false) String listingTitleContains,
+                                         @RequestParam(name = "major_abbreviation_contains", required = false) String majorAbbreviationContains,
+                                         @RequestParam(name = "number_of_ratings_greater_than_or_equals", required = false) Integer numberOfRatingsGreaterThanOrEquals,
+                                         @RequestParam(name = "number_of_ratings_less_than_or_equals", required = false) Integer numberOfRatingsLessThanOrEquals,
+                                         @RequestParam(name = "pay_rate_greater_than_or_equals", required = false) Double payRateGreaterThanOrEquals,
+                                         @RequestParam(name = "pay_rate_less_than_or_equals", required = false) Double payRateLessThanOrEquals,
+                                         @RequestParam(name = "phone_number_contains", required = false) Long phoneNumberContains,
+                                         @RequestParam(name = "picture_url_contains", required = false) String pictureUrlContains,
+                                         @RequestParam(name = "seniority_name_in", required = false) String seniorityNameIn,
+                                         // tutor_course_preference parameters
+                                         @RequestParam(name = "course_grade_in", required = false) String courseGradeIn,
+                                         @RequestParam(name = "course_number_equals", required = false) Integer courseNumberEquals,
+                                         @RequestParam(name = "course_number_greater_than_or_equals", required = false) Integer courseNumberGreaterThanOrEquals,
+                                         @RequestParam(name = "course_number_less_than_or_equals", required = false) Integer courseNumberLessThanOrEquals,
+                                         @RequestParam(name = "course_major_abbreviation_contains", required = false) String courseMajorAbbreviationContains,
+                                         // tutor_location_preference parameters
+                                         @RequestParam(name = "location_name_in", required = false) String locationNameIn,
+                                         @RequestParam(name = "page_number", required = false, defaultValue = "1") Integer pageNumber,
+                                         @RequestParam(name = "number_entries_per_page", required = false) Integer numberEntriesPerPage) {
         List<String> courseGradeInList = null;
         if (courseGradeIn != null) {
             courseGradeInList = Arrays.asList(courseGradeIn.split(", "));
@@ -113,8 +114,8 @@ public class TutorController {
                 courseMajorAbbreviationContains,
                 // tutor_location_preference parameters
                 locationNameInList,
-                limit,
-                offset);
+                pageNumber,
+                numberEntriesPerPage);
     }
     @PutMapping(value = {"", "/"})
     public void update(@RequestParam(name = "email_old") String emailOld,

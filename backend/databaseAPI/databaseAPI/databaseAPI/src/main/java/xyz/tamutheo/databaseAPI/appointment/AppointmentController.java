@@ -3,6 +3,7 @@ package xyz.tamutheo.databaseAPI.appointment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import xyz.tamutheo.databaseAPI.util.paginationContainer.PaginationContainerModel;
 
 import java.time.LocalDateTime;
 
@@ -33,18 +34,18 @@ public class AppointmentController {
         this.appointmentService.create(appointmentModel);
     }
     @GetMapping(value = {"", "/"})
-    public List<AppointmentModel> read(@RequestParam(name = "appointment_id_equals", required = false) Integer appointmentIdEquals,
-                                       @RequestParam(name = "appointment_size_name_contains", required = false) String appointmentSizeNameContains,
-                                       @RequestParam(name = "cancellation_reason_contains", required = false) String cancellationReasonContains,
-                                       @RequestParam(name = "end_date_time_less_than_or_equals", required = false) String endDateTimeLessThanOrEquals,
-                                       @RequestParam(name = "is_cancelled_equals", required = false) Boolean isCancelledEquals,
-                                       @RequestParam(name = "is_confirmed_equals", required = false) Boolean isConfirmedEquals,
-                                       @RequestParam(name = "location_name_in", required = false) String locationNameIn,
-                                       @RequestParam(name = "tutee_email_contains", required = false) String tuteeEmailContains,
-                                       @RequestParam(name = "tutor_email_contains", required = false) String tutorEmailContains,
-                                       @RequestParam(name = "start_date_time_greater_than_or_equals", required = false) String startDateTimeGreaterThanOrEquals,
-                                       @RequestParam(name = "limit", required = false) Integer limit,
-                                       @RequestParam(name = "offset", required = false) Integer offset) {
+    public PaginationContainerModel read(@RequestParam(name = "appointment_id_equals", required = false) Integer appointmentIdEquals,
+                                         @RequestParam(name = "appointment_size_name_contains", required = false) String appointmentSizeNameContains,
+                                         @RequestParam(name = "cancellation_reason_contains", required = false) String cancellationReasonContains,
+                                         @RequestParam(name = "end_date_time_less_than_or_equals", required = false) String endDateTimeLessThanOrEquals,
+                                         @RequestParam(name = "is_cancelled_equals", required = false) Boolean isCancelledEquals,
+                                         @RequestParam(name = "is_confirmed_equals", required = false) Boolean isConfirmedEquals,
+                                         @RequestParam(name = "location_name_in", required = false) String locationNameIn,
+                                         @RequestParam(name = "tutee_email_contains", required = false) String tuteeEmailContains,
+                                         @RequestParam(name = "tutor_email_contains", required = false) String tutorEmailContains,
+                                         @RequestParam(name = "start_date_time_greater_than_or_equals", required = false) String startDateTimeGreaterThanOrEquals,
+                                         @RequestParam(name = "page_number", required = false, defaultValue = "1") Integer pageNumber,
+                                         @RequestParam(name = "number_entries_per_page", required = false) Integer numberEntriesPerPage) {
         List<String> locationNameInList = null;
         if (locationNameIn != null) {
             locationNameInList = Arrays.asList(locationNameIn.split(", "));
@@ -62,8 +63,8 @@ public class AppointmentController {
                 tuteeEmailContains,
                 tutorEmailContains,
                 startDateTimeGreaterThanOrEquals,
-                limit,
-                offset);
+                pageNumber,
+                numberEntriesPerPage);
     }
 
     @PutMapping(value = {"", "/"})
