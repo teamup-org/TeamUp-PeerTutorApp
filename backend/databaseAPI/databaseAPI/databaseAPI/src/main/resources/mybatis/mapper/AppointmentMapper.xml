@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="xyz.tamutheo.databaseAPI.appointment.AppointmentMapper">
+
     <resultMap id="AppointmentResultMap" type="xyz.tamutheo.databaseAPI.appointment.AppointmentModel">
         <result property="appointmentId" column="appointment_id" />
         <result property="startDateTimeValue" column="start_date_time_value" />
@@ -19,6 +20,7 @@
         <result property="tutorLastName" column="tutor_last_name" />
         <result property="tutorPhoneNumber" column="tutor_phone_number" />
     </resultMap>
+
     <insert id="create" parameterType="xyz.tamutheo.databaseAPI.appointment.AppointmentModel">
         <bind name="formatPattern" value = "'%Y-%m-%d %T'" />
         INSERT INTO appointment
@@ -26,15 +28,16 @@
         VALUES
             (DATE(STR_TO_DATE(#{startDateTimeValue}, #{formatPattern})), #{appointmentSizeName}, TIME(STR_TO_DATE(#{endDateTimeValue}, #{formatPattern})), #{locationName}, TIME(STR_TO_DATE(#{startDateTimeValue}, #{formatPattern})), #{tuteeEmail}, #{tutorEmail})
     </insert>
+
     <select id="read" resultMap="AppointmentResultMap">
         SELECT a.appointment_id,
             a.appointment_size_name,
             a.cancellation_reason,
-            TIMESTAMP(a.appointment_date, a.end_time) AS end_date_time_value,
+            a.end_date_time AS end_date_time_value,
             a.is_cancelled,
             a.is_confirmed,
             a.location_name,
-            TIMESTAMP(a.appointment_date, a.start_time) AS start_date_time_value,
+            a.start_date_time AS start_date_time_value,
             a.tutee_email AS tutee_email,
             tutee.first_name AS tutee_first_name,
             tutee.last_name AS tutee_last_name,
@@ -60,7 +63,7 @@
             </if>
             <if test="endDateTimeLessThanOrEquals != null">
                 <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
-                AND TIMESTAMP(a.appointment_date, a.end_time) &lt;= STR_TO_DATE(#{endDateTimeLessThanOrEquals}, #{formatPattern})
+                AND a.end_date_time &lt;= STR_TO_DATE(#{endDateTimeLessThanOrEquals}, #{formatPattern})
             </if>
             <if test="isCancelledEquals != null">
                 AND a.is_cancelled = #{isCancelledEquals}
@@ -84,7 +87,7 @@
             </if>
             <if test="startDateTimeGreaterThanOrEquals != null">
                 <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
-                AND TIMESTAMP(a.appointment_date, a.start_time) &gt;= STR_TO_DATE(#{startDateTimeGreaterThanOrEquals}, #{formatPattern})
+                AND a.start_date_time &gt;= STR_TO_DATE(#{startDateTimeGreaterThanOrEquals}, #{formatPattern})
             </if>
         </where>
         <if test="limit != null">
@@ -94,12 +97,14 @@
             OFFSET #{offset}
         </if>
     </select>
+
     <update id="update" parameterType="map">
-        <bind name="formatPattern" value = "'%Y-%m-%d%T'" />
         UPDATE appointment
+
+        <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
         <set>
-            <if test="appointmentModelNew.startDateTimeValue != null">
-                appointment_date =  DATE(STR_TO_DATE(#{appointmentModelNew.startDateTimeValue}, #{formatPattern})),
+            <if test="appointmentModelNew.startDateTimeString != null">
+                appointment_date =  DATE(STR_TO_DATE(#{appointmentModelNew.startDateTimeString}, #{formatPattern})),
             </if>
             <if test="appointmentModelNew.appointmentSizeName != null">
                 appointment_size_name = #{appointmentModelNew.appointmentSizeName},
@@ -107,8 +112,8 @@
             <if test="appointmentModelNew.cancellationReason != null">
                 cancellation_reason = #{appointmentModelNew.cancellationReason},
             </if>
-            <if test="appointmentModelNew.endDateTimeValue != null">
-                end_time = TIME(STR_TO_DATE(#{appointmentModelNew.endDateTimeValue}, #{formatPattern})),
+            <if test="appointmentModelNew.endDateTimeString != null">
+                end_time = TIME(STR_TO_DATE(#{appointmentModelNew.endDateTimeString}, #{formatPattern})),
             </if>
             <if test="appointmentModelNew.isCancelled != null">
                 is_cancelled = #{appointmentModelNew.isCancelled},
@@ -119,28 +124,87 @@
             <if test="appointmentModelNew.locationName != null">
                 location_name = #{appointmentModelNew.locationName},
             </if>
-            <if test="appointmentModelNew.startDateTimeValue != null">
-                start_time = TIME(STR_TO_DATE(#{appointmentModelNew.startDateTimeValue}, #{formatPattern})),
+            <if test="appointmentModelNew.startDateTimeString != null">
+                start_time = TIME(STR_TO_DATE(#{appointmentModelNew.startDateTimeString}, #{formatPattern})),
             </if>
         </set>
         <where>
-            <if test="appointmentModelOld.startDateTimeValue != null">
-                AND appointment_date = DATE(STR_TO_DATE(#{appointmentModelOld.startDateTimeValue}, #{formatPattern}))
+            <if test="appointmentModelOld.startDateTimeString != null">
+                AND appointment_date = DATE(STR_TO_DATE(#{appointmentModelOld.startDateTimeString}, #{formatPattern}))
             </if>
-            <if test="appointmentModelOld.endDateTimeValue != null">
-                AND end_time = TIME(STR_TO_DATE(#{appointmentModelOld.endDateTimeValue}, #{formatPattern}))
-            </if> 
+            <if test="appointmentModelOld.endDateTimeString != null">
+                AND end_time = TIME(STR_TO_DATE(#{appointmentModelOld.endDateTimeString}, #{formatPattern}))
+            </if>
             <if test="appointmentModelOld.tuteeEmail != null">
                 AND tutee_email = #{appointmentModelOld.tuteeEmail}
-            </if> 
+            </if>
             <if test="appointmentModelOld.tutorEmail != null">
                 AND tutor_email = #{appointmentModelOld.tutorEmail}
-            </if> 
-            <if test="appointmentModelOld.startDateTimeValue != null">
-                AND start_time = TIME(STR_TO_DATE(#{appointmentModelOld.startDateTimeValue}, #{formatPattern}))
-            </if> 
+            </if>
+            <if test="appointmentModelOld.startDateTimeString != null">
+                AND start_time = TIME(STR_TO_DATE(#{appointmentModelOld.startDateTimeString}, #{formatPattern}))
+            </if>
         </where>
+<!--        <where>-->
+<!--            <if test="appointmentModelOld.startDateTimeValue != null">-->
+<!--                AND appointment_date = DATE(STR_TO_DATE(#{appointmentModelOld.startDateTimeValue}, #{formatPattern}))-->
+<!--            </if>-->
+<!--            <if test="appointmentModelOld.endDateTimeValue != null">-->
+<!--                AND end_time = TIME(STR_TO_DATE(#{appointmentModelOld.endDateTimeValue}, #{formatPattern}))-->
+<!--            </if> -->
+<!--            <if test="appointmentModelOld.tuteeEmail != null">-->
+<!--                AND tutee_email = #{appointmentModelOld.tuteeEmail}-->
+<!--            </if> -->
+<!--            <if test="appointmentModelOld.tutorEmail != null">-->
+<!--                AND tutor_email = #{appointmentModelOld.tutorEmail}-->
+<!--            </if> -->
+<!--            <if test="appointmentModelOld.startDateTimeValue != null">-->
+<!--                AND start_time = TIME(STR_TO_DATE(#{appointmentModelOld.startDateTimeValue}, #{formatPattern}))-->
+<!--            </if> -->
+<!--        </where>-->
     </update>
+
+
+
+    <select id="overlaps" resultMap="AppointmentResultMap">
+        SELECT a.appointment_id,
+        a.appointment_size_name,
+        a.cancellation_reason,
+        TIMESTAMP(a.appointment_date, a.end_time) AS end_date_time_value,
+        a.is_cancelled,
+        a.is_confirmed,
+        a.location_name,
+        TIMESTAMP(a.appointment_date, a.start_time) AS start_date_time_value,
+        a.tutee_email AS tutee_email,
+        tutee.first_name AS tutee_first_name,
+        tutee.last_name AS tutee_last_name,
+        tutee.phone_number AS tutee_phone_number,
+        tutor.first_name AS tutor_first_name,
+        tutor.last_name AS tutor_last_name,
+        tutor.phone_number AS tutor_phone_number,
+        a.tutor_email AS tutor_email
+        FROM appointment AS a
+        INNER JOIN tutor ON a.tutor_email = tutor.email
+        INNER JOIN tutee ON a.tutee_email = tutee.email
+        <where>
+            <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
+            <if test="tutorEmail != null">
+                AND LOWER(tutor.email) = LOWER(#{tutorEmail})
+            </if>
+<!--            <if test="startDateTimeValue != null">-->
+<!--                AND a.appointment_date = DATE(STR_TO_DATE(#{startDateTimeValue}, #{formatPattern}))-->
+<!--            </if>-->
+            <if test="startDateTimeValue != null">
+                AND TIMESTAMP(STR_TO_DATE(#{startDateTimeValue}, #{formatPattern})) &lt; TIMESTAMP(a.appointment_date, a.end_time)
+            </if>
+<!--            <if test="endDateTimeValue != null">-->
+<!--                AND TIME(STR_TO_DATE(#{endDateTimeValue}, #{formatPattern})) &gt; TIMESTAMP(a.appointment_date, a.start_time)-->
+<!--            </if>-->
+        </where>
+    </select>
+
+
+
 </mapper>
 
 

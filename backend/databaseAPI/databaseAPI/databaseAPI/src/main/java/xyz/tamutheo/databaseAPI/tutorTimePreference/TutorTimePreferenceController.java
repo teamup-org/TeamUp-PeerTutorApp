@@ -41,8 +41,8 @@ public class TutorTimePreferenceController {
     // template: <start_time> <end_time>
     // example: 05:00:00 06:00:00, 09:00:00 11:00:00, 15:00:00 16:00:00
     public void update(@RequestParam(name = "time_intervals", defaultValue = "empty") String timeIntervals,
-                          @RequestParam(name = "tutor_email") String tutorEmail,
-                          @RequestParam(name = "weekday_name") String weekdayName) {
+                       @RequestParam(name = "tutor_email") String tutorEmail,
+                       @RequestParam(name = "weekday_name") String weekdayName) {
 
         List<TutorTimePreferenceModel> tutorTimePreferenceModelList = null;
         if ((timeIntervals != null) && !(timeIntervals.equals("empty"))) {

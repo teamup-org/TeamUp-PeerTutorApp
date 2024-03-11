@@ -3,9 +3,10 @@ package xyz.tamutheo.databaseAPI.appointment;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 
 @Mapper
@@ -25,6 +26,7 @@ public interface AppointmentMapper {
                                 @Param("offset") Integer offset);
     void update(@Param("appointmentModelOld") AppointmentModel appointmentModelOld,
                 @Param("appointmentModelNew") AppointmentModel appointmentModelNew);
+    List<AppointmentModel> overlaps(AppointmentModel appointmentModel);
 }
 
 
