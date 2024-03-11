@@ -22,11 +22,11 @@
     </resultMap>
 
     <insert id="create" parameterType="xyz.tamutheo.databaseAPI.appointment.AppointmentModel">
-        <bind name="formatPattern" value = "'%Y-%m-%d %T'" />
+        <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
         INSERT INTO appointment
-            (appointment_date, appointment_size_name, end_time, location_name, start_time, tutee_email , tutor_email)
+            (appointment_size_name, end_date_time, location_name, start_date_time, tutee_email , tutor_email)
         VALUES
-            (DATE(STR_TO_DATE(#{startDateTimeValue}, #{formatPattern})), #{appointmentSizeName}, TIME(STR_TO_DATE(#{endDateTimeValue}, #{formatPattern})), #{locationName}, TIME(STR_TO_DATE(#{startDateTimeValue}, #{formatPattern})), #{tuteeEmail}, #{tutorEmail})
+            (#{appointmentSizeName}, STR_TO_DATE(#{endDateTimeString}, #{formatPattern}), #{locationName}, STR_TO_DATE(#{startDateTimeString}, #{formatPattern}), #{tuteeEmail}, #{tutorEmail})
     </insert>
 
     <select id="read" resultMap="AppointmentResultMap">
@@ -100,20 +100,10 @@
 
     <update id="update" parameterType="map">
         UPDATE appointment
-
         <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
         <set>
-            <if test="appointmentModelNew.startDateTimeString != null">
-                appointment_date =  DATE(STR_TO_DATE(#{appointmentModelNew.startDateTimeString}, #{formatPattern})),
-            </if>
-            <if test="appointmentModelNew.appointmentSizeName != null">
-                appointment_size_name = #{appointmentModelNew.appointmentSizeName},
-            </if>
             <if test="appointmentModelNew.cancellationReason != null">
                 cancellation_reason = #{appointmentModelNew.cancellationReason},
-            </if>
-            <if test="appointmentModelNew.endDateTimeString != null">
-                end_time = TIME(STR_TO_DATE(#{appointmentModelNew.endDateTimeString}, #{formatPattern})),
             </if>
             <if test="appointmentModelNew.isCancelled != null">
                 is_cancelled = #{appointmentModelNew.isCancelled},
@@ -121,19 +111,10 @@
             <if test="appointmentModelNew.isConfirmed != null">
                 is_confirmed = #{appointmentModelNew.isConfirmed},
             </if>
-            <if test="appointmentModelNew.locationName != null">
-                location_name = #{appointmentModelNew.locationName},
-            </if>
-            <if test="appointmentModelNew.startDateTimeString != null">
-                start_time = TIME(STR_TO_DATE(#{appointmentModelNew.startDateTimeString}, #{formatPattern})),
-            </if>
         </set>
         <where>
-            <if test="appointmentModelOld.startDateTimeString != null">
-                AND appointment_date = DATE(STR_TO_DATE(#{appointmentModelOld.startDateTimeString}, #{formatPattern}))
-            </if>
             <if test="appointmentModelOld.endDateTimeString != null">
-                AND end_time = TIME(STR_TO_DATE(#{appointmentModelOld.endDateTimeString}, #{formatPattern}))
+                AND end_date_time = STR_TO_DATE(#{appointmentModelOld.endDateTimeString}, #{formatPattern})
             </if>
             <if test="appointmentModelOld.tuteeEmail != null">
                 AND tutee_email = #{appointmentModelOld.tuteeEmail}
@@ -142,68 +123,53 @@
                 AND tutor_email = #{appointmentModelOld.tutorEmail}
             </if>
             <if test="appointmentModelOld.startDateTimeString != null">
-                AND start_time = TIME(STR_TO_DATE(#{appointmentModelOld.startDateTimeString}, #{formatPattern}))
+                AND start_date_time = STR_TO_DATE(#{appointmentModelOld.startDateTimeString}, #{formatPattern})
             </if>
         </where>
-<!--        <where>-->
-<!--            <if test="appointmentModelOld.startDateTimeValue != null">-->
-<!--                AND appointment_date = DATE(STR_TO_DATE(#{appointmentModelOld.startDateTimeValue}, #{formatPattern}))-->
-<!--            </if>-->
-<!--            <if test="appointmentModelOld.endDateTimeValue != null">-->
-<!--                AND end_time = TIME(STR_TO_DATE(#{appointmentModelOld.endDateTimeValue}, #{formatPattern}))-->
-<!--            </if> -->
-<!--            <if test="appointmentModelOld.tuteeEmail != null">-->
-<!--                AND tutee_email = #{appointmentModelOld.tuteeEmail}-->
-<!--            </if> -->
-<!--            <if test="appointmentModelOld.tutorEmail != null">-->
-<!--                AND tutor_email = #{appointmentModelOld.tutorEmail}-->
-<!--            </if> -->
-<!--            <if test="appointmentModelOld.startDateTimeValue != null">-->
-<!--                AND start_time = TIME(STR_TO_DATE(#{appointmentModelOld.startDateTimeValue}, #{formatPattern}))-->
-<!--            </if> -->
-<!--        </where>-->
     </update>
-
-
 
     <select id="overlaps" resultMap="AppointmentResultMap">
         SELECT a.appointment_id,
-        a.appointment_size_name,
-        a.cancellation_reason,
-        TIMESTAMP(a.appointment_date, a.end_time) AS end_date_time_value,
-        a.is_cancelled,
-        a.is_confirmed,
-        a.location_name,
-        TIMESTAMP(a.appointment_date, a.start_time) AS start_date_time_value,
-        a.tutee_email AS tutee_email,
-        tutee.first_name AS tutee_first_name,
-        tutee.last_name AS tutee_last_name,
-        tutee.phone_number AS tutee_phone_number,
-        tutor.first_name AS tutor_first_name,
-        tutor.last_name AS tutor_last_name,
-        tutor.phone_number AS tutor_phone_number,
-        a.tutor_email AS tutor_email
+            a.appointment_size_name,
+            a.cancellation_reason,
+            a.end_date_time AS end_date_time_value,
+            a.is_cancelled,
+            a.is_confirmed,
+            a.location_name,
+            a.start_date_time AS start_date_time_value,
+            a.tutee_email AS tutee_email,
+            tutee.first_name AS tutee_first_name,
+            tutee.last_name AS tutee_last_name,
+            tutee.phone_number AS tutee_phone_number,
+            tutor.first_name AS tutor_first_name,
+            tutor.last_name AS tutor_last_name,
+            tutor.phone_number AS tutor_phone_number,
+            a.tutor_email AS tutor_email
         FROM appointment AS a
         INNER JOIN tutor ON a.tutor_email = tutor.email
         INNER JOIN tutee ON a.tutee_email = tutee.email
         <where>
-            <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
+            AND a.is_confirmed = true
+            AND a.is_cancelled = false
+            <if test="endDateTimeString != null">
+                <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
+                AND STR_TO_DATE(#{endDateTimeString}, #{formatPattern}) &gt; a.start_date_time
+            </if>
+            <if test="isCancelled != null">
+                AND a.is_cancelled = #{isCancelled}
+            </if>
+            <if test="isConfirmed != null">
+                AND a.is_confirmed = #{isConfirmed}
+            </if>
             <if test="tutorEmail != null">
                 AND LOWER(tutor.email) = LOWER(#{tutorEmail})
             </if>
-<!--            <if test="startDateTimeValue != null">-->
-<!--                AND a.appointment_date = DATE(STR_TO_DATE(#{startDateTimeValue}, #{formatPattern}))-->
-<!--            </if>-->
-            <if test="startDateTimeValue != null">
-                AND TIMESTAMP(STR_TO_DATE(#{startDateTimeValue}, #{formatPattern})) &lt; TIMESTAMP(a.appointment_date, a.end_time)
+            <if test="startDateTimeString != null">
+                <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
+                AND STR_TO_DATE(#{startDateTimeString}, #{formatPattern}) &lt; a.end_date_time
             </if>
-<!--            <if test="endDateTimeValue != null">-->
-<!--                AND TIME(STR_TO_DATE(#{endDateTimeValue}, #{formatPattern})) &gt; TIMESTAMP(a.appointment_date, a.start_time)-->
-<!--            </if>-->
         </where>
     </select>
-
-
 
 </mapper>
 

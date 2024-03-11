@@ -127,10 +127,9 @@ CREATE TABLE appointment_size (
 );
 
 CREATE TABLE appointment (
-	appointment_date DATE NOT NULL,
 	appointment_id INTEGER NOT NULL AUTO_INCREMENT,
-	end_time TIME NOT NULL,
-	start_time TIME NOT NULL,
+	end_date_time DATETIME NOT NULL,
+	start_date_time DATETIME NOT NULL,
 	tutee_email VARCHAR(30) NOT NULL,
 	tutor_email VARCHAR(30) NOT NULL,
 	appointment_size_name VARCHAR(50) NOT NULL,
@@ -144,9 +143,9 @@ CREATE TABLE appointment (
 	FOREIGN KEY (location_name) REFERENCES location(location_name) ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY (appointment_size_name) REFERENCES appointment_size(appointment_size_name) ON UPDATE CASCADE ON DELETE CASCADE,
     UNIQUE (appointment_id, tutor_email, tutee_email),
-	CHECK (MOD(MINUTE(start_time), 15) = 0),
-	CHECK (MOD(MINUTE(end_time), 15) = 0),
-	CHECK (end_time > start_time)
+	CHECK (MOD(MINUTE(start_date_time), 15) = 0),
+	CHECK (MOD(MINUTE(end_date_time), 15) = 0),
+	CHECK (end_date_time > start_date_time)
 );
 
 CREATE TABLE tutor_review (
