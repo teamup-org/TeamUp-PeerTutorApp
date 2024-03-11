@@ -3,7 +3,9 @@ package xyz.tamutheo.databaseAPI.appointment;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,7 +18,15 @@ public class AppointmentService {
     private AppointmentMapper appointmentMapper;
 
     public void create(AppointmentModel appointmentModel) {
-        this.appointmentMapper.create(appointmentModel);
+        List<AppointmentModel> appointmentModelList = this.appointmentMapper.overlaps(appointmentModel);
+        System.out.println(appointmentModelList);
+        if (!appointmentModelList.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Requested appointment overlaps with other existing appointments." + appointmentModelList);
+        }
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "OK");
+//        this.appointmentMapper.create(appointmentModel);
     }
 
     public List<AppointmentModel> read(Integer appointmentIdEquals,

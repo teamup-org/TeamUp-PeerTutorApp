@@ -5,17 +5,16 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.Arrays;
 import java.util.List;
-import java.time.LocalDate;
+
 
 @RestController
 @RequestMapping("/appointment")
 public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
-
     @PostMapping(value = {"", "/"})
     public void create(@RequestParam(name = "appointment_size_name", defaultValue = "single") String appointmentSizeName,
                        @RequestParam(name = "end_date_time") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTimeValue,
@@ -33,7 +32,6 @@ public class AppointmentController {
                 .build();
         this.appointmentService.create(appointmentModel);
     }
-
     @GetMapping(value = {"", "/"})
     public List<AppointmentModel> read(@RequestParam(name = "appointment_id_equals", required = false) Integer appointmentIdEquals,
                                        @RequestParam(name = "appointment_size_name_contains", required = false) String appointmentSizeNameContains,
@@ -67,33 +65,34 @@ public class AppointmentController {
                 limit,
                 offset);
     }
-    @PutMapping(value = {"", "/"})
-    public void update(@RequestParam(name = "end_date_time_old") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTimeValueOld,
-                       @RequestParam(name = "tutee_email_old") String tuteeEmailOld,
-                       @RequestParam(name = "tutor_email_old") String tutorEmailOld,
-                       @RequestParam(name = "start_date_time_old") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTimeValueOld,
-                       @RequestParam(name = "appointment_size_name_new", required = false) String appointmentSizeNameNew,
-                       @RequestParam(name = "cancellation_reason_new", required = false) String cancellationReasonNew,
-                       @RequestParam(name = "end_date_time_new", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTimeValueNew,
-                       @RequestParam(name = "is_cancelled_new", required = false) Boolean isCancelledNew,
-                       @RequestParam(name = "is_confirmed_new", required = false) Boolean isConfirmedNew,
-                       @RequestParam(name = "location_name_new", required = false) String locationNameNew,
-                       @RequestParam(name = "start_date_time_new", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTimeValueNew) {
-        AppointmentModel appointmentModelOld = AppointmentModel.builder()
-                .endDateTimeValue(endDateTimeValueOld)
-                .tuteeEmail(tuteeEmailOld)
-                .tutorEmail(tutorEmailOld)
-                .startDateTimeValue(startDateTimeValueOld)
-                .build();
-        AppointmentModel appointmentModelNew = AppointmentModel.builder()
-                .appointmentSizeName(appointmentSizeNameNew)
-                .cancellationReason(cancellationReasonNew)
-                .isCancelled(isCancelledNew)
-                .isConfirmed(isConfirmedNew)
-                .endDateTimeValue(endDateTimeValueNew)
-                .locationName(locationNameNew)
-                .startDateTimeValue(startDateTimeValueNew)
-                .build();
-        this.appointmentService.update(appointmentModelOld, appointmentModelNew);
-    }
+
+//    @PutMapping(value = {"", "/"})
+//    public void update(@RequestParam(name = "end_date_time_old") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTimeValueOld,
+//                       @RequestParam(name = "tutee_email_old") String tuteeEmailOld,
+//                       @RequestParam(name = "tutor_email_old") String tutorEmailOld,
+//                       @RequestParam(name = "start_date_time_old") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTimeValueOld,
+//                       @RequestParam(name = "appointment_size_name_new", required = false) String appointmentSizeNameNew,
+//                       @RequestParam(name = "cancellation_reason_new", required = false) String cancellationReasonNew,
+//                       @RequestParam(name = "end_date_time_new", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTimeValueNew,
+//                       @RequestParam(name = "is_cancelled_new", required = false) Boolean isCancelledNew,
+//                       @RequestParam(name = "is_confirmed_new", required = false) Boolean isConfirmedNew,
+//                       @RequestParam(name = "location_name_new", required = false) String locationNameNew,
+//                       @RequestParam(name = "start_date_time_new", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTimeValueNew) {
+//        AppointmentModel appointmentModelOld = AppointmentModel.builder()
+//                .endDateTimeString(endDateTimeValueOld != null ? endDateTimeValueOld.toString() : null)
+//                .tuteeEmail(tuteeEmailOld)
+//                .tutorEmail(tutorEmailOld)
+//                .startDateTimeString(startDateTimeValueOld != null ? startDateTimeValueOld.toString() : null)
+//                .build();
+//        AppointmentModel appointmentModelNew = AppointmentModel.builder()
+//                .appointmentSizeName(appointmentSizeNameNew)
+//                .cancellationReason(cancellationReasonNew)
+//                .isCancelled(isCancelledNew)
+//                .isConfirmed(isConfirmedNew)
+//                .endDateTimeString(endDateTimeValueNew != null ? endDateTimeValueNew.toString() : null)
+//                .locationName(locationNameNew)
+//                .startDateTimeString(startDateTimeValueNew != null ? startDateTimeValueNew.toString(): null)
+//                .build();
+//        this.appointmentService.update(appointmentModelOld, appointmentModelNew);
+//    }
 }
