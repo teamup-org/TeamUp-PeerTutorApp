@@ -84,4 +84,32 @@
             </if>
         </where>
     </delete>
+
+    <select id="getTotalNumberEntries" resultType="Integer">
+        SELECT COUNT(*)
+        FROM tutor_review
+        <where>
+            <if test="appointmentIdEquals != null">
+                AND appointment_id = #{appointmentIdEquals}
+            </if>
+            <if test="numberStarsGreaterThanOrEquals != null">
+                AND number_stars &gt;= #{numberStarsGreaterThanOrEquals}
+            </if>
+            <if test="numberStarsLessThanOrEquals != null">
+                AND number_stars &lt;= #{numberStarsLessThanOrEquals}
+            </if>
+            <if test="reviewTextContains != null">
+                <bind name="reviewTextContainsPattern" value = "'%' + reviewTextContains + '%'" />
+                AND LOWER(review_text) LIKE LOWER(#{reviewTextContainsPattern})
+            </if>
+            <if test="tuteeEmailContains != null">
+                <bind name="tuteeEmailContainsPattern" value = "'%' + tuteeEmailContains + '%'" />
+                AND LOWER(tutee_email) LIKE LOWER(#{tuteeEmailContainsPattern})
+            </if>
+            <if test="tutorEmailContains != null">
+                <bind name="tutorEmailContainsPattern" value = "'%' + tutorEmailContains + '%'" />
+                AND LOWER(tutor_email) LIKE LOWER(#{tutorEmailContainsPattern})
+            </if>
+        </where>
+    </select>
 </mapper>

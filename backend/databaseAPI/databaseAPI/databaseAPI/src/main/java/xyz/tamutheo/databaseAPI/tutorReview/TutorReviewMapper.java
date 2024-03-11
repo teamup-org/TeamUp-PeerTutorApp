@@ -20,4 +20,10 @@ public interface TutorReviewMapper {
     void update (@Param("tutorReviewModelOld") TutorReviewModel tutorReviewModelOld,
                  @Param("tutorReviewModelNew") TutorReviewModel tutorReviewModelNew);
     void delete(TutorReviewModel tutorReviewModel);
+    Integer getTotalNumberEntries(@Param("appointmentIdEquals") Integer appointmentIdEquals,
+                                  @Param("numberStarsGreaterThanOrEquals") Integer numberStarsGreaterThanOrEquals,
+                                  @Param("numberStarsLessThanOrEquals") Integer numberStarsLessThanOrEquals,
+                                  @Param("reviewTextContains") String reviewTextContains,
+                                  @Param("tuteeEmailContains") String tuteeEmailContains,
+                                  @Param("tutorEmailContains") String tutorEmailContains);
 }

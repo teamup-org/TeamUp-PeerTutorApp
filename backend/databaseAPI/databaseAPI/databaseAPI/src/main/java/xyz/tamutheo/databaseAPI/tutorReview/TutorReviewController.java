@@ -2,6 +2,7 @@ package xyz.tamutheo.databaseAPI.tutorReview;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import xyz.tamutheo.databaseAPI.util.paginationContainer.PaginationContainerModel;
 
 import java.util.List;
 
@@ -26,22 +27,22 @@ public class TutorReviewController {
         this.tutorReviewService.create(tutorReviewModel);
     }
     @GetMapping(value = {"", "/"})
-    public List<TutorReviewModel> read(@RequestParam(name = "appointment_id_equals", required = false) Integer appointmentIdEquals,
-                                       @RequestParam(name = "number_stars_greater_than_or_equals", required = false) Integer numberStarsGreaterThanOrEquals,
-                                       @RequestParam(name = "number_stars_less_than_or_equals", required = false) Integer numberStarsLessThanOrEquals,
-                                       @RequestParam(name = "review_text_contains", required = false) String reviewTextContains,
-                                       @RequestParam(name = "tutee_email_contains", required = false) String tuteeEmailContains,
-                                       @RequestParam(name = "tutor_email_contains", required = false) String tutorEmailContains,
-                                       @RequestParam(name = "limit", required = false) Integer limit,
-                                       @RequestParam(name = "offset", required = false) Integer offset) {
+    public PaginationContainerModel read(@RequestParam(name = "appointment_id_equals", required = false) Integer appointmentIdEquals,
+                                         @RequestParam(name = "number_stars_greater_than_or_equals", required = false) Integer numberStarsGreaterThanOrEquals,
+                                         @RequestParam(name = "number_stars_less_than_or_equals", required = false) Integer numberStarsLessThanOrEquals,
+                                         @RequestParam(name = "review_text_contains", required = false) String reviewTextContains,
+                                         @RequestParam(name = "tutee_email_contains", required = false) String tuteeEmailContains,
+                                         @RequestParam(name = "tutor_email_contains", required = false) String tutorEmailContains,
+                                         @RequestParam(name = "page_number", required = false, defaultValue = "1") Integer pageNumber,
+                                         @RequestParam(name = "number_entries_per_page", required = false) Integer numberEntriesPerPage) {
         return this.tutorReviewService.read(appointmentIdEquals,
                 numberStarsGreaterThanOrEquals,
                 numberStarsLessThanOrEquals,
                 reviewTextContains,
                 tuteeEmailContains,
                 tutorEmailContains,
-                limit,
-                offset);
+                pageNumber,
+                numberEntriesPerPage);
     }
     @PutMapping(value = {"", "/"})
     public void update(@RequestParam(name = "appointment_id_old") Integer appointmentIdOld,
