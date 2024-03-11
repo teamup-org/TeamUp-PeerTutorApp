@@ -8,6 +8,26 @@
         <result property="tuteeEmail" column="tutee_email"/>
         <result property="tutorEmail" column="tutor_email"/>
     </resultMap>
+
+    <resultMap id="AppointmentResultMap" type="xyz.tamutheo.databaseAPI.appointment.AppointmentModel">
+        <result property="appointmentId" column="appointment_id" />
+        <result property="startDateTimeValue" column="start_date_time_value" />
+        <result property="endDateTimeValue" column="end_date_time_value" />
+        <result property="appointmentSizeName" column="appointment_size_name" />
+        <result property="cancellationReason" column="cancellation_reason" />
+        <result property="isCancelled" column="is_cancelled" />
+        <result property="isConfirmed" column="is_confirmed" />
+        <result property="locationName" column="location_name" />
+        <result property="tuteeEmail" column="tutee_email" />
+        <result property="tuteeFirstName" column="tutee_first_name" />
+        <result property="tuteeLastName" column="tutee_last_name" />
+        <result property="tuteePhoneNumber" column="tutee_phone_number" />
+        <result property="tutorEmail" column="tutor_email" />
+        <result property="tutorFirstName" column="tutor_first_name" />
+        <result property="tutorLastName" column="tutor_last_name" />
+        <result property="tutorPhoneNumber" column="tutor_phone_number" />
+    </resultMap>
+
     <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutorReview.TutorReviewModel">
         INSERT INTO tutor_review
         (appointment_id, number_stars, review_text, tutee_email, tutor_email)
@@ -109,6 +129,72 @@
             <if test="tutorEmailContains != null">
                 <bind name="tutorEmailContainsPattern" value = "'%' + tutorEmailContains + '%'" />
                 AND LOWER(tutor_email) LIKE LOWER(#{tutorEmailContainsPattern})
+            </if>
+        </where>
+    </select>
+
+    <select id="getPendingReviews" resultMap="AppointmentResultMap">
+        SELECT a.appointment_id,
+        a.appointment_size_name,
+        a.cancellation_reason,
+        a.end_date_time AS end_date_time_value,
+        a.is_cancelled,
+        a.is_confirmed,
+        a.location_name,
+        a.start_date_time AS start_date_time_value,
+        a.tutee_email AS tutee_email,
+        tutee.first_name AS tutee_first_name,
+        tutee.last_name AS tutee_last_name,
+        tutee.phone_number AS tutee_phone_number,
+        tutor.first_name AS tutor_first_name,
+        tutor.last_name AS tutor_last_name,
+        tutor.phone_number AS tutor_phone_number,
+        a.tutor_email AS tutor_email
+        FROM appointment AS a
+        INNER JOIN tutor ON a.tutor_email = tutor.email
+        INNER JOIN tutee ON a.tutee_email = tutee.email
+        LEFT JOIN tutor_review ON a.appointment_id = tutor_review.appointment_id
+        <where>
+            AND tutor_review.appointment_id IS NULL
+            AND a.end_date_time &lt; NOW()
+            <if test="appointmentIdEquals != null">
+                AND a.appointment_id = #{appointmentIdEquals}
+            </if>
+            <if test="appointmentSizeNameContains != null">
+                <bind name="appointmentSizeNameContainsPattern" value = "'%' + appointmentSizeNameContains + '%'" />
+                AND LOWER(a.appointment_size_name) LIKE LOWER(#{appointmentSizeNameContainsPattern})
+            </if>
+            <if test="cancellationReasonContains != null">
+                <bind name="cancellationReasonContainsPattern" value = "'%' + cancellationReasonContains + '%'" />
+                AND LOWER(a.cancellation_reason) LIKE LOWER(#{cancellationReasonContainsPattern})
+            </if>
+            <if test="endDateTimeLessThanOrEquals != null">
+                <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
+                AND a.end_date_time &lt;= STR_TO_DATE(#{endDateTimeLessThanOrEquals}, #{formatPattern})
+            </if>
+            <if test="isCancelledEquals != null">
+                AND a.is_cancelled = #{isCancelledEquals}
+            </if>
+            <if test="isConfirmedEquals != null">
+                AND a.is_confirmed = #{isConfirmedEquals}
+            </if>
+            <if test="locationNameInList != null">
+                AND a.location_name in
+                <foreach item="item" index="index" collection="locationNameInList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tuteeEmailContains != null">
+                <bind name="tuteeEmailContainsPattern" value = "'%' + tuteeEmailContains + '%'" />
+                AND LOWER(tutee.email) LIKE LOWER(#{tuteeEmailContainsPattern})
+            </if>
+            <if test="tutorEmailContains != null">
+                <bind name="tutorEmailContainsPattern" value = "'%' + tutorEmailContains + '%'" />
+                AND LOWER(tutor.email) LIKE LOWER(#{tutorEmailContainsPattern})
+            </if>
+            <if test="startDateTimeGreaterThanOrEquals != null">
+                <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
+                AND a.start_date_time &gt;= STR_TO_DATE(#{startDateTimeGreaterThanOrEquals}, #{formatPattern})
             </if>
         </where>
     </select>

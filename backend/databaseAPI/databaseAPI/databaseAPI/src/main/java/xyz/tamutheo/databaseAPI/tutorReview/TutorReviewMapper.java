@@ -2,6 +2,7 @@ package xyz.tamutheo.databaseAPI.tutorReview;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import xyz.tamutheo.databaseAPI.appointment.AppointmentModel;
 
 import java.util.List;
 
@@ -26,4 +27,14 @@ public interface TutorReviewMapper {
                                   @Param("reviewTextContains") String reviewTextContains,
                                   @Param("tuteeEmailContains") String tuteeEmailContains,
                                   @Param("tutorEmailContains") String tutorEmailContains);
+    List<AppointmentModel> getPendingReviews(@Param("appointmentIdEquals") Integer appointmentIdEquals,
+                                @Param("appointmentSizeNameContains") String appointmentSizeNameContains,
+                                @Param("cancellationReasonContains") String cancellationReasonContains,
+                                @Param("endDateTimeLessThanOrEquals") String endDateTimeLessThanOrEquals,
+                                @Param("isCancelledEquals") Boolean isCancelledEquals,
+                                @Param("isConfirmedEquals") Boolean isConfirmedEquals,
+                                @Param("locationNameInList") List<String> locationNameInList,
+                                @Param("tuteeEmailContains") String tuteeEmailContains,
+                                @Param("tutorEmailContains") String tutorEmailContains,
+                                @Param("startDateTimeGreaterThanOrEquals") String startDateTimeGreaterThanOrEquals);
 }
