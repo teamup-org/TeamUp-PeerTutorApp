@@ -1,11 +1,15 @@
-import type { Metadata } from 'next';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './(ui)/theme';
+
+import type { Metadata } 
+from 'next';
+
+import { ThemeProvider } 
+from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+
+import theme from '@/app/(ui)/theme';
 import AuthProvider from '@/app/AuthProvider';
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import QueryProvider from "@/app/QueryProvider";
-// 
+
 export const metadata: Metadata = {
   title: "Theo Peer Tutoring",
   description: "A peer tutoring service for matching tutors with tutees",

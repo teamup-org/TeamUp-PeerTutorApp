@@ -1,15 +1,18 @@
+
 import React from "react";
 
-import ResponsiveAppBar from "../app-bar";
-import { Dashboard, School, CalendarMonth } from '@mui/icons-material';
+import { Dashboard, School, CalendarMonth } 
+from '@mui/icons-material';
 
-const links = [
+import ResponsiveAppBar from "@/app/(ui)/app-bar";
+
+const links: Link[] = [
   { name: 'Dashboard', href: '/dashboard', icon: Dashboard },
   { name: 'Peer Tutors', href: '/dashboard/tutors', icon: School },
   { name: 'My Schedule', href: '/dashboard/schedule', icon: CalendarMonth },
 ];
 
-const settings = [
+const settings: Link[] = [
   { name: 'Profile', href: '/dashboard/profile', icon: Dashboard },
   { name: 'Log Out', href: '/', icon: Dashboard },
 ];
@@ -18,7 +21,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <header>
-        <ResponsiveAppBar position="static" display={{ xs: 'none', md: 'flex' }} links={links} settings={settings}/>
+        <ResponsiveAppBar position="static" links={links} settings={settings}/>
       </header>
       <main>
         {children}

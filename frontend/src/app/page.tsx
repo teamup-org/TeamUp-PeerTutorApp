@@ -1,9 +1,11 @@
 'use client';
 
-import ResponsiveAppBar from './(ui)/app-bar'
+import { Box, Container, Typography, Paper } 
+from '@mui/material';
+import { Login, HowToReg } 
+from '@mui/icons-material';
 
-import { Box, Container, Typography, Paper } from '@mui/material'
-import { Login, HowToReg } from '@mui/icons-material'
+import ResponsiveAppBar from '@/app/(ui)/app-bar';
 
 const links = [
   {name: 'Login', href: '/login', icon: Login},
@@ -14,7 +16,7 @@ export default function LandingPage() {
   return (
     <>
       <header>
-        <ResponsiveAppBar position="static" display={{ xs: 'none', md: 'flex' }} links={links} />
+        <ResponsiveAppBar position="static" links={links} />
       </header>
       <main>
         <Box position="relative" sx={{top: 50}}>

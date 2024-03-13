@@ -1,16 +1,19 @@
 'use client';
 
 import * as React from 'react';
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
 
 import Link from 'next/link';
+import { useRouter } 
+from "next/navigation"
 
-import { GoogleSignInButton } from '@/app/(ui)/login/authButtons';
+import { useSession } 
+from "next-auth/react"
 
-import {
-    Container, Box, Avatar, Typography, TextField, FormControlLabel, Checkbox, Button, Grid, Paper
-} from '@mui/material';
+import { GoogleSignInButton } 
+from '@/app/(ui)/login/authButtons';
+
+import { Container, Box, Avatar, Typography, TextField, FormControlLabel, Checkbox, Button, Paper} 
+from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 export default function SignIn() {

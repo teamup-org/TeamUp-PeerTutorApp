@@ -1,12 +1,12 @@
+
 import Link from 'next/link';
 
-import AdbIcon from '@mui/icons-material/Adb';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography } 
+from '@mui/material';
 
 export default function TheoLogo(props: any) {
   return (
     <Box sx={{ flexGrow: props.flexGrow, display: props.display, mr: 2 }}>
-      {/*<AdbIcon sx={{ display: props.display, mr: 1 }} />*/}
       <Typography
         variant="h4"
         noWrap

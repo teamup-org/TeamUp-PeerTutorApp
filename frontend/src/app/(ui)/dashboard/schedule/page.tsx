@@ -2,15 +2,20 @@
 
 import * as React from 'react';
 
-import { Box, Container, Paper, Stack, Typography, Button } from '@mui/material';
+import { Box, Container, Paper, Stack, Typography, Button } 
+from '@mui/material';
+
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import type { EventClickArg } 
+from '@fullcalendar/core/index.js';
+import type { EventImpl } 
+from '@fullcalendar/core/internal';
 
-import { TableFetch, TableUpdate } from '@/app/_lib/data';
-import type { EventClickArg } from '@fullcalendar/core/index.js';
-import type { EventImpl } from '@fullcalendar/core/internal';
-
-import { toTitleCase } from '@/app/_lib/utils';
+import { toTitleCase } 
+from '@/app/_lib/utils';
+import { TableFetch, TableUpdate } 
+from '@/app/_lib/data';
 
 export default function DashboardPage() {
   const {data, isLoading, isError} = TableFetch("appointment_listing");

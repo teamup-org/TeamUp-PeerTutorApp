@@ -1,8 +1,7 @@
 'use client';
 
-import { 
-  Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Paper
-} from '@mui/material';
+import { Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Paper} 
+from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 export default function SignUp() {

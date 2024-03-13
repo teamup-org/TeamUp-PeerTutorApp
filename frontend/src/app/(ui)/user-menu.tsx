@@ -1,9 +1,12 @@
 'use client';
 
-import { useSession, signOut } from 'next-auth/react';
-
 import * as React from 'react';
-import { Box, Menu, MenuItem, Typography, Tooltip, IconButton, Avatar } from '@mui/material';
+
+import { useSession, signOut }
+from 'next-auth/react';
+
+import { Box, Menu, MenuItem, Typography, Tooltip, IconButton, Avatar }
+from '@mui/material';
 
 const settings = [ 'Profile', 'Log Out' ];
 
@@ -19,8 +22,8 @@ export default function UserMenu() {
   };
 
   const handleLogOut = async () => {
-    await signOut(); // Call the signOut function provided by useSession
-    setAnchorElUser(null); // Close the menu after signing out
+    await signOut();
+    setAnchorElUser(null);
   };
 
   const { data: session, status } = useSession();

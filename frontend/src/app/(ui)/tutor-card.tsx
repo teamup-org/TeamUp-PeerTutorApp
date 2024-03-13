@@ -1,28 +1,31 @@
 'use client';
 
-import { Stack, Card, CardContent, Typography, Divider, Avatar, Rating, Chip, Button } from '@mui/material';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import { useRef } from 'react';
+// import { useRef } from 'react';
 
-export default function TutorCard(props: any) {
+import { Stack, Card, Typography, Divider, Avatar, Rating, Chip } 
+from '@mui/material';
+// import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+// import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+
+type TutorCardProps = { tutor: Tutor };
+export default function TutorCard(props: TutorCardProps) {
   const handleClick = () => {
     console.info('Clicked chip.');
   };
 
-  const stackRef = useRef<HTMLDivElement>(null);
+  /*const stackRef = useRef<HTMLDivElement>(null);
   const scrollRight = () => {
     if(stackRef.current) stackRef.current.scrollLeft += 100;
-  };
+  };*/
 
   const printChips = () => {
-    return props.tutor?.coursePreferences?.map((course: {id: number, majorAbbreviation: string, courseNumber: number}) => (
-      <Chip label={course.majorAbbreviation.toUpperCase() + course.courseNumber} onClick={handleClick} color="error" sx={{ width:100, }} key={course.id}/>
+    return props.tutor?.coursePreferences?.map((course: { courseGrade: string, courseNumber: number, majorAbbreviation: string, tutorEmail: string }, index: number) => (
+      <Chip label={course.majorAbbreviation.toUpperCase() + course.courseNumber} onClick={handleClick} color="error" sx={{ width:100, }} key={index}/>
     ));
   };
 
   return (
-    <Card elevation={4} sx={{ p: 2 }}>
+    <Card elevation={4} sx={{ p: 2, width: '100%' }}>
       <Stack direction="row">
         <Stack direction="column" alignItems="center" spacing={1} minWidth="0%" width="20%">
           <Typography variant="h6"> <center> {props.tutor?.firstName + " " + props.tutor?.lastName} </center> </Typography>
@@ -58,7 +61,7 @@ export default function TutorCard(props: any) {
                 scrollbarWidth: 'none', 
                 msOverflowStyle: 'none' 
               }}
-              ref={stackRef}
+              // ref={stackRef}
             >
               { printChips() }
             </Stack>
