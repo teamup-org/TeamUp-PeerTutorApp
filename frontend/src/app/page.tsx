@@ -20,7 +20,7 @@ export default function LandingPage() {
   return (
     <>
       <header>
-        <ResponsiveAppBar position="static" display={{ xs: 'none', md: 'flex' }} links={links} />
+        <ResponsiveAppBar position="static" links={links} />
       </header>
       <main>
         <Stack direction="column" width="100%" height="100%" spacing={8} alignItems="center">

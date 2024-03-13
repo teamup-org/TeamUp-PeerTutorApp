@@ -2,11 +2,13 @@
 
 // author: Brandon Nguyen
 
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useInfiniteQuery, keepPreviousData } from "@tanstack/react-query";
 import axios from "axios";
 
 const development = "http://localhost:8080";
 const deployment = "https://tamutheo.xyz/database-api";
+
+const numberEntriesPerPage = "number_entries_per_page=5";
 
 axios.defaults.baseURL = development;
 
@@ -16,18 +18,9 @@ export function TableFetch(tableName: string) {
     queryKey: ["table-data", tableName],
     // asynchronous fetch
     queryFn: async () => {
-      const response = await axios.get("/" + tableName);
-      console.log("before inner return: " + data);
-      return response.data;
+      return (await axios.get("/" + tableName)).data;
     },
-    placeholderData: (prev) => prev,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchOnMount: false,
-    refetchInterval: false, 
-    refetchIntervalInBackground: false,
-
+    placeholderData: keepPreviousData,
   });
 
   // console.log("before outer return: " + data);
@@ -37,10 +30,20 @@ export function TableFetch(tableName: string) {
 export function TableUpdate(tableName: string, field: string, value: any) {
   const { data, isError } = useMutation({
     mutationFn: async () => {
-      const response = await axios.put("/" + tableName, (field + '=' + value));
-      return response;
+      return (await axios.put("/" + tableName, (field + '=' + value))).data;
     },
   });
 
   return { data, isError };
+}
+
+export function TableFetchPaginated(tableName: string, pageNumber: number) {
+  return {...useQuery({
+    queryKey: ["table-data", tableName],
+    queryFn: async () => {
+      return (await axios.get("/" + tableName + "?" + numberEntriesPerPage + "&" + `page_number=${pageNumber}`)).data;
+    },
+    placeholderData: keepPreviousData,
+    })
+  };
 }

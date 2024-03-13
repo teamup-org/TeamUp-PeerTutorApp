@@ -3,15 +3,18 @@
 import * as React from 'react';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname } 
+from 'next/navigation';
 
-import { AppBar, Box, Toolbar, IconButton, Menu, Container, Avatar, Button, Tooltip, MenuItem } from '@mui/material';
+import { AppBar, Box, Toolbar, IconButton, Menu, Container, Button, MenuItem } 
+from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 
-import TheoLogo from './theo-logo';
+import TheoLogo from '@/app/(ui)/theo-logo';
 import UserMenu from '@/app/(ui)/user-menu';
 
-export default function ResponsiveAppBar(props: any) {
+type AppBarProps = { links: Link[], settings: Link[] };
+export default function ResponsiveAppBar(props : AppBarProps) {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
