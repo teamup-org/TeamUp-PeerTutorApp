@@ -133,6 +133,20 @@
                 </foreach>
             </if>
         </where>
+        <if test="sortBy != null">
+            <if test='"average_rating_ascending".equals(sortBy)'>
+                ORDER BY average_rating ASC, number_of_ratings ASC
+            </if>
+            <if test='"average_rating_descending".equals(sortBy)'>
+                ORDER BY average_rating DESC, number_of_ratings ASC
+            </if>
+            <if test='"pay_rate_ascending".equals(sortBy)'>
+                ORDER BY pay_rate ASC
+            </if>
+            <if test='"pay_rate_descending".equals(sortBy)'>
+                ORDER BY pay_rate DESC
+            </if>
+        </if>
         <if test="limit != null">
             LIMIT #{limit}
         </if>
@@ -291,5 +305,19 @@
                 </foreach>
             </if>
         </where>
+        <if test="sortBy != null">
+            <if test='"average_rating_ascending".equals(sortBy)'>
+                ORDER BY average_rating ASC, number_of_ratings ASC
+            </if>
+            <if test='"average_rating_descending".equals(sortBy)'>
+                ORDER BY average_rating DESC, number_of_ratings ASC
+            </if>
+            <if test='"pay_rate_ascending".equals(sortBy)'>
+                ORDER BY pay_rate ASC
+            </if>
+            <if test='"pay_rate_descending".equals(sortBy)'>
+                ORDER BY pay_rate DESC
+            </if>
+        </if>
     </select>
 </mapper>

@@ -59,6 +59,7 @@ public class TutorController {
                                          @RequestParam(name = "phone_number_contains", required = false) Long phoneNumberContains,
                                          @RequestParam(name = "picture_url_contains", required = false) String pictureUrlContains,
                                          @RequestParam(name = "seniority_name_in", required = false) String seniorityNameIn,
+                                         @RequestParam(name = "sort_by", required = false) String sortBy,
                                          // tutor_course_preference parameters
                                          @RequestParam(name = "course_grade_in", required = false) String courseGradeIn,
                                          @RequestParam(name = "course_number_equals", required = false) Integer courseNumberEquals,
@@ -106,6 +107,7 @@ public class TutorController {
                 phoneNumberContains,
                 pictureUrlContains,
                 seniorityNameInList,
+                sortBy,
                 // tutor_course_preference parameters
                 courseGradeInList,
                 courseNumberEquals,

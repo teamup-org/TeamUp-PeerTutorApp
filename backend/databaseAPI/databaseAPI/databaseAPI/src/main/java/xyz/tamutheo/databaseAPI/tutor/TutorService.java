@@ -37,6 +37,7 @@ public class TutorService {
                                  Long phoneNumberContains,
                                  String pictureUrlContains,
                                  List<String> seniorityNameInList,
+                                 String sortBy,
                                  // tutor_course_preference parameters
                                  List<String> courseGradeInList,
                                  Integer courseNumberEquals,
@@ -65,6 +66,7 @@ public class TutorService {
                 phoneNumberContains,
                 pictureUrlContains,
                 seniorityNameInList,
+                sortBy,
                 // tutor_course_preference parameters
                 courseGradeInList,
                 courseNumberEquals,
@@ -103,6 +105,7 @@ public class TutorService {
                 phoneNumberContains,
                 pictureUrlContains,
                 seniorityNameInList,
+                sortBy,
                 // tutor_course_preference parameters
                 courseGradeInList,
                 courseNumberEquals,
