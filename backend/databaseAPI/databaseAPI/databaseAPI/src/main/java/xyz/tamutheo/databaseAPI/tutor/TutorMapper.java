@@ -24,6 +24,7 @@ public interface TutorMapper {
                           @Param("phoneNumberContains") Long phoneNumberContains,
                           @Param("pictureUrlContains") String pictureUrlContains,
                           @Param("seniorityNameInList") List<String> seniorityNameInList,
+                          @Param("sortBy") String sortBy,
                           // tutor_course_preference parameters
                           @Param("courseGradeInList") List<String> courseGradeInList,
                           @Param("courseNumberEquals") Integer courseNumberEquals,
@@ -53,6 +54,7 @@ public interface TutorMapper {
                                   @Param("phoneNumberContains") Long phoneNumberContains,
                                   @Param("pictureUrlContains") String pictureUrlContains,
                                   @Param("seniorityNameInList") List<String> seniorityNameInList,
+                                  @Param("sortBy") String sortBy,
                                   // tutor_course_preference parameters
                                   @Param("courseGradeInList") List<String> courseGradeInList,
                                   @Param("courseNumberEquals") Integer courseNumberEquals,
