@@ -38,19 +38,6 @@ export default function LandingPage() {
             </Paper>
           </Container>
         </Box>
-
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <Button
-              type="submit"
-              LinkComponent={Link}
-              href="/peertutor"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Register as a Peer Tutor
-            </Button>
-          </Box>
       </main>
     </>
   );
