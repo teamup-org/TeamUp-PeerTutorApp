@@ -9,20 +9,43 @@ import {
 } from '@mui/material';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
-import { CreateTutor, useTutorMutation } from '@/app/_lib/data';
+import { useTutorMutation } from '@/app/_lib/data';
 import { AnyARecord } from 'dns';
 
 import { useSession, signOut } from 'next-auth/react';
+
+const newTutor = { 
+  active_status_name: "active",
+  //first_name: fields.firstName,
+  first_name: "Trey",
+  //last_name: fields.lastName,
+  last_name: "Wells",
+  listing_title: "csce tutor",
+  //seniority_name: fields.seniority,
+  seniority_name: "senior",
+  //major_abbreviation: fields.major,
+  major_abbreviation: "csce",
+  pay_rate: 40.0,
+  //bio_text: fields.bioText,
+  bio_text: "Howdy everybody!",
+  //picture_url: fields.pfp,
+  picture_url: "fakeline",
+  //phone_number: fields.phoneNumber,
+  phone_number: 2146017139,
+  //email: fields.email,
+  email: "wells.t.2024@tamu.edu"
+  //active_status_name: 1
+};
 
 export default function SignUp() {
 
   // Seniority Selection -------------------------------------------------
   const seniorityOptions = [
-    { value: '1', label: 'Freshman' },
-    { value: '2', label: 'Sophomore' },
-    { value: '3', label: 'Junior' },
-    { value: '4', label: 'Senior' },
-    { value: '5', label: 'Graduate Student' }
+    { value: 'freshman', label: 'Freshman' },
+    { value: 'sophomore', label: 'Sophomore' },
+    { value: 'junior', label: 'Junior' },
+    { value: 'senior', label: 'Senior' },
+    { value: 'graduate', label: 'Graduate Student' }
   ];
   
   const [seniority, setSeniority] = React.useState('');
@@ -43,16 +66,17 @@ export default function SignUp() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const registrationData = {
-      firstName: formData.get('firstName') as string,
-      lastName: formData.get('lastName') as string,
-      uin: parseInt(formData.get('uin') as string), // Convert uin to an integer
-      phoneNumber: formData.get('phoneNumber') as string,
-      title: formData.get('title') as string,
-      seniority: seniority,
-      payRate: formData.get('payrate') as string,
-      bioText: "HELLO",
+      first_name: formData.get('firstName') as string,
+      last_name: formData.get('lastName') as string,
+      phone_number: formData.get('phoneNumber') as string,
+      listing_title: formData.get('title') as string,
+      seniority_name: seniority,
+      pay_rate: formData.get('payrate') as string,
+      bio_text: formData.get('bioText') as string,
       email: session?.user?.email as string,
-      pfp: session?.user?.image as string
+      picture_url: session?.user?.image as string,
+      major_abbreviation: formData.get('major') as string,
+      active_status_name: 'active'
     };
     
 
@@ -99,17 +123,6 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="uin"
-                  label="UIN"
-                  type="uin"
-                  id="uin"
-                  autoComplete="UIN"
                 />
               </Grid>
 
@@ -162,6 +175,29 @@ export default function SignUp() {
                 />
               </Grid>
 
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="major"
+                  label="Undergraduate Department (4 letter abbreviation)"
+                  name="major"
+                  autoComplete="major"
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="bioText"
+                  label="Biography Text (This can be changed later)"
+                  name="bioText"
+                  autoComplete="bioText"
+                  multiline  // Add this prop for multiline textarea
+                  rows={4}   // Optionally set the number of rows
+                />
+              </Grid>
 
             </Grid>
             <Button
