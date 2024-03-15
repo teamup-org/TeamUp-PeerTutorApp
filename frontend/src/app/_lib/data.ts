@@ -153,3 +153,11 @@ export const useTutorMutation = () => {
      }
   })
 };
+
+export const useTuteeMutation = () => {
+  return useMutation({
+    mutationFn: async (fields: any) => { const response = axios.post('/tutee?' + objectToQueryString(fields));
+     return (await response).data;
+     }
+  })
+};
