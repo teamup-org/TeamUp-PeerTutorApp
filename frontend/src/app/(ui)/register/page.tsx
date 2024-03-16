@@ -12,14 +12,17 @@ const links = [
 
 import { 
   Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Paper, InputLabel, MenuItem, Select, SelectChangeEvent,
-  OutlinedInput, InputAdornment, Tabs, Tab, tabClasses
+  OutlinedInput, InputAdornment, Tabs, Tab, Step, Stepper, StepLabel
 } from '@mui/material';
+
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 import { useTutorMutation, useTuteeMutation } from '@/app/_lib/data';
 import { AnyARecord } from 'dns';
 
-import { useSession, signOut } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
+
+const steps = ['General Info', 'Transcript', 'Finalize'];
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -204,6 +207,21 @@ function PeerTutorForm() {
   );
 }
 
+function HorizontalLinearStepper() {
+  const [activeStep, setActiveStep] = React.useState(0);
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+
+
+}
+
 function TuteeForm() {
 
   const seniorityOptions = [
@@ -320,6 +338,16 @@ function TuteeForm() {
 
 export default function Registration() {
 
+  const [activeStep, setActiveStep] = React.useState(0);
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
   const [tab, setTab] = React.useState(0);
 
   const tabLabels = ["Register as Peer Tutor", "Register as Tutee"];
@@ -343,6 +371,9 @@ export default function Registration() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            '& > *': {
+              marginBottom: 4,
+            },
           }}
         >
 
@@ -351,19 +382,36 @@ export default function Registration() {
             <Tab label={tabLabels[1]} />
           </Tabs>
 
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <AccountBoxIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            {tabLabels[tab]}
-          </Typography>
+          <Box sx={{ marginBottom: 4, display: 'flex', alignItems: 'center', flexDirection: 'column'  }}>
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+              <AccountBoxIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              {tabLabels[tab]}
+            </Typography>
+          </Box>
 
-          <TabPanel value={tab} index={0}>
-            {/* Peer Tutor Form */}
-          </TabPanel>
-          <TabPanel value={tab} index={1}>
-            {/* Tutee Form */}
-          </TabPanel>
+          {tab === 0 && (
+            <>
+              <Stepper activeStep={activeStep} alternativeLabel>
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+              {activeStep === 0 && <PeerTutorForm />}
+              {activeStep === 1 && <div>Transcript Form</div>}
+              {activeStep === 2 && <div>Finalize Form</div>}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
+                <Button disabled={activeStep === 0} onClick={handleBack}>
+                  Back
+                </Button>
+                <Button onClick={handleNext}>Next</Button>
+              </Box>
+            </>
+          )}
+          {tab === 1 && <TuteeForm />}
 
         </Box>
       </Paper>
