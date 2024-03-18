@@ -2,29 +2,26 @@
 
 // author: Brandon Nguyen
 
-import { useQuery, useMutation, useInfiniteQuery, keepPreviousData } from "@tanstack/react-query";
+import { useQuery, useMutation, keepPreviousData } from "@tanstack/react-query";
+
 import axios from "axios";
 
 const development = "http://localhost:8080";
 const deployment = "https://tamutheo.xyz/database-api";
 
-const numberEntriesPerPage = "number_entries_per_page=5";
-
 axios.defaults.baseURL = development;
 
-export function TableFetch(tableName: string) {
-  const { data, isError, isFetching, isLoading, refetch } = useQuery({
-    // refetch when any of the following query keys change
-    queryKey: ["table-data", tableName],
-    // asynchronous fetch
+
+export function TableFetch<T>(tableName: string, ...args: string[]) {
+  return {...useQuery<T>({
+    queryKey: ["table-data-paginated", tableName],
     queryFn: async () => {
-      return (await axios.get("/" + tableName)).data;
+      let req = `/${tableName}?${args.join('&')}`
+      return (await axios.get(req)).data;
     },
     placeholderData: keepPreviousData,
-  });
-
-  // console.log("before outer return: " + data);
-  return { data, isError, isFetching, isLoading, refetch };
+    })
+  };
 }
 
 export function TableUpdate(tableName: string, field: string, value: any) {
@@ -37,13 +34,41 @@ export function TableUpdate(tableName: string, field: string, value: any) {
   return { data, isError };
 }
 
-export function TableFetchPaginated(tableName: string, pageNumber: number) {
-  return {...useQuery({
-    queryKey: ["table-data", tableName],
-    queryFn: async () => {
-      return (await axios.get("/" + tableName + "?" + numberEntriesPerPage + "&" + `page_number=${pageNumber}`)).data;
-    },
-    placeholderData: keepPreviousData,
-    })
-  };
-}
+
+// ============== DATABASE TUTOR QUERIES ==============
+// active_status_name_equals
+// average_rating_greater_than_or_equals
+// average_rating_less_than_or_equals
+// bio_text_contains
+// email_contains
+// first_name_contains
+// last_name_contains
+// listing_title_contains
+// major_abbreviation_contains
+// number_of_ratings_greater_than_or_equals
+// number_of_ratings_less_than_or_equals
+// pay_rate_greater_than_or_equals
+// pay_rate_less_than_or_equals
+// phone_number_contains
+// picture_url_contains
+// seniority_name_in
+// sort_by
+          // average_rating_ascending --> equivalent front end label "lowest rating"
+          // average_rating_descending --> equivalent front end label "highest rating"
+          // pay_rate_ascending --> equivalent front end label "lowest pay rate"
+          // pay_rate_descending --> equivalent front end label "highest pay rate"
+
+// tutor_course_preference parameters
+
+// course_grade_in
+// course_number_equals
+// course_number_greater_than_or_equals
+// course_number_less_than_or_equals
+// course_major_abbreviation_contains
+
+// tutor_location_preference parameters
+
+// location_name_in
+
+// page_number
+// number_entries_per_page

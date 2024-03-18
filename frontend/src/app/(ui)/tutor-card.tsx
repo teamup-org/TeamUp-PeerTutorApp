@@ -2,10 +2,14 @@
 
 // import { useRef } from 'react';
 
-import { Stack, Card, Typography, Divider, Avatar, Rating, Chip } 
+import Image from 'next/image';
+
+import { Box, Stack, Card, Typography, Divider, Avatar, Rating, Chip, Accordion, AccordionSummary, AccordionDetails } 
 from '@mui/material';
-// import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-// import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+import { toTitleCase }
+from '@/app/_lib/utils'
 
 type TutorCardProps = { tutor: Tutor };
 export default function TutorCard(props: TutorCardProps) {
@@ -28,9 +32,9 @@ export default function TutorCard(props: TutorCardProps) {
     <Card elevation={4} sx={{ p: 2, width: '100%' }}>
       <Stack direction="row">
         <Stack direction="column" alignItems="center" spacing={1} minWidth="0%" width="20%">
-          <Typography variant="h6"> <center> {props.tutor?.firstName + " " + props.tutor?.lastName} </center> </Typography>
+          <Typography variant="h6"> <center> {toTitleCase(props.tutor?.firstName + " " + props.tutor?.lastName)} </center> </Typography>
 
-          <Avatar sx={{ width: 100, height: 100,}} src = {props.tutor?.pictureUrl}/>
+          <Avatar src={props.tutor?.pictureUrl} alt="Tutor profile picture" sx={{ width: 100, height: 100 }} />
 
           <Typography variant="h6" width="100%" sx={{ fontWeight: 'bold' }}>
             <center> ${props.tutor?.payRate} / hr </center>
@@ -43,7 +47,7 @@ export default function TutorCard(props: TutorCardProps) {
           </Stack>
         </Stack>
 
-        <Divider variant="middle" orientation="vertical" flexItem sx={{ mx: 2, }}/>
+        <Divider variant="middle" orientation="vertical" flexItem sx={{ mx: 2 }}/>
 
         <Stack direction="column" spacing={1} minWidth="0%" width="80%">
           <Typography variant="h6" align="left"> {props.tutor?.listingTitle} </Typography>
@@ -72,6 +76,13 @@ export default function TutorCard(props: TutorCardProps) {
           <Typography align="left">
             {props.tutor?.bioText}
           </Typography>
+
+          {/*<Accordion>
+            <AccordionSummary expandIcon={ <ExpandMoreIcon /> } aria-controls="tutor-content" id="tutor-header" />
+            <AccordionDetails>
+              Test
+            </AccordionDetails>
+            </Accordion>*/}
         </Stack>
       </Stack>
     </Card>

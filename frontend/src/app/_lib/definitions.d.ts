@@ -6,13 +6,6 @@ import type { SvgIconComponent }
 from "@mui/icons-material";
 
 declare global {
-  type JSONValue =
-  | string
-  | number
-  | boolean
-  | { [x: string]: JSONValue }
-  | Array<JSONValue>;
-  
   type Link = {
     name: string,
     href: string,
@@ -23,12 +16,20 @@ declare global {
     activeStatusName: string,
     averageRating: number,
     bioText: string,
-    coursePreferences: { courseGrade: string, courseNumber: number, majorAbbreviation: string, tutorEmail: string }[],
+    coursePreferences: { 
+      courseGrade: string, 
+      courseNumber: number, 
+      majorAbbreviation: string, 
+      tutorEmail: string 
+    }[],
     email: string,
     firstName: string,
     lastName: string,
     listingTitle: string,
-    locationPreferences: { locationName: string, tutorEmail: string }[],
+    locationPreferences: { 
+      locationName: string, 
+      tutorEmail: string 
+    }[],
     majorAbbreviation: string,
     numberOfRatings: number,
     payRate: number,
@@ -37,9 +38,18 @@ declare global {
     seniorityName: string,
   };
 
-  type Page = {
-    data: Data[],
-    prevCursor?: number,
-    nextCursor?: number,
+  type TutorQuery = {
+    data: Tutor[],
+    metaData: { 
+      pageNumber: number, 
+      totalNumberEntries: number,
+      maximumNumberEntriesPerPage: number,
+      totalNumberPages: number,
+    },
+  };
+
+  type Major = {
+    majorAbbreviation: string,
+    majorName: string,
   };
 }
