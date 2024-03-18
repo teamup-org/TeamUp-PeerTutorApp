@@ -52,4 +52,10 @@ declare global {
     majorAbbreviation: string,
     majorName: string,
   };
+
+  type Course = {
+    courseNumber: number,
+    courseTitle: string,
+    majorAbbreviation: string,
+  };
 }

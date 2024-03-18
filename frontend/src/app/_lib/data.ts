@@ -13,13 +13,14 @@ axios.defaults.baseURL = development;
 
 
 export function TableFetch<T>(tableName: string, ...args: string[]) {
-  return {...useQuery<T>({
-    queryKey: ["table-data-paginated", tableName],
-    queryFn: async () => {
-      let req = `/${tableName}?${args.join('&')}`
-      return (await axios.get(req)).data;
-    },
-    placeholderData: keepPreviousData,
+  return {
+    ...useQuery<T>({
+      queryKey: ["table-data-paginated", tableName],
+      queryFn: async () => {
+        let req = `/${tableName}?${args.join('&')}`
+        return (await axios.get(req)).data;
+      },
+      placeholderData: keepPreviousData,
     })
   };
 }
