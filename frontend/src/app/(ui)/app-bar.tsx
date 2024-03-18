@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname } 
 from 'next/navigation';
 
-import { AppBar, Box, Toolbar, IconButton, Menu, Container, Button, MenuItem } 
+import { AppBar, Box, Toolbar, IconButton, Menu, Container, Button, MenuItem, Stack, Typography } 
 from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -34,22 +34,16 @@ export default function ResponsiveAppBar(props : AppBarProps) {
   };
 
   return (
-    <AppBar position="sticky" color="tertiary" >
+    <AppBar position="static" color="tertiary">
       <Container maxWidth="lg">
-        <Toolbar disableGutters>
+        <Toolbar disableGutters sx={{ maxHeight: '100px' }}>
           <TheoLogo flexGrow="1"/>
 
-          <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="primary"
-            >
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, }}>
+            <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" onClick={handleOpenNavMenu} color="primary">
               <MenuIcon />
             </IconButton>
+            
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
@@ -69,11 +63,11 @@ export default function ResponsiveAppBar(props : AppBarProps) {
               }}
             >
             { 
-              (props.links).map((link: any) => (
+              (props.links).map((link: Link) => (
               <MenuItem key={link.name} onClick={handleCloseNavMenu} sx={{ p: 0 }}>
                   <Button key={link.name} component={Link} href={link.href} fullWidth sx={{ p: 3 }}>
-                      <link.icon />
-                      {link.name}
+                    <link.icon />
+                    { link.name }
                   </Button>
               </MenuItem>
               ))
@@ -81,31 +75,23 @@ export default function ResponsiveAppBar(props : AppBarProps) {
             </Menu>
           </Box>
           
-          <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>
+          <Stack direction="row" my={0} spacing={2} display={{ xs: "none", md: "flex" }}>
             {
-              (props.links).map((link: any) => {
+              (props.links).map((link: Link) => {
                 let LinkIcon = link.icon;
                 return (
-                  <Button
-                    key={link.name}
-                    onClick={handleCloseNavMenu}
-                    component={Link}
-                    href={link.href}
-                    sx={{ my: 2, display: 'block' }}
-                  >
-                    <LinkIcon />
-                    {link.name}
+                  <Button key={link.name} onClick={handleCloseNavMenu} component={Link} href={link.href}>
+                    <Stack direction="row" alignItems="center" spacing={0.5}>
+                      <LinkIcon fontSize="medium" />
+                      <Typography variant="body1"> {link.name} </Typography>
+                    </Stack>
                   </Button>
                 );
               })
             }
-          </Box>
-          
-          { (usePathname().startsWith("/dashboard")) && 
-            (
-              <UserMenu />
-            )
-          }
+
+            { (usePathname().startsWith("/dashboard")) && <UserMenu /> }
+          </Stack>
         </Toolbar>
       </Container>
     </AppBar>

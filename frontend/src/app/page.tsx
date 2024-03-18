@@ -16,7 +16,7 @@ export default function LandingPage() {
   return (
     <>
       <header>
-        <ResponsiveAppBar position="static" links={links} />
+        <ResponsiveAppBar links={links} settings={[]} />
       </header>
       <main>
         <Box position="relative" sx={{top: 50}}>
