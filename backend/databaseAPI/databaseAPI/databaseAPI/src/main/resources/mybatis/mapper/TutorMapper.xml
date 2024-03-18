@@ -74,7 +74,7 @@
             </if>
             <if test="majorAbbreviationContains != null">
                 <bind name="majorAbbreviationContainsPattern" value = "'%' + majorAbbreviationContains + '%'" />
-                AND LOWER(major_abbreviation) LIKE LOWER(#{majorAbbreviationContainsPattern})
+                AND LOWER(t.major_abbreviation) LIKE LOWER(#{majorAbbreviationContainsPattern})
             </if>
             <if test="numberOfRatingsGreaterThanOrEquals != null">
                 AND number_of_ratings &gt;= #{numberOfRatingsGreaterThanOrEquals}
@@ -246,7 +246,7 @@
             </if>
             <if test="majorAbbreviationContains != null">
                 <bind name="majorAbbreviationContainsPattern" value = "'%' + majorAbbreviationContains + '%'" />
-                AND LOWER(major_abbreviation) LIKE LOWER(#{majorAbbreviationContainsPattern})
+                AND LOWER(t.major_abbreviation) LIKE LOWER(#{majorAbbreviationContainsPattern})
             </if>
             <if test="numberOfRatingsGreaterThanOrEquals != null">
                 AND number_of_ratings &gt;= #{numberOfRatingsGreaterThanOrEquals}
