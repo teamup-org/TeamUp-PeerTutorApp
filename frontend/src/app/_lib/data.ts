@@ -6,7 +6,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
 const development = "http://localhost:8080";
-const deployment = "https://tamutheo.xyz/database-api";
+const deployment = "https://tamutheo.xyz/database_api";
 
 axios.defaults.baseURL = development;
 
@@ -51,9 +51,25 @@ export function TableUpdate(tableName: string, field: string, value: any) {
   return { data, isError };
 }
 
-export const useTutorMutation = () => {
+export const useTutorCreate = () => {
   return useMutation({
     mutationFn: async (fields: any) => { const response = axios.post('/tutor?' + objectToQueryString(fields));
+     return (await response).data;
+     }
+  })
+};
+
+export const useTutorEligibleCourse = () => {
+  return useMutation({
+    mutationFn: async (fields: any) => { const response = axios.post('/tutor_eligible_course?' + objectToQueryString(fields));
+     return (await response).data;
+     }
+  })
+};
+
+export const useTutorCoursePreference = () => {
+  return useMutation({
+    mutationFn: async (fields: any) => { const response = axios.post('/tutor_course_preference?' + objectToQueryString(fields));
      return (await response).data;
      }
   })
