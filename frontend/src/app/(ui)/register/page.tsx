@@ -12,17 +12,24 @@ const links = [
 
 import { 
   Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Paper, InputLabel, MenuItem, Select, SelectChangeEvent,
-  OutlinedInput, InputAdornment, Tabs, Tab, Step, Stepper, StepLabel
+  OutlinedInput, InputAdornment, Tabs, Tab, Step, Stepper, StepLabel, StepContent
 } from '@mui/material';
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
-import { useTutorMutation, useTuteeMutation } from '@/app/_lib/data';
+import { useTutorCreate, useTutorEligibleCourse, useTuteeMutation, useTutorCoursePreference } from '@/app/_lib/data';
 import { AnyARecord } from 'dns';
 
 import { useSession } from 'next-auth/react';
+import { all } from 'axios';
 
 const steps = ['General Info', 'Transcript', 'Finalize'];
+
+interface RowData {
+  courseType: string;
+  courseNumber: string;
+  courseGrade: string;
+}
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -30,6 +37,9 @@ interface TabPanelProps {
   index: number;
   value: number;
 }
+
+var selected: string;
+var grades: RowData[];
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -66,6 +76,7 @@ function PeerTutorForm() {
   
   const changeSeniority = (event: SelectChangeEvent) => {
     setSeniority(event.target.value as string);
+    selected = event.target.value;
   };
 
   // Google Account Specific Info ----------------------------------------
@@ -74,7 +85,7 @@ function PeerTutorForm() {
 
   // Form submission -----------------------------------------------------
 
-  const { mutate } = useTutorMutation();
+  const { mutate } = useTutorCreate();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -151,6 +162,7 @@ function PeerTutorForm() {
           value={seniority}
           label="seniority"
           onChange={changeSeniority}
+          defaultValue=''
         >
           {seniorityOptions.map(option => (
           <MenuItem key={option.value} value={option.value}>
@@ -336,11 +348,135 @@ function TuteeForm() {
   );
 }
 
+function DynamicTextFieldForm(props: any) {
+  const { inputs, updateInputs, setInputs } = props;
+
+  const addRow = () => {
+    setInputs([...inputs, { courseType: '', courseNumber: '', courseGrade: '' }]);
+  };
+
+  const handleFieldChange = (index: any, event: any) => {
+    const newInputs = [...inputs];
+    newInputs[index] = { ...newInputs[index], [event.target.name]: event.target.value };
+    updateInputs(newInputs);
+  };
+
+  return (
+    <div>
+      {inputs.map((input: any, index: any) => (
+        <div key={index} style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+          <TextField
+            label="Course Type"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            name="courseType"
+            value={input.courseType}
+            onChange={(event) => handleFieldChange(index, event)}
+          />
+          <TextField
+            label="Course Number"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            name="courseNumber"
+            value={input.courseNumber}
+            onChange={(event) => handleFieldChange(index, event)}
+          />
+          <TextField
+            label="Grade"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            name="courseGrade"
+            value={input.courseGrade}
+            onChange={(event) => handleFieldChange(index, event)}
+          />
+        </div>
+      ))}
+      
+      <Button variant="contained" color="primary" onClick={addRow}>
+        Add Row
+      </Button>
+
+    </div>
+  );
+}
+
 export default function Registration() {
 
   const [activeStep, setActiveStep] = React.useState(0);
 
+  const [inputs, setInputs] = useState([{ courseType: '', courseNumber: '', courseGrade: '' }]);
+
+  const updateInputs = (newInputs: any) => {
+    setInputs(newInputs);
+  };
+
   const handleNext = () => {
+
+    
+    if (tab == 0) {
+
+      let allFieldsFilled = true;
+
+      if (activeStep === 0) {
+
+        const fname = document.getElementById('firstName') as HTMLInputElement;
+        const lname = document.getElementById('lastName') as HTMLInputElement;
+        const phone = document.getElementById('phoneNumber') as HTMLInputElement;
+        const title = document.getElementById('title') as HTMLInputElement;
+        const payrate = document.getElementById('payrate') as HTMLInputElement;
+        const major = document.getElementById('major') as HTMLInputElement;
+        const bio = document.getElementById('bioText') as HTMLInputElement;
+
+        if (!fname?.value || !lname?.value || !phone?.value || !title?.value || !selected || !payrate?.value || !major?.value || !bio?.value) {
+          allFieldsFilled = false;
+        }
+
+        if (allFieldsFilled) {
+          setPeerTutorData((prevData) => ({
+            ...prevData,
+            firstName: fname?.value,
+            lastName: lname?.value,
+            phoneNumber: phone?.value,
+            title: title?.value,
+            seniority: selected,
+            payrate: payrate?.value,
+            major: major?.value,
+            bioText: bio?.value
+          }));
+        }
+        else {
+          alert("Fill out all fields first before continuing");
+          return;
+        }
+      }
+      else if (activeStep === 1) {
+
+        for (var i = 0; i < inputs.length; i++) {
+          if (!(inputs[i].courseType) || !(inputs[i].courseNumber) || !(inputs[i].courseGrade)) {
+            allFieldsFilled = false;
+          }
+        }
+
+        if (allFieldsFilled) {
+          setCoursesData((prevData) => ({
+            ...prevData,
+            inputs
+          }));
+        }
+        else {
+          alert("Fill out all fields first before continuing");
+          return;
+        }
+
+      }
+    }
+
+    console.log(peerTutorData);
+    console.log(coursesData);
+    
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -349,6 +485,27 @@ export default function Registration() {
   };
 
   const [tab, setTab] = React.useState(0);
+
+  const [peerTutorData, setPeerTutorData] = React.useState({
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    title: '',
+    seniority: '',
+    payrate: '',
+    major: '',
+    bioText: ''
+  });
+
+  const [tuteeData, setTuteeData] = React.useState({
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    seniority: '',
+    major: ''
+  });
+
+  const [coursesData, setCoursesData] = React.useState([{ courseType: '', courseNumber: '', grade: '' }]);
 
   const tabLabels = ["Register as Peer Tutor", "Register as Tutee"];
 
@@ -401,7 +558,7 @@ export default function Registration() {
                 ))}
               </Stepper>
               {activeStep === 0 && <PeerTutorForm />}
-              {activeStep === 1 && <div>Transcript Form</div>}
+              {activeStep === 1 && <DynamicTextFieldForm inputs={inputs} updateInputs={updateInputs} setInputs={setInputs} />}
               {activeStep === 2 && <div>Finalize Form</div>}
               <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
                 <Button disabled={activeStep === 0} onClick={handleBack}>

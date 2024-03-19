@@ -84,71 +84,25 @@ export function TableUpdate(tableName: string, field: string, value: any) {
 // page_number
 // number_entries_per_page
 
-
-// ============== DATABASE TUTOR QUERIES ==============
-// active_status_name_equals
-// average_rating_greater_than_or_equals
-// average_rating_less_than_or_equals
-// bio_text_contains
-// email_contains
-// first_name_contains
-// last_name_contains
-// listing_title_contains
-// major_abbreviation_contains
-// number_of_ratings_greater_than_or_equals
-// number_of_ratings_less_than_or_equals
-// pay_rate_greater_than_or_equals
-// pay_rate_less_than_or_equals
-// phone_number_contains
-// picture_url_contains
-// seniority_name_in
-// sort_by
-          // average_rating_ascending --> equivalent front end label "lowest rating"
-          // average_rating_descending --> equivalent front end label "highest rating"
-          // pay_rate_ascending --> equivalent front end label "lowest pay rate"
-          // pay_rate_descending --> equivalent front end label "highest pay rate"
-
-// tutor_course_preference parameters
-
-// course_grade_in
-// course_number_equals
-// course_number_greater_than_or_equals
-// course_number_less_than_or_equals
-// course_major_abbreviation_contains
-
-// tutor_location_preference parameters
-
-// location_name_in
-
-// page_number
-// number_entries_per_page
-
-export function CreateTutor(fields: any) {
-  const { data, isError } = useMutation({
-    mutationFn: async () => {
-      const response = await axios.post("/" + "tutor", {
-        uin: fields.uin,
-        first_name: fields.firstName,
-        last_name: fields.lastName,
-        major_id: 1,
-        seniority_id: fields.seniority,
-        pay_rate: 40.0,
-        bio_text: fields.bioText,
-        picture_url: fields.pfp,
-        phone_number: fields.phoneNumber,
-        email: fields.email,
-        active_status_id: 1
-      }); 
-      return response;
-    },
-  });
-
-  return { data, isError };
-}
-
-export const useTutorMutation = () => {
+export const useTutorCreate = () => {
   return useMutation({
     mutationFn: async (fields: any) => { const response = axios.post('/tutor?' + objectToQueryString(fields));
+     return (await response).data;
+     }
+  })
+};
+
+export const useTutorEligibleCourse = () => {
+  return useMutation({
+    mutationFn: async (fields: any) => { const response = axios.post('/tutor_eligible_course?' + objectToQueryString(fields));
+     return (await response).data;
+     }
+  })
+};
+
+export const useTutorCoursePreference = () => {
+  return useMutation({
+    mutationFn: async (fields: any) => { const response = axios.post('/tutor_course_preference?' + objectToQueryString(fields));
      return (await response).data;
      }
   })
