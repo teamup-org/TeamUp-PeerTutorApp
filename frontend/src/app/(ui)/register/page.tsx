@@ -41,6 +41,8 @@ interface Tutor {
   numberOfRatings: number;
   listingTitle: string;
   bioText: string;
+  phoneNumber: number;
+  email: string;
   coursePreferences: {id: number, majorAbbreviation: string, courseNumber: number}[];
 }
 
@@ -85,7 +87,14 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-function PeerTutorForm() {
+function PeerTutorForm(props: any) {
+
+  const { formData, setFormData } = props;  
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormData((prevData: any) => ({ ...prevData, [name]: value }));
+  };
 
   const seniorityOptions = [
     { value: 'freshman', label: 'Freshman' },
@@ -102,36 +111,9 @@ function PeerTutorForm() {
     selected = event.target.value;
   };
 
-  // Google Account Specific Info ----------------------------------------
-
-  const { data: session, status } = useSession();
-
-  // Form submission -----------------------------------------------------
-
-  const { mutate } = useTutorCreate();
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const registrationData = {
-      first_name: formData.get('firstName') as string,
-      last_name: formData.get('lastName') as string,
-      phone_number: formData.get('phoneNumber') as string,
-      listing_title: formData.get('title') as string,
-      seniority_name: seniority,
-      pay_rate: formData.get('payrate') as string,
-      bio_text: formData.get('bioText') as string,
-      email: session?.user?.email as string,
-      picture_url: session?.user?.image as string,
-      major_abbreviation: formData.get('major') as string,
-      active_status_name: 'active'
-    };
-    
-    mutate(registrationData);
-  };
 
   return (
-    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+    <Box component="form" noValidate sx={{ mt: 3 }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -141,6 +123,8 @@ function PeerTutorForm() {
             fullWidth
             id="firstName"
             label="First Name"
+            value={formData.firstName}
+            onChange={handleChange}
             autoFocus
           />
         </Grid>
@@ -152,6 +136,8 @@ function PeerTutorForm() {
             label="Last Name"
             name="lastName"
             autoComplete="family-name"
+            value={formData.lastName}
+            onChange={handleChange}
           />
         </Grid>
 
@@ -163,6 +149,8 @@ function PeerTutorForm() {
             label="Phone Number (No dashes or spaces)"
             name="phoneNumber"
             autoComplete="phoneNumber"
+            value={formData.phoneNumber}
+            onChange={handleChange}
           />
         </Grid>
 
@@ -174,6 +162,8 @@ function PeerTutorForm() {
             label="Title (Ex. Computer Science Tutor)"
             name="title"
             autoComplete="title"
+            value={formData.title}
+            onChange={handleChange}
           />
         </Grid>
 
@@ -198,10 +188,12 @@ function PeerTutorForm() {
         <Grid item xs={12} sm={6}>
           <InputLabel htmlFor="payrate">Pay Rate/Hr</InputLabel>
           <OutlinedInput
-            name="payrate"
+            name="payRate"
             id="payrate"
             startAdornment={<InputAdornment position="start">$</InputAdornment>}
             label="payrate"
+            value={formData.payRate}
+            onChange={handleChange}
           />
         </Grid>
 
@@ -213,6 +205,8 @@ function PeerTutorForm() {
             label="Undergraduate Department (4 letter abbreviation)"
             name="major"
             autoComplete="major"
+            value={formData.major}
+            onChange={handleChange}
           />
         </Grid>
 
@@ -226,6 +220,8 @@ function PeerTutorForm() {
             autoComplete="bioText"
             multiline  // Add this prop for multiline textarea
             rows={4}   // Optionally set the number of rows
+            value={formData.bioText}
+            onChange={handleChange}
           />
         </Grid>
 
@@ -424,6 +420,16 @@ export default function Registration() {
 
   const [inputs, setInputs] = useState([{ courseType: '', courseNumber: '', courseGrade: '' }]);
 
+  const [peerTutorFormData, setPeerTutorFormData] = useState({
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    title: '',
+    payRate: '',
+    major: '',
+    bioText: '',
+  });
+
   const updateInputs = (newInputs: any) => {
     setInputs(newInputs);
   };
@@ -431,18 +437,6 @@ export default function Registration() {
   // Google Account Specific Info ----------------------------------------
 
   const { data: session, status } = useSession();
-
-  var t1 = {
-    firstName: "Trey",
-    lastName: "Wells",
-    pictureUrl: session?.user?.image,
-    payRate: 30.0,
-    averageRating: 5,
-    numberOfRatings: 40,
-    listingTitle: "tutor",
-    bioText: "am happy, very happy",
-    coursePreferences: [{id: 0, majorAbbreviation: "csce", courseNumber: 120}]
-  }
 
   const [tutor, setTutor] = React.useState<Tutor>({
     firstName: '',
@@ -453,64 +447,42 @@ export default function Registration() {
     numberOfRatings: 0,
     listingTitle: '',
     bioText: '',
+    phoneNumber: -1,
+    email: '',
     coursePreferences: []
   });
 
   const handleNext = () => {
 
-    
     if (tab == 0) {
-
-      let allFieldsFilled = true;
 
       if (activeStep === 0) {
 
-        const fname = document.getElementById('firstName') as HTMLInputElement;
-        const lname = document.getElementById('lastName') as HTMLInputElement;
-        const phone = document.getElementById('phoneNumber') as HTMLInputElement;
-        const title = document.getElementById('title') as HTMLInputElement;
-        const payrate = document.getElementById('payrate') as HTMLInputElement;
-        const major = document.getElementById('major') as HTMLInputElement;
-        const bio = document.getElementById('bioText') as HTMLInputElement;
-
-        if (!fname?.value || !lname?.value || !phone?.value || !title?.value || !selected || !payrate?.value || !major?.value || !bio?.value) {
-          allFieldsFilled = false;
-        }
-
-        if (allFieldsFilled) {
-          setPeerTutorData((prevData) => ({
-            ...prevData,
-            firstName: fname?.value,
-            lastName: lname?.value,
-            phoneNumber: Number(phone?.value),
-            title: title?.value,
-            seniority: selected,
-            payrate: Number(payrate?.value),
-            major: major?.value,
-            bioText: bio?.value
-          }));
-        }
-        else {
-          alert("Fill out all fields first before continuing");
-          return;
+        for (const key in peerTutorFormData) {
+          if (!(peerTutorFormData as any)[key]) {
+            alert("Fill out all fields first before continuing");
+            return;
+          }
         }
       }
       else if (activeStep === 1) {
 
         for (var i = 0; i < inputs.length; i++) {
           if (!(inputs[i].courseType) || !(inputs[i].courseNumber) || !(inputs[i].courseGrade)) {
-            allFieldsFilled = false;
+            alert("Fill out all fields first before continuing");
+            return;
           }
         }
 
-
         const newTutor: Tutor = {
-          firstName: peerTutorData.firstName,
-          lastName: peerTutorData.lastName,
-          bioText: peerTutorData.bioText,
-          listingTitle: peerTutorData.title,
-          payRate: peerTutorData.payrate,
+          firstName: peerTutorFormData.firstName,
+          lastName: peerTutorFormData.lastName,
+          bioText: peerTutorFormData.bioText,
+          listingTitle: peerTutorFormData.title,
+          payRate: Number(peerTutorFormData.payRate),
           pictureUrl: session?.user?.image || '',
+          phoneNumber: Number(peerTutorFormData.phoneNumber),
+          email: session?.user?.email || '',
           coursePreferences: inputs.map((input, index) => ({
             id: index,
             majorAbbreviation: input.courseType,
@@ -522,26 +494,8 @@ export default function Registration() {
 
         setTutor(newTutor);
 
-        console.log(tutor);
-
-        if (allFieldsFilled) {
-          setCoursesData(inputs);
-        }
-        else {
-          alert("Fill out all fields first before continuing");
-          return;
-        }
-
-      }
-      else if (activeStep === 2) {
-        console.log(peerTutorData);
-        console.log(coursesData);
-
       }
     }
-
-    console.log(tutor);
-
     
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -552,17 +506,6 @@ export default function Registration() {
 
   const [tab, setTab] = React.useState(0);
 
-  const [peerTutorData, setPeerTutorData] = React.useState<PeerTutorData>({
-    firstName: '',
-    lastName: '',
-    phoneNumber: 0,
-    title: '',
-    seniority: '',
-    payrate: 0,
-    major: '',
-    bioText: ''
-  });
-
   const [tuteeData, setTuteeData] = React.useState({
     firstName: '',
     lastName: '',
@@ -571,13 +514,18 @@ export default function Registration() {
     major: ''
   });
 
-  const [coursesData, setCoursesData] = React.useState([{ courseType: '', courseNumber: '', courseGrade: '' }]);
-
   const tabLabels = ["Register as Peer Tutor", "Register as Tutee"];
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
   };
+
+  const handleTutor = () => {
+
+    
+
+
+  }
 
   return (
     <>
@@ -623,14 +571,33 @@ export default function Registration() {
                   </Step>
                 ))}
               </Stepper>
-              {activeStep === 0 && <PeerTutorForm />}
+              {activeStep === 0 && <PeerTutorForm formData={peerTutorFormData} setFormData={setPeerTutorFormData} />}
               {activeStep === 1 && <DynamicTextFieldForm inputs={inputs} updateInputs={updateInputs} setInputs={setInputs} />}
-              {activeStep === 2 && <TutorCard tutor={tutor} />}
+              {activeStep === 2 && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    height: '100%',
+                    padding: 4,
+                    '& > *': {
+                      marginBottom: 4,
+                    },
+                  }}>
+                  <Typography> Here is your Tutor Card!! </Typography>
+                  <TutorCard tutor={tutor} />
+                  <Button onClick={handleTutor}>Register as Peer Tutor!</Button>
+
+                </Box>
+              )}
               <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
                 <Button disabled={activeStep === 0} onClick={handleBack}>
                   Back
                 </Button>
-                <Button onClick={handleNext}>Next</Button>
+                <Button disabled={activeStep === 2} onClick={handleNext}>Next</Button>
               </Box>
             </>
           )}
