@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import ResponsiveAppBar from '../app-bar'
 import { Login, HowToReg } from '@mui/icons-material'
+import TutorCard from '../tutor-card';
 const links = [
   {name: 'Login', href: '/login', icon: Login},
   {name: 'Register', href: '/register', icon: HowToReg},
@@ -31,6 +32,29 @@ interface RowData {
   courseGrade: string;
 }
 
+interface Tutor {
+  firstName: string;
+  lastName: string;
+  pictureUrl: string;
+  payRate: number;
+  averageRating: number;
+  numberOfRatings: number;
+  listingTitle: string;
+  bioText: string;
+  coursePreferences: {id: number, majorAbbreviation: string, courseNumber: number}[];
+}
+
+interface PeerTutorData {
+  firstName: string;
+  lastName: string;
+  phoneNumber: number; // Allow both string and number types
+  title: string;
+  seniority: string;
+  payrate: number; // Allow both string and number types
+  major: string;
+  bioText: string;
+}
+
 interface TabPanelProps {
   children?: React.ReactNode;
   dir?: string;
@@ -39,7 +63,6 @@ interface TabPanelProps {
 }
 
 var selected: string;
-var grades: RowData[];
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -207,14 +230,6 @@ function PeerTutorForm() {
         </Grid>
 
       </Grid>
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        sx={{ mt: 3, mb: 2 }}
-      >
-        Register
-      </Button>
     </Box>
   );
 }
@@ -413,6 +428,34 @@ export default function Registration() {
     setInputs(newInputs);
   };
 
+  // Google Account Specific Info ----------------------------------------
+
+  const { data: session, status } = useSession();
+
+  var t1 = {
+    firstName: "Trey",
+    lastName: "Wells",
+    pictureUrl: session?.user?.image,
+    payRate: 30.0,
+    averageRating: 5,
+    numberOfRatings: 40,
+    listingTitle: "tutor",
+    bioText: "am happy, very happy",
+    coursePreferences: [{id: 0, majorAbbreviation: "csce", courseNumber: 120}]
+  }
+
+  const [tutor, setTutor] = React.useState<Tutor>({
+    firstName: '',
+    lastName: '',
+    pictureUrl: '',
+    payRate: 0,
+    averageRating: 5,
+    numberOfRatings: 0,
+    listingTitle: '',
+    bioText: '',
+    coursePreferences: []
+  });
+
   const handleNext = () => {
 
     
@@ -439,10 +482,10 @@ export default function Registration() {
             ...prevData,
             firstName: fname?.value,
             lastName: lname?.value,
-            phoneNumber: phone?.value,
+            phoneNumber: Number(phone?.value),
             title: title?.value,
             seniority: selected,
-            payrate: payrate?.value,
+            payrate: Number(payrate?.value),
             major: major?.value,
             bioText: bio?.value
           }));
@@ -460,11 +503,29 @@ export default function Registration() {
           }
         }
 
+
+        const newTutor: Tutor = {
+          firstName: peerTutorData.firstName,
+          lastName: peerTutorData.lastName,
+          bioText: peerTutorData.bioText,
+          listingTitle: peerTutorData.title,
+          payRate: peerTutorData.payrate,
+          pictureUrl: session?.user?.image || '',
+          coursePreferences: inputs.map((input, index) => ({
+            id: index,
+            majorAbbreviation: input.courseType,
+            courseNumber: Number(input.courseNumber)
+          })),
+          averageRating: 5,
+          numberOfRatings: 0 
+        };
+
+        setTutor(newTutor);
+
+        console.log(tutor);
+
         if (allFieldsFilled) {
-          setCoursesData((prevData) => ({
-            ...prevData,
-            inputs
-          }));
+          setCoursesData(inputs);
         }
         else {
           alert("Fill out all fields first before continuing");
@@ -472,10 +533,15 @@ export default function Registration() {
         }
 
       }
+      else if (activeStep === 2) {
+        console.log(peerTutorData);
+        console.log(coursesData);
+
+      }
     }
 
-    console.log(peerTutorData);
-    console.log(coursesData);
+    console.log(tutor);
+
     
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -486,13 +552,13 @@ export default function Registration() {
 
   const [tab, setTab] = React.useState(0);
 
-  const [peerTutorData, setPeerTutorData] = React.useState({
+  const [peerTutorData, setPeerTutorData] = React.useState<PeerTutorData>({
     firstName: '',
     lastName: '',
-    phoneNumber: '',
+    phoneNumber: 0,
     title: '',
     seniority: '',
-    payrate: '',
+    payrate: 0,
     major: '',
     bioText: ''
   });
@@ -505,7 +571,7 @@ export default function Registration() {
     major: ''
   });
 
-  const [coursesData, setCoursesData] = React.useState([{ courseType: '', courseNumber: '', grade: '' }]);
+  const [coursesData, setCoursesData] = React.useState([{ courseType: '', courseNumber: '', courseGrade: '' }]);
 
   const tabLabels = ["Register as Peer Tutor", "Register as Tutee"];
 
@@ -559,7 +625,7 @@ export default function Registration() {
               </Stepper>
               {activeStep === 0 && <PeerTutorForm />}
               {activeStep === 1 && <DynamicTextFieldForm inputs={inputs} updateInputs={updateInputs} setInputs={setInputs} />}
-              {activeStep === 2 && <div>Finalize Form</div>}
+              {activeStep === 2 && <TutorCard tutor={tutor} />}
               <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
                 <Button disabled={activeStep === 0} onClick={handleBack}>
                   Back
