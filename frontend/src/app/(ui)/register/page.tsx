@@ -18,8 +18,7 @@ import {
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
-import { useTutorCreate, useTutorEligibleCourse, useTuteeMutation, useTutorCoursePreference } from '@/app/_lib/data';
-import { AnyARecord } from 'dns';
+import { useTuteeMutation } from '@/app/_lib/data';
 
 import { useSession } from 'next-auth/react';
 
@@ -537,10 +536,6 @@ export default function Registration() {
     setTab(newValue);
   };
 
-  const { mutate: createTutor } = useTutorCreate();
-  const { mutate: eligibleCourse } = useTutorEligibleCourse();
-  const { mutate: coursePreference } = useTutorCoursePreference();
-
   function delay(t: number) {
     return new Promise(resolve => setTimeout(resolve, t));
   }
@@ -587,16 +582,11 @@ export default function Registration() {
       console.log("running request");
       let data = await axios.post(request);
       results.push(data);
-  }
-
-
+    }
   }
 
   const handleTutor = () => {
-
     TutorCreation();
-    
-
   }
 
   return (
