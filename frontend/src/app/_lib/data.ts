@@ -12,12 +12,12 @@ const deployment = "https://tamutheo.xyz/database-api";
 axios.defaults.baseURL = development;
 
 
-export function TableFetch<T>(tableName: string, ...args: string[]) {
+export function TableFetch<T>(tableName: string, vars?: any[], ...args: string[]) {
   return {
     ...useQuery<T>({
-      queryKey: ["table-data-paginated", tableName],
+      queryKey: ["table-data", {...vars}],
       queryFn: async () => {
-        let req = `/${tableName}?${args.join('&')}`
+        let req = `/${tableName}?${args.join('&')}`;
         return (await axios.get(req)).data;
       },
       placeholderData: keepPreviousData,

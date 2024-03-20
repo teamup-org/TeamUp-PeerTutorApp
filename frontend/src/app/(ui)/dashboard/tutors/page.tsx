@@ -3,12 +3,14 @@
 import React, { useState, useEffect, SyntheticEvent } 
 from 'react';
 
+import SearchIcon from '@mui/icons-material/Search';
 import { Box, Container, Grid, Stack, Skeleton, Pagination, Paper, 
   Slider, Select, SelectChangeEvent, MenuItem, FormControl, InputLabel, 
-  Autocomplete, TextField, Typography, ToggleButtonGroup, ToggleButton }
+  Autocomplete, TextField, Typography, ToggleButtonGroup, ToggleButton, InputAdornment, IconButton }
 from '@mui/material';
 
 import TutorCard from '@/app/(ui)/tutor-card';
+import FilterBox from './filter-box';
 import { TableFetch } 
 from '@/app/_lib/data';
 
@@ -31,6 +33,8 @@ const sortOptions = [
 
 const tutorsPerPageOptions = [ 5, 10, 15 ];
 
+const tutorSkeleton: Tutor = { activeStatusName: "", averageRating: 0, bioText: "", coursePreferences: [], email: "", firstName: "", lastName: "", 
+  listingTitle: "", locationPreferences: [], majorAbbreviation: "", numberOfRatings: 0, payRate: 0, phoneNumber: 0, pictureUrl: "", seniorityName: "" };
 
 export default function TutorPage() {
   const [tutorsPerPage, setTutorsPerPage] = useState(5);
@@ -68,58 +72,76 @@ export default function TutorPage() {
     // window.scrollTo(0, 0);
   };
 
-  const [major, setMajor] = useState<{label: string, firstLetter: string} | null>(null);
-  const handleMajorChange = (event: any, value: {label: string, firstLetter: string} | null) => {
+  const [major, setMajor] = useState<string | null>(null);
+  const handleMajorChange = (event: any, value: string | null) => {
     setMajor(value);
   };
 
-  const [course, setCourse] = useState<{label: number, firstNumber: number} | null>(null);
-  const handleCourseChange = (event: any, value: {label: number, firstNumber: number} | null) => {
+  const [course, setCourse] = useState<string | null>(null);
+  const handleCourseChange = (event: any, value: string | null) => {
     setCourse(value);
+  };
+
+  const [search, setSearch] = useState<string>("");
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
   };
 
   // Database Fetching
   const { data: tutorData, isLoading: tutorIsLoading, isFetching: tutorIsFetching, refetch: tutorRefetch } = 
-  TableFetch<TutorQuery>("tutor", `number_entries_per_page=${tutorsPerPage}`, `page_number=${page}`, 
+  TableFetch<TutorQuery>("tutor", [tutorsPerPage, page, sort, rate, major, course], `number_entries_per_page=${tutorsPerPage}`, `page_number=${page}`, 
     `sort_by=${sort}`,
     `pay_rate_greater_than_or_equals=${rate[0]}`, 
     `pay_rate_less_than_or_equals=${rate[1]}`,
-    `course_major_abbreviation_contains=${major ? major.label : ""}`,
-    `course_number_equals=${course ? course.label : ""}`
+    `course_major_abbreviation_contains=${major ? major : ""}`,
+    `course_number_equals=${course ? course : ""}`
   );
   
   const { data: majorData, isLoading: majorIsLoading, isFetching: majorIsFetching, isPlaceholderData: majorIsPlaceholderData, refetch: majorRefetch } = 
     TableFetch<Major[]>("major");
   
   const { data: courseData, isLoading: courseIsLoading, isFetching: courseIsFetching, refetch: courseRefetch } =
-    TableFetch<Course[]>("course", `major_abbreviation_contains=${major?.label}`);
+    TableFetch<Course[]>("course", [major], `major_abbreviation_contains=${major}`);
 
-  useEffect(() => {
+  /*useEffect( () => {
     tutorRefetch();
+    // window.scrollTo(0, 0);
   }, [tutorsPerPage, page, sort, major, course]);
 
   useEffect(() => {
     courseRefetch();
-  }, [major]);
+  }, [major]); */
   
   const printTutors = () => {
     if (tutorIsLoading) {
       return (
-        <Skeleton animation="wave" variant="rounded" height="275px" width="100%" />
+        <Skeleton animation="wave" variant="rounded" width="100%"> <TutorCard tutor={tutorSkeleton} /> </Skeleton>
       );
     } 
-    else { 
+    else if (tutorData && tutorData?.data?.length > 0) { 
       return tutorData?.data?.map((tutor: Tutor, index: number) => (
         <TutorCard tutor={tutor} key={index} />
       ));
     }
+    
+    return (
+      <Typography variant="h4"> Could not find any tutors. . . </Typography>
+    )
   };
 
   const populateMajorOptions = () => {
     if (majorData)
-      return (majorData.map((major: Major) => { 
-        return { label: (major.majorAbbreviation).toUpperCase(), firstLetter: major.majorAbbreviation[0].toUpperCase() }})).sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))
-    
+      return (majorData.map( (major: Major) => (major.majorAbbreviation.toUpperCase()) ))
+        .sort( (a, b) => (-b.localeCompare(a)) );
+
+    return [];
+  };
+
+  const populateCourseOptions = () => {
+    if (courseData)
+      return (courseData.map( (course: Course) => (course.courseNumber.toString()) ))
+        .sort( (a, b) => (-b.localeCompare(a)) );
+
     return [];
   };
 
@@ -146,9 +168,9 @@ export default function TutorPage() {
                     <Autocomplete 
                       fullWidth loading={majorIsLoading}
                       id="autocomplete-major" 
-                      options={ majorData ? (majorData.map((major: Major) => { return { label: (major.majorAbbreviation).toUpperCase(), firstLetter: major.majorAbbreviation[0].toUpperCase() }})).sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter)) : [] } 
-                      isOptionEqualToValue={ (option, value) => (option.label === option.label) }
-                      groupBy={ (option) => option.firstLetter }
+                      options={populateMajorOptions()} 
+                      isOptionEqualToValue={ (option, value) => (option === option) }
+                      groupBy={ (option) => option[0] }
                       value={major || null} onChange={handleMajorChange} 
                       renderInput={ (params) => <TextField {...params} label="Major" /> } 
                     />
@@ -159,12 +181,12 @@ export default function TutorPage() {
                     <Autocomplete 
                       fullWidth 
                       id="autocomplete-course" 
-                      options={ courseData ? (courseData.map((course: Course) => { return { label: course.courseNumber, firstNumber: Number(course.courseNumber.toString()[0]) }})).sort((a: any, b: any) => a.label - b.label) : [] }
-                      isOptionEqualToValue={ (option, value) => (option.label === option.label) }
-                      groupBy={ (option) => option.firstNumber.toString() }
+                      options={populateCourseOptions()}
+                      isOptionEqualToValue={ (option, value) => (option === option) }
+                      groupBy={ (option) => option.toString()[0] }
                       value={course || null} onChange={handleCourseChange}
                       renderInput={ (params) => <TextField {...params} label="Course" /> }
-                      disabled={ !major }
+                      disabled={!major}
                     />
                   </Stack>
                 </Stack>
@@ -175,7 +197,7 @@ export default function TutorPage() {
                     <Slider 
                       valueLabelDisplay="on" valueLabelFormat={valueLabelFormat} getAriaLabel={() => ""} getAriaValueText={valuetext}
                       min={0} max={200} step={5} 
-                      value={rate} onChange={handleRateChange} onChangeCommitted={() => tutorRefetch()}
+                      value={rate} onChange={handleRateChange} onChangeCommitted={ () => tutorRefetch() }
                       disableSwap sx={{ '& .MuiSlider-valueLabel': { top: 4, backgroundColor: 'unset', '& *': { background: 'transparent', color: '#000' } } }}
                     />
                   </Box>
@@ -186,19 +208,25 @@ export default function TutorPage() {
 
           <Grid item xs={12} md={8}>
             <Stack direction="column" spacing={2} alignItems="center">
+              <TextField 
+                id="outlined-tutor-search" label="Search" variant="outlined" 
+                value={search} onChange={handleSearchChange} onKeyUp={ (event) => {if (event.key === "Enter") console.log(search);} }
+                fullWidth InputProps={{ endAdornment: (<Box height="100%"> <IconButton onClick={ () => console.log("Submit Search") }> <SearchIcon /> </IconButton> </Box>) }}
+              />
+
               { printTutors() }
 
               <Stack direction="row" width="100%" alignItems="center">
                 <Box display="flex" flexGrow={1} justifyContent="center">
                   <Pagination 
                     color="primary" size="large"
-                    count={tutorData?.metaData?.totalNumberPages} page={page} onChange={handlePageChange} 
+                    count={tutorData ? tutorData?.metaData?.totalNumberPages : 0} page={Math.min(page, tutorData ? tutorData?.metaData?.totalNumberPages : page)} onChange={handlePageChange} 
                     disabled={tutorIsLoading || tutorIsFetching}
                   />
                 </Box>
 
-                <Stack direction="column" marginLeft="auto">
-                  <Typography variant="body1" fontWeight="bold" alignSelf="end"> Per Page: </Typography>
+                <Stack direction="column" marginLeft="auto" alignItems="end">
+                  <Typography variant="body1" fontWeight="bold" alignSelf="end"> Tutors Per Page: </Typography>
                   <ToggleButtonGroup value={tutorsPerPage} onChange={handleTutorsPerPageChange} exclusive>
                     { 
                       tutorsPerPageOptions.map((option) => (
