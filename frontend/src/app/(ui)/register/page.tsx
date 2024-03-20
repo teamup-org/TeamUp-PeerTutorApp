@@ -22,7 +22,18 @@ import { useTutorCreate, useTutorEligibleCourse, useTuteeMutation, useTutorCours
 import { AnyARecord } from 'dns';
 
 import { useSession } from 'next-auth/react';
-import { all } from 'axios';
+
+
+import axios from 'axios';
+const development = "http://localhost:8080";
+const deployment = "https://tamutheo.xyz/database_api";
+axios.defaults.baseURL = development;
+
+function objectToQueryString(obj: any) {
+  return Object.keys(obj)
+    .map(key => `${key}=${obj[key]}`)
+    .join('&');
+}
 
 const steps = ['General Info', 'Transcript', 'Finalize'];
 
@@ -43,6 +54,8 @@ interface Tutor {
   bioText: string;
   phoneNumber: number;
   email: string;
+  majorAbbreviation: string;
+  seniority: string;
   coursePreferences: {id: number, majorAbbreviation: string, courseNumber: number}[];
 }
 
@@ -449,6 +462,8 @@ export default function Registration() {
     bioText: '',
     phoneNumber: -1,
     email: '',
+    majorAbbreviation: '',
+    seniority: '',
     coursePreferences: []
   });
 
@@ -459,7 +474,7 @@ export default function Registration() {
       if (activeStep === 0) {
 
         for (const key in peerTutorFormData) {
-          if (!(peerTutorFormData as any)[key]) {
+          if (!(peerTutorFormData as any)[key] || !selected) {
             alert("Fill out all fields first before continuing");
             return;
           }
@@ -483,6 +498,8 @@ export default function Registration() {
           pictureUrl: session?.user?.image || '',
           phoneNumber: Number(peerTutorFormData.phoneNumber),
           email: session?.user?.email || '',
+          majorAbbreviation: peerTutorFormData.major,
+          seniority: selected,
           coursePreferences: inputs.map((input, index) => ({
             id: index,
             majorAbbreviation: input.courseType,
@@ -520,10 +537,65 @@ export default function Registration() {
     setTab(newValue);
   };
 
+  const { mutate: createTutor } = useTutorCreate();
+  const { mutate: eligibleCourse } = useTutorEligibleCourse();
+  const { mutate: coursePreference } = useTutorCoursePreference();
+
+  function delay(t: number) {
+    return new Promise(resolve => setTimeout(resolve, t));
+  }
+
+  async function TutorCreation() {
+
+    const requests = [];
+    const results = [];
+
+    // Create the Tutor in the database -------------------------------------
+
+    const tutorCreateData = {
+      active_status_name: 'active',
+      bio_text: tutor.bioText,
+      email: tutor.email,
+      first_name: tutor.firstName,
+      last_name: tutor.lastName,
+      listing_title: tutor.listingTitle,
+      major_abbreviation: tutor.majorAbbreviation,
+      pay_rate: tutor.payRate,
+      phone_number: tutor.phoneNumber,
+      picture_url: tutor.pictureUrl,
+      seniority_name: tutor.seniority
+    }
+
+    requests.push('/tutor?' + objectToQueryString(tutorCreateData));
+
+    // Update the course eligibility and preferences for the tutor ----------
+
+    for (var i = 0; i < inputs.length; i++) {
+      const course = {
+        course_grade: inputs[i].courseGrade,
+        course_number: inputs[i].courseNumber,
+        major_abbreviation: inputs[i].courseType,
+        tutor_email: session?.user?.email
+      }
+
+      requests.push('/tutor_eligible_course?' + objectToQueryString(course));
+      requests.push('/tutor_course_preference?' + objectToQueryString(course));
+    }
+
+    for (let  request  of  requests) {
+      await delay(1000);
+      console.log("running request");
+      let data = await axios.post(request);
+      results.push(data);
+  }
+
+
+  }
+
   const handleTutor = () => {
 
+    TutorCreation();
     
-
 
   }
 
