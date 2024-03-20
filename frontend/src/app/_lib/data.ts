@@ -2,7 +2,7 @@
 
 // author: Brandon Nguyen
 
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, keepPreviousData } from "@tanstack/react-query";
 import axios from "axios";
 
 const development = "http://localhost:8080";
@@ -16,28 +16,17 @@ function objectToQueryString(obj: any) {
     .join('&');
 }
 
-export function TableFetch(tableName: string) {
-  const { data, isError, isFetching, isLoading, refetch } = useQuery({
-    // refetch when any of the following query keys change
-    queryKey: ["table-data", tableName],
-    // asynchronous fetch
-    queryFn: async () => {
-      const response = await axios.get("/" + tableName);
-      console.log("before inner return: " + data);
-      return response.data;
-    },
-    placeholderData: (prev) => prev,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchOnMount: false,
-    refetchInterval: false, 
-    refetchIntervalInBackground: false,
-
-  });
-
-  // console.log("before outer return: " + data);
-  return { data, isError, isFetching, isLoading, refetch };
+export function TableFetch<T>(tableName: string, vars?: any[], ...args: string[]) {
+  return {
+    ...useQuery<T>({
+      queryKey: ["table-data", {...vars}],
+      queryFn: async () => {
+        let req = `/${tableName}?${args.join('&')}`;
+        return (await axios.get(req)).data;
+      },
+      placeholderData: keepPreviousData,
+    })
+  };
 }
 
 export function TableUpdate(tableName: string, field: string, value: any) {

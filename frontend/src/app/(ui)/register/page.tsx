@@ -10,6 +10,7 @@ const links = [
   {name: 'Login', href: '/login', icon: Login},
   {name: 'Register', href: '/register', icon: HowToReg},
 ];
+const tabLabels = ["Register as Peer Tutor", "Register as Tutee"];
 
 import { 
   Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Paper, InputLabel, MenuItem, Select, SelectChangeEvent,
@@ -18,7 +19,7 @@ import {
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
-import { useTuteeMutation } from '@/app/_lib/data';
+import { useTuteeMutation, TableFetch } from '@/app/_lib/data';
 
 import { useSession } from 'next-auth/react';
 
@@ -428,8 +429,14 @@ function DynamicTextFieldForm(props: any) {
 
 export default function Registration() {
 
-  const [activeStep, setActiveStep] = React.useState(0);
+  // Variable Initializing ------------------------------------------------------------------------
 
+  const { data: session, status } = useSession();
+
+  const [activeStep, setActiveStep] = React.useState(0);
+  
+  const [tab, setTab] = React.useState(0);
+  
   const [inputs, setInputs] = useState([{ courseType: '', courseNumber: '', courseGrade: '' }]);
 
   const [peerTutorFormData, setPeerTutorFormData] = useState({
@@ -441,14 +448,6 @@ export default function Registration() {
     major: '',
     bioText: '',
   });
-
-  const updateInputs = (newInputs: any) => {
-    setInputs(newInputs);
-  };
-
-  // Google Account Specific Info ----------------------------------------
-
-  const { data: session, status } = useSession();
 
   const [tutor, setTutor] = React.useState<Tutor>({
     firstName: '',
@@ -466,12 +465,30 @@ export default function Registration() {
     coursePreferences: []
   });
 
+  // Button and Update Functions -------------------------------------------------------------
+
+  const updateInputs = (newInputs: any) => {
+    setInputs(newInputs);
+  };
+  
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
+    setTab(newValue);
+  };
+  
+  const handleTutor = () => {
+    TutorCreation();
+  }
+
   const handleNext = () => {
-
+  
     if (tab == 0) {
-
+  
       if (activeStep === 0) {
-
+  
         for (const key in peerTutorFormData) {
           if (!(peerTutorFormData as any)[key] || !selected) {
             alert("Fill out all fields first before continuing");
@@ -480,14 +497,14 @@ export default function Registration() {
         }
       }
       else if (activeStep === 1) {
-
+  
         for (var i = 0; i < inputs.length; i++) {
           if (!(inputs[i].courseType) || !(inputs[i].courseNumber) || !(inputs[i].courseGrade)) {
             alert("Fill out all fields first before continuing");
             return;
           }
         }
-
+  
         const newTutor: Tutor = {
           firstName: peerTutorFormData.firstName,
           lastName: peerTutorFormData.lastName,
@@ -507,34 +524,20 @@ export default function Registration() {
           averageRating: 5,
           numberOfRatings: 0 
         };
-
+  
         setTutor(newTutor);
-
+  
       }
     }
     
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+  // Checks to see if account is already registered --------------------------------------------------------------
 
-  const [tab, setTab] = React.useState(0);
+  const {data: tutorResult} = TableFetch<TutorQuery>("tutor", [], `email_contains=${session?.user?.email}`);
 
-  const [tuteeData, setTuteeData] = React.useState({
-    firstName: '',
-    lastName: '',
-    phoneNumber: '',
-    seniority: '',
-    major: ''
-  });
-
-  const tabLabels = ["Register as Peer Tutor", "Register as Tutee"];
-
-  const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
-  };
+  // Operations for database insertions ---------------------------------------------------------------------------
 
   function delay(t: number) {
     return new Promise(resolve => setTimeout(resolve, t));
@@ -544,8 +547,6 @@ export default function Registration() {
 
     const requests = [];
     const results = [];
-
-    // Create the Tutor in the database -------------------------------------
 
     const tutorCreateData = {
       active_status_name: 'active',
@@ -585,10 +586,6 @@ export default function Registration() {
     }
   }
 
-  const handleTutor = () => {
-    TutorCreation();
-  }
-
   return (
     <>
     <header>
@@ -624,7 +621,7 @@ export default function Registration() {
             </Typography>
           </Box>
 
-          {tab === 0 && (
+          {tab === 0 && (tutorResult?.data.length === 0) && (
             <>
               <Stepper activeStep={activeStep} alternativeLabel>
                 {steps.map((label) => (
@@ -663,7 +660,7 @@ export default function Registration() {
               </Box>
             </>
           )}
-          {tab === 1 && <TuteeForm />}
+          {tab === 1  && <TuteeForm />}
 
         </Box>
       </Paper>
