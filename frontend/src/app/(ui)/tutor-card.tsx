@@ -13,18 +13,14 @@ from '@/app/_lib/utils'
 
 type TutorCardProps = { tutor: Tutor };
 export default function TutorCard(props: TutorCardProps) {
-  const handleClick = () => {
-    console.info('Clicked chip.');
-  };
-
   /*const stackRef = useRef<HTMLDivElement>(null);
   const scrollRight = () => {
     if(stackRef.current) stackRef.current.scrollLeft += 100;
   };*/
 
   const printChips = () => {
-    return props.tutor?.coursePreferences?.map((course: { courseGrade: string, courseNumber: number, majorAbbreviation: string, tutorEmail: string }, index: number) => (
-      <Chip label={course.majorAbbreviation.toUpperCase() + course.courseNumber} onClick={handleClick} color="error" sx={{ width:100, }} key={index}/>
+    return props?.tutor?.coursePreferences?.map((course: { courseGrade: string, courseNumber: number, majorAbbreviation: string, tutorEmail: string }, index: number) => (
+      <Chip label={course.majorAbbreviation.toUpperCase() + course.courseNumber} color="error" sx={{ width:100, }} key={index}/>
     ));
   };
 
