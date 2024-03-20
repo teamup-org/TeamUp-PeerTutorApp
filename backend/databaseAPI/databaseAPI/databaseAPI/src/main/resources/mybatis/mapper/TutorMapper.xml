@@ -55,6 +55,18 @@
                 <bind name="bioTextContainsPattern" value = "'%' + bioTextContains + '%'" />
                 AND LOWER(bio_text) LIKE LOWER(#{bioTextContainsPattern})
             </if>
+            <if test="contains != null">
+                <bind name="containsPattern" value = "'%' + contains + '%'" />
+                AND
+                (LOWER(t.bio_text) LIKE LOWER(#{containsPattern})
+                OR LOWER(c.course_number) LIKE LOWER(#{containsPattern})
+                OR LOWER(c.major_abbreviation) LIKE LOWER(#{containsPattern})
+                OR LOWER(t.email) LIKE LOWER(#{containsPattern})
+                OR LOWER(t.first_name) LIKE LOWER(#{containsPattern})
+                OR LOWER(t.last_name) LIKE LOWER(#{containsPattern})
+                OR LOWER(t.listing_title) LIKE LOWER(#{containsPattern})
+                OR LOWER(l.location_name) LIKE LOWER(#{containsPattern}))
+            </if>
             <if test="emailContains != null">
                 <bind name="emailContainsPattern" value = "'%' + emailContains + '%'" />
                 AND LOWER(t.email) LIKE LOWER(#{emailContainsPattern})
@@ -226,6 +238,18 @@
             <if test="bioTextContains != null">
                 <bind name="bioTextContainsPattern" value = "'%' + bioTextContains + '%'" />
                 AND LOWER(bio_text) LIKE LOWER(#{bioTextContainsPattern})
+            </if>
+            <if test="contains != null">
+                <bind name="containsPattern" value = "'%' + contains + '%'" />
+                AND
+                (LOWER(t.bio_text) LIKE LOWER(#{containsPattern})
+                OR LOWER(c.course_number) LIKE LOWER(#{containsPattern})
+                OR LOWER(c.major_abbreviation) LIKE LOWER(#{containsPattern})
+                OR LOWER(t.email) LIKE LOWER(#{containsPattern})
+                OR LOWER(t.first_name) LIKE LOWER(#{containsPattern})
+                OR LOWER(t.last_name) LIKE LOWER(#{containsPattern})
+                OR LOWER(t.listing_title) LIKE LOWER(#{containsPattern})
+                OR LOWER(l.location_name) LIKE LOWER(#{containsPattern}))
             </if>
             <if test="emailContains != null">
                 <bind name="emailContainsPattern" value = "'%' + emailContains + '%'" />
