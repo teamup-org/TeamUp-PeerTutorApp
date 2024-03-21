@@ -48,6 +48,20 @@ declare global {
     },
   };
 
+  type Tutee = {
+    activeStatusName: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+    majorAbbreviation: string,
+    phoneNumber: number,
+    seniorityName: string
+  }
+
+  type TuteeQuery = {
+    data: Tutee[]
+  }
+
   type Major = {
     majorAbbreviation: string,
     majorName: string,
