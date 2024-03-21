@@ -258,7 +258,7 @@ function HorizontalLinearStepper() {
 
 }
 
-function TuteeForm() {
+function TuteeForm(props: any) {
 
   const seniorityOptions = [
     { value: 'freshman', label: 'Freshman' },
@@ -269,6 +269,8 @@ function TuteeForm() {
   ];
   
   const [seniority, setSeniority] = React.useState('');
+
+  const { tuteeIsRegistered, setTuteeIsRegistered } = props;
   
   const changeSeniority = (event: SelectChangeEvent) => {
     setSeniority(event.target.value as string);
@@ -295,6 +297,9 @@ function TuteeForm() {
     };
     
     mutate(registrationData);
+
+    setTuteeIsRegistered(true);
+
   };
 
   return (
@@ -431,6 +436,9 @@ export default function Registration() {
 
   // Variable Initializing ------------------------------------------------------------------------
 
+  const [tutorRegistered, setTutorRegistered] = useState(false);   // This will be set to true when registration is submitted
+  const [tuteeRegistered, setTuteeRegistered] = useState(false);   // This will be set to true when registration is submitted
+
   const { data: session, status } = useSession();
 
   const [activeStep, setActiveStep] = React.useState(0);
@@ -481,6 +489,7 @@ export default function Registration() {
   
   const handleTutor = () => {
     TutorCreation();
+    setTutorRegistered(true);
   }
 
   const handleNext = () => {
@@ -536,6 +545,7 @@ export default function Registration() {
   // Checks to see if account is already registered --------------------------------------------------------------
 
   const {data: tutorResult} = TableFetch<TutorQuery>("tutor", [], `email_contains=${session?.user?.email}`);
+  const {data: tuteeResult} = TableFetch<TuteeQuery>("tutee", [], `email_contains=${session?.user?.email}`);
 
   // Operations for database insertions ---------------------------------------------------------------------------
 
@@ -621,7 +631,7 @@ export default function Registration() {
             </Typography>
           </Box>
 
-          {tab === 0 && (tutorResult?.data.length === 0) && (
+          {tab === 0 && (tutorResult?.data.length === 0) && !(tutorRegistered) && (
             <>
               <Stepper activeStep={activeStep} alternativeLabel>
                 {steps.map((label) => (
@@ -633,24 +643,19 @@ export default function Registration() {
               {activeStep === 0 && <PeerTutorForm formData={peerTutorFormData} setFormData={setPeerTutorFormData} />}
               {activeStep === 1 && <DynamicTextFieldForm inputs={inputs} updateInputs={updateInputs} setInputs={setInputs} />}
               {activeStep === 2 && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '100%',
-                    height: '100%',
-                    padding: 4,
-                    '& > *': {
-                      marginBottom: 4,
-                    },
-                  }}>
-                  <Typography> Here is your Tutor Card!! </Typography>
-                  <TutorCard tutor={tutor} />
-                  <Button onClick={handleTutor}>Register as Peer Tutor!</Button>
-
-                </Box>
+                <Grid container rowSpacing={3}>
+                  <Grid item xs={12}> <Typography align="center"> Here is your Tutor Card!! </Typography> </Grid>
+                  <Grid item xs={12}> <TutorCard tutor={tutor} /> </Grid>
+                  <Grid item xs={12}> 
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Button color="secondary" onClick={handleTutor}>Register as Peer Tutor!</Button> 
+                    </Box>
+                  </Grid>
+                </Grid>
               )}
               <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
                 <Button disabled={activeStep === 0} onClick={handleBack}>
@@ -660,7 +665,41 @@ export default function Registration() {
               </Box>
             </>
           )}
-          {tab === 1  && <TuteeForm />}
+          {tab === 0 && (tutorResult?.data.length === 0) && tutorRegistered && (
+            <>
+            <Typography align="center"> Thank you for Registering as a Peer Tutor! </Typography>
+            <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
+              <Typography align="center"> Click Here to See Your Profile! </Typography>
+            </Button>
+          </>
+          )}
+          {tab === 0 && (tutorResult?.data.length !== 0) && (
+            <>
+              <Typography align="center"> You have already registered as a Peer Tutor! </Typography>
+              <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
+                <Typography align="center"> Click Here to Update Profile </Typography>
+              </Button>
+            </>
+          )}
+          {tab === 1  && (tuteeResult?.data.length === 0) && !tuteeRegistered && (
+            <TuteeForm tuteeIsRegistered={tuteeRegistered} setTuteeIsRegistered={setTuteeRegistered}/>)
+          }
+          {tab === 1  && (tuteeResult?.data.length === 0) && tuteeRegistered && (
+            <>
+            <Typography align="center"> Thank you for Registering as a Tutee! </Typography>
+            <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
+              <Typography align="center"> Click Here to See Your Profile! </Typography>
+            </Button>
+          </>
+          )}
+          {tab === 1  && (tuteeResult?.data.length !== 0) && (
+            <>
+              <Typography align="center"> You have already registered as a Tutee! </Typography>
+              <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
+                <Typography align="center"> Click Here to Update Profile </Typography>
+              </Button>
+            </>
+          )}
 
         </Box>
       </Paper>

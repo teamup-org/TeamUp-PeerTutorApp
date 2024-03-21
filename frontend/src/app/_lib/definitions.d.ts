@@ -65,6 +65,20 @@ declare global {
     metaData: Metadata,
   };
 
+  type Tutee = {
+    activeStatusName: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+    majorAbbreviation: string,
+    phoneNumber: number,
+    seniorityName: string
+  }
+
+  type TuteeQuery = {
+    data: Tutee[]
+  }
+
   // REST API: /major
   type Major = {
     majorAbbreviation: string,
