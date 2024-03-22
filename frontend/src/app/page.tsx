@@ -24,12 +24,14 @@ export default function LandingPage() {
             <Grid container spacing={4} justifyContent="center" alignItems="center">
               <Grid item xs={12} sm={6}> 
                 <Box textAlign="left" width="75%">
-                  <div style={{display:"flex"}}>
+                  {/* <div style={{display:"flex"}}> */}
                     <Typography gutterBottom color='secondary' sx={{ fontSize: { xs: '1.5rem', sm: '3rem' }, fontFamily: nunito_sans, fontWeight: 'bold'}} display='inline'>
-                      Find Peer Tutors With Experience In <Typography color='primary' sx={{ fontSize: { xs: '1.5rem', sm: '3rem' }, fontFamily: nunito_sans, fontWeight: 'bold'}} display='inline'>Your Course</Typography>.
-                    </Typography>
-                  </div>
-                  <Button variant="contained" color="secondary"><Typography color='primary' sx={{ fontSize: { xs: '.75rem', sm: '1.5rem' }, fontWeight: 'bold'}}>Sign Up</Typography></Button>
+                      Find Peer Tutors With Experience In </Typography>
+                      <Typography color='primary' sx={{ fontSize: { xs: '1.5rem', sm: '3rem' }, fontFamily: nunito_sans, fontWeight: 'bold'}} display='inline'>Your Course</Typography>
+                      <Typography gutterBottom color='secondary' sx={{ fontSize: { xs: '1.5rem', sm: '3rem' }, fontFamily: nunito_sans, fontWeight: 'bold'}} display='inline'>.</Typography>
+                      
+                  {/* </div> */}
+                  <Button variant="contained" color="secondary"><Typography color='primary' sx={{ fontSize: { xs: '.75rem', sm: '1.5rem' }, fontFamily: nunito_sans, fontWeight: 'bold'}}>Sign Up</Typography></Button>
                 </Box>
               </Grid>
               <Grid item xs={4}> 
