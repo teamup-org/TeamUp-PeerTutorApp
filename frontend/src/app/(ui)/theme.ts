@@ -20,8 +20,12 @@ declare module '@mui/material/styles' {
   }
 }
 
-declare module '@mui/material/AppBar' {
+declare module '@mui/material' {
   interface AppBarPropsColorOverrides {
+    tertiary: true;
+  }
+
+  interface ButtonPropsColorOverrides {
     tertiary: true;
   }
 }
