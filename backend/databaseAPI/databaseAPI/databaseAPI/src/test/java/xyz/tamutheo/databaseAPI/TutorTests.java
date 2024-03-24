@@ -60,4 +60,15 @@ public class TutorTests {
                 .andExpect(status().isBadRequest());
         verify(tutorService, never()).create(any(TutorModel.class));
     }
+
+     // Test for handling invalid input
+    @Test
+    public void testUpdateTutorInvalidInput() throws Exception {
+        mockMvc.perform(put("/tutor")
+                .param("email_old", "plankton@chum.bucket")
+                .param("pay_rate_new", "-100")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isBadRequest());
+        verify(tutorService, never()).update(any(TutorModel.class), any(TutorModel.class));
+    }
 }
