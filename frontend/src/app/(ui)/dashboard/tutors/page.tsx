@@ -1,7 +1,7 @@
 'use client';
 
 
-import React, { useState } 
+import React, { useEffect, useState } 
 from 'react';
 
 import SearchIcon from '@mui/icons-material/Search';
@@ -56,9 +56,12 @@ export default function TutorPage() {
     `contains=${search}`,
   );
   
-  
+  useEffect(() => {
+    setPage(Math.min(page, (tutorData ? tutorData?.metaData?.totalNumberPages : page)))
+  }, [tutorData]);
+
   const printTutors = () => {
-    if (tutorIsLoading) {
+    if (tutorIsLoading || tutorIsFetching) {
       return (
         <Skeleton animation="wave" variant="rounded" width="100%"> <TutorCard tutor={tutorSkeleton} /> </Skeleton>
       );
@@ -115,7 +118,7 @@ export default function TutorPage() {
                 <Box display="flex" flexGrow={1} justifyContent="center">
                   <Pagination 
                     color="primary" size="large"
-                    count={tutorData ? tutorData?.metaData?.totalNumberPages : 0} page={Math.min(page, tutorData ? tutorData?.metaData?.totalNumberPages : page)} onChange={handlePageChange} 
+                    count={tutorData ? tutorData?.metaData?.totalNumberPages : 0} page={page} onChange={handlePageChange} 
                     disabled={tutorIsLoading || tutorIsFetching}
                   />
                 </Box>
