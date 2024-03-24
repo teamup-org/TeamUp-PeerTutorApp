@@ -52,5 +52,12 @@ public class TutorTests {
         verify(tutorService).create(any(TutorModel.class));
     }
 
-
+    // Test for handling missing required parameters
+    @Test
+    public void testCreateTutorMissingParameters() throws Exception {
+        mockMvc.perform(post("/tutor")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isBadRequest());
+        verify(tutorService, never()).create(any(TutorModel.class));
+    }
 }
