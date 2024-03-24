@@ -76,6 +76,43 @@ public class TutorTests {
         verify(tutorService).update(any(TutorModel.class), any(TutorModel.class));
     }
 
+
+    // Test for listing filtering by last name
+    @Test
+    public void testFilterTutorsByLastName() throws Exception {
+        String lastNameToFilter = "Krabs";
+        mockMvc.perform(get("/tutor")
+                .param("last_name_contains", lastNameToFilter)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tutorService).read(anyString(), anyDouble(), anyDouble(), anyString(), anyString(), anyString(), eq(lastNameToFilter), anyString(), anyString(), anyString(), anyInt(), anyInt(), anyDouble(), anyDouble(), anyLong(), anyString(), anyList(), anyString(), anyList(), anyInt(), anyInt(), anyInt(), anyString(), anyList(), anyInt(), anyInt());
+    }
+
+    // Test for listing filtering by major abbreviation
+    @Test
+    public void testFilterTutorsByMajorAbbreviation() throws Exception {
+        String majorAbbreviationToFilter = "KYKB";
+        mockMvc.perform(get("/tutor")
+                .param("major_abbreviation_contains", majorAbbreviationToFilter)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tutorService).read(anyString(), anyDouble(), anyDouble(), anyString(), anyString(), anyString(), anyString(), eq(majorAbbreviationToFilter), anyString(), anyString(), anyInt(), anyInt(), anyDouble(), anyDouble(), anyLong(), anyString(), anyList(), anyString(), anyList(), anyInt(), anyInt(), anyInt(), anyString(), anyList(), anyInt(), anyInt());
+    }
+
+    // Test for listing filtering by e-mail
+    @Test
+    public void testFilterTutorsByEmail() throws Exception {
+        String emailToFilter = "eugene.krabs@krusty.krab";
+        mockMvc.perform(get("/tutor")
+                .param("email_contains", emailToFilter)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tutorService).read(anyString(), anyDouble(), anyDouble(), anyString(), anyString(), eq(emailToFilter), anyString(), anyString(), anyString(), anyString(), anyInt(), anyInt(), anyDouble(), anyDouble(), anyLong(), anyString(), anyList(), anyString(), anyList(), anyInt(), anyInt(), anyInt(), anyString(), anyList(), anyInt(), anyInt());
+    }
+
     // Test for handling missing required parameters
     @Test
     public void testCreateTutorMissingParameters() throws Exception {
