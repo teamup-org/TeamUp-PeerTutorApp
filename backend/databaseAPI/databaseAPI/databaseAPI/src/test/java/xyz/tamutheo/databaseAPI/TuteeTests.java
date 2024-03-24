@@ -53,4 +53,14 @@ public class TuteeTests {
         verify(tuteeService, never()).create(any(TuteeModel.class));
     }
 
+    // Test for handling invalid input
+    @Test
+    public void testUpdateTuteeInvalidInput() throws Exception {
+        mockMvc.perform(put("/tutee")
+                .param("email_old", "squidward.tentacles@krusty.krab")
+                .param("phone_number_new", "-2147842638")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isBadRequest());
+        verify(tuteeService, never()).update(any(TuteeModel.class), any(TuteeModel.class));
+    }
 }
