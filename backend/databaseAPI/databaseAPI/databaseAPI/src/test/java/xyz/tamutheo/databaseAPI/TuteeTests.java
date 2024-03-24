@@ -62,6 +62,42 @@ public class TuteeTests {
         verify(tuteeService).update(any(TuteeModel.class), any(TuteeModel.class));
     }
 
+    // Test for listing filtering by last name
+    @Test
+    public void testFilterTuteesByLastName() throws Exception {
+        String lastNameToFilter = "SquarePants";
+        mockMvc.perform(get("/tutee")
+                .param("last_name_contains", lastNameToFilter)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tuteeService).read(anyString(), anyString(), anyString(), eq(lastNameToFilter), anyString(), anyLong(), anyList(), anyInt(), anyInt());
+    }
+
+    // Test for listing filtering by major abbreviation
+    @Test
+    public void testFilterTuteesByMajorAbbreviation() throws Exception {
+        String majorAbbreviationToFilter = "KYKB";
+        mockMvc.perform(get("/tutee")
+                .param("major_abbreviation_contains", majorAbbreviationToFilter)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tuteeService).read(anyString(), anyString(), anyString(), anyString(), eq(majorAbbreviationToFilter), anyLong(), anyList(), anyInt(), anyInt());
+}
+    
+    // Test for listing filtering by e-mail
+    @Test
+    public void testFilterTuteesByEmail() throws Exception {
+        String emailToFilter = "spongebob.squarepants@krusty.krab";
+        mockMvc.perform(get("/tutee")
+                .param("email_contains", emailToFilter)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tuteeService).read(anyString(), eq(emailToFilter), anyString(), anyString(), anyString(), anyLong(), anyList(), anyInt(), anyInt());
+    }
+
     // Test for handling missing required parameters
     @Test
     public void testCreateTuteeMissingParameters() throws Exception {
