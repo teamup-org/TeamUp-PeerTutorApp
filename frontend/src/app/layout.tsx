@@ -10,6 +10,9 @@ import theme from '@/app/(ui)/theme';
 import AuthProvider from '@/app/AuthProvider';
 import QueryProvider from "@/app/QueryProvider";
 
+import './(ui)/global.css';
+
+
 export const metadata: Metadata = {
   title: "Theo Peer Tutoring",
   description: "A peer tutoring service for matching tutors with tutees",

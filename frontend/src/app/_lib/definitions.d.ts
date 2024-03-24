@@ -1,61 +1,112 @@
-// This file contains type definitions for your data.
+
+// This file contains type definitions for our backend data.
 // It describes the shape of the data, and what data type each property should accept.
-// These types are generated automatically if you're using an ORM such as Prisma.
+// ORM such as Prisma should be considered in the future
+
 
 import type { SvgIconComponent } 
 from "@mui/icons-material";
 
+
+// Must declare global to access types without import, IF importing. Imports flag file as React module and prevent global scoping by default.
 declare global {
+  // Custom Hyperlink type, useful for passing custom links to app-bar component as shown in /dashboard layout.tsx
   type Link = {
     name: string,
     href: string,
     icon: SvgIconComponent,
   };
 
+  // Pagination Metadata
+  type Metadata = {
+    pageNumber: number, 
+    totalNumberEntries: number,
+    maximumNumberEntriesPerPage: number,
+    totalNumberPages: number,
+  };
+
+  // REST API: /seniority
+  type Seniority = "All" | "Freshman" | "Sophomore" | "Junior" | "Senior" | "Graduate";
+
+  // 
   type Tutor = {
-    activeStatusName: string,
-    averageRating: number,
+    activeStatusName: "active" | "inactive" | "banned",
+
+    // Contact Information
+    firstName: string,
+    lastName: string,
+    email: string,
+    phoneNumber: number,
+    pictureUrl: string,
+
+    // Profile Details
+    listingTitle: string,
     bioText: string,
+    averageRating: number,
+    numberOfRatings: number,
     coursePreferences: { 
       courseGrade: string, 
       courseNumber: number, 
       majorAbbreviation: string, 
       tutorEmail: string 
     }[],
-    email: string,
-    firstName: string,
-    lastName: string,
-    listingTitle: string,
     locationPreferences: { 
       locationName: string, 
       tutorEmail: string 
     }[],
     majorAbbreviation: string,
-    numberOfRatings: number,
     payRate: number,
-    phoneNumber: number,
-    pictureUrl: string,
-    seniorityName: string,
+    seniorityName: Seniority,
   };
 
+  // REST API: /tutor
   type TutorQuery = {
     data: Tutor[],
-    metaData: { 
-      pageNumber: number, 
-      totalNumberEntries: number,
-      maximumNumberEntriesPerPage: number,
-      totalNumberPages: number,
-    },
+    metaData: Metadata,
   };
 
+  // REST API: /major
   type Major = {
     majorAbbreviation: string,
     majorName: string,
   };
 
+  // REST API: /course
   type Course = {
     courseNumber: number,
     courseTitle: string,
     majorAbbreviation: string,
+  };
+
+  // 
+  type Appointment = {
+    appointmentId: number,
+
+    // Appointment Information
+    appointmentSizeName: "single" | "group",
+    cancellationReason: string,
+    startDateTimeString: Date,
+    endDateTimeString: Date,
+    isCancelled: boolean,
+    isConfirmed: boolean,
+    locationName: "in-person off-campus" | "in-person on-campus" | "online",
+
+    // Tutee Information
+    tuteeEmail: string,
+    tuteeFirstName: string,
+    tuteeLastName: string,
+    tuteePhoneNumber: number,
+
+    // Tutor Information
+    tutorEmail: string,
+    tutorFirstName: string,
+    tutorLastName: string,
+    tutorPhoneNumber: number,
+  };
+
+  // REST API: /appointment
+  type AppointmentQuery = {
+    data: Appointment[],
+    metaData: Metadata,
   };
 }

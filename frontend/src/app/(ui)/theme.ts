@@ -56,7 +56,7 @@ const theme = responsiveFontSizes(createTheme({
 
     background: {
       // paper: '#',
-      default: '#ffffff',
+      default: '#F3F3F3',
     },
 
     text1: {
