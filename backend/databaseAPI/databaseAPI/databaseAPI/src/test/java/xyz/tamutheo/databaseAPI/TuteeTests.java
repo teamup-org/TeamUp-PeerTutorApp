@@ -28,7 +28,22 @@ public class TuteeTests {
     @MockBean
     private TuteeService tuteeService;
 
+    // Test for create endpoint
+    public void testCreateTutee() throws Exception {
+        mockMvc.perform(post("/tutee")
+                .param("active_status_name", "active")
+                .param("email", "spongebob.squarepants@krusty.krab")
+                .param("first_name", "SpongeBob")
+                .param("last_name", "SquarePants")
+                .param("major_abbreviation", "KYKB")
+                .param("phone_number", "8088088088")
+                .param("seniority_name", "Freshman")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk());
+
+        verify(tuteeService).create(any(TuteeModel.class));
+    }
 
 
-
+    
 }
