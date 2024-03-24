@@ -44,6 +44,13 @@ public class TuteeTests {
         verify(tuteeService).create(any(TuteeModel.class));
     }
 
+    // Test for handling missing required parameters
+    @Test
+    public void testCreateTuteeMissingParameters() throws Exception {
+        mockMvc.perform(post("/tutee")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isBadRequest());
+        verify(tuteeService, never()).create(any(TuteeModel.class));
+    }
 
-    
 }
