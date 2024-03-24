@@ -25,9 +25,9 @@ import { useSession } from 'next-auth/react';
 
 
 import axios from 'axios';
-const development = "http://localhost:8080";
-const deployment = "https://tamutheo.xyz/database_api";
-axios.defaults.baseURL = development;
+// const development = "http://localhost:8080";
+// const deployment = "https://tamutheo.xyz/database_api";
+// axios.defaults.baseURL = development;
 
 function objectToQueryString(obj: any) {
   return Object.keys(obj)
@@ -379,6 +379,7 @@ function TuteeForm(props: any) {
 
 function DynamicTextFieldForm(props: any) {
   const { inputs, updateInputs, setInputs } = props;
+  const { setTranscript } = props;
 
   const addRow = () => {
     setInputs([...inputs, { courseType: '', courseNumber: '', courseGrade: '' }]);
@@ -390,8 +391,32 @@ function DynamicTextFieldForm(props: any) {
     updateInputs(newInputs);
   };
 
+  async function file(formData: FormData) {
+    const file = formData.get("file") as File;
+    const fr = new FileReader();
+
+    fr.onload = (event: any) => {
+      const transcriptWords = event.target.result as string;
+      setTranscript(transcriptWords);
+    };
+    
+    fr.onerror = (error) => {
+      console.error('Error reading file:', error);
+    };
+
+    fr.readAsText(file, 'base64');
+  }
+
   return (
     <div>
+      <form action={file}>
+        <label htmlFor="file">Transcript: </label>
+        <input type="file" name="file" id="file" />
+        <button type="submit" id="upload">
+          Upload File
+        </button>
+      </form>
+
       {inputs.map((input: any, index: any) => (
         <div key={index} style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
           <TextField
@@ -438,6 +463,7 @@ export default function Registration() {
 
   const [tutorRegistered, setTutorRegistered] = useState(false);   // This will be set to true when registration is submitted
   const [tuteeRegistered, setTuteeRegistered] = useState(false);   // This will be set to true when registration is submitted
+  const [transcript, setTranscript] = useState("");
 
   const { data: session, status } = useSession();
 
@@ -492,6 +518,22 @@ export default function Registration() {
     setTutorRegistered(true);
   }
 
+  const ocrAPI = async () => {
+    axios.defaults.baseURL = 'http://localhost:3000';
+    const userData = {
+      transcript: transcript
+    };
+    const response = await fetch("http://localhost:3000/api/ocr", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(userData)
+    });
+    const text = await response.text();
+    console.log(text);
+  }
+
   const handleNext = () => {
   
     if (tab == 0) {
@@ -513,6 +555,8 @@ export default function Registration() {
             return;
           }
         }
+
+        ocrAPI();
   
         const newTutor: Tutor = {
           firstName: peerTutorFormData.firstName,
@@ -641,7 +685,7 @@ export default function Registration() {
                 ))}
               </Stepper>
               {activeStep === 0 && <PeerTutorForm formData={peerTutorFormData} setFormData={setPeerTutorFormData} />}
-              {activeStep === 1 && <DynamicTextFieldForm inputs={inputs} updateInputs={updateInputs} setInputs={setInputs} />}
+              {activeStep === 1 && <DynamicTextFieldForm inputs={inputs} updateInputs={updateInputs} setInputs={setInputs} setTranscript={setTranscript} />}
               {activeStep === 2 && (
                 <Grid container rowSpacing={3}>
                   <Grid item xs={12}> <Typography align="center"> Here is your Tutor Card!! </Typography> </Grid>
