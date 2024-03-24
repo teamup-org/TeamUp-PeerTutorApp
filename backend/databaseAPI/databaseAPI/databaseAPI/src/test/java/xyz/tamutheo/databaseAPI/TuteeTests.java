@@ -44,6 +44,24 @@ public class TuteeTests {
         verify(tuteeService).create(any(TuteeModel.class));
     }
 
+    // Test for updating a tutee
+    @Test
+    public void testUpdateTutee() throws Exception {
+        mockMvc.perform(put("/tutee")
+                .param("email_old", "squidward.tentacles@krusty.krab")
+                .param("active_status_name_new", "active")
+                .param("email_new", "spongebob.squarepants@krusty.krab")
+                .param("first_name_new", "SpongeBob")
+                .param("last_name_new", "SquarePants")
+                .param("major_abbreviation_new", "KYKB")
+                .param("phone_number_new", "8088088088")
+                .param("seniority_name_new", "Sophomore")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk());
+
+        verify(tuteeService).update(any(TuteeModel.class), any(TuteeModel.class));
+    }
+
     // Test for handling missing required parameters
     @Test
     public void testCreateTuteeMissingParameters() throws Exception {
