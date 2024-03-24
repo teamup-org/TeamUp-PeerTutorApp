@@ -17,8 +17,12 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import xyz.tamutheo.databaseAPI.tutor.TutorService;
+import xyz.tamutheo.databaseAPI.tutor.TutorController;
+import xyz.tamutheo.databaseAPI.tutor.TutorModel;
+
 @RunWith(SpringRunner.class)
-@WebMvcTest(TutorController.java)
+@WebMvcTest(TutorController.class)
 public class TutorTests {
 
     @Autowired
