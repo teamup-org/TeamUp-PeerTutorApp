@@ -1,23 +1,26 @@
-// PUT DATABASE DATA FETCHING FUNCTIONS HERE
 
-// author: Brandon Nguyen
+// author: Brandon Nguyen, Kyle Lang
 
+// Asynchronous state management for backend queries (https://tanstack.com/query/latest/docs/framework/react/overview)
 import { useQuery, useMutation, keepPreviousData } from "@tanstack/react-query";
 
+// HTTP client for node.js and the browser (https://axios-http.com/docs/intro)
 import axios from "axios";
 
-const development = "http://localhost:8080";
-const deployment = "https://tamutheo.xyz/database-api";
-
+// Base URL's to direct backend database queries to
+const development = "http://localhost:8080";            // For use in local development, forwards to a local instance on port 8080, in this case forwarding to Java Sprint Boot
+const deployment = "https://tamutheo.xyz/database-api"; // For use on deployment server, forwards to Spring Boot endpoint 'database-api'
 axios.defaults.baseURL = development;
 
 
-export function TableFetch<T>(tableName: string, vars?: any[], ...args: string[]) {
+// Generalized fetching function for fetching database data using useQuery() from Tanstack and get() from Axios.
+// The function requires a 'tableName' to route to, any listening variables 'vars' that, upon update, should refetch the query, and any additional 'args' such as query options
+export function TableFetch<T>(tableName: string, vars: any[], ...args: string[]) {
   return {
     ...useQuery<T>({
-      queryKey: ["table-data", {...vars}],
+      queryKey: [tableName, {...vars}],
       queryFn: async () => {
-        let req = `/${tableName}?${args.join('&')}`;
+        const req = `/${tableName}?${args.join('&')}`;
         return (await axios.get(req)).data;
       },
       placeholderData: keepPreviousData,

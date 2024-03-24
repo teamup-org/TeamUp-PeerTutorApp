@@ -1,6 +1,7 @@
+
 // This file contains placeholder data for testing data driven components in lieu of database connectivity.
 
-// Some placeholder data for tutors that can be displayed on the peer tutors page
+// Some placeholder data for tutors that can be displayed on the peer tutors page. Data here is not synced with defined type
 export const tutors: Tutor[] = [
   /*
   {

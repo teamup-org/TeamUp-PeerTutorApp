@@ -2,32 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+
+.fc-header-toolbar .fc-button {
+  background-color: #f8d06d; /* Change button background color */
+  color: #1e1810; /* Change button text color */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.fc-header-toolbar .fc-button:disabled {
+  background-color: #f8d06d; /* Change button background color */
+  color: #1e1810; /* Change button text color */
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgb(var(--background-end-rgb))
-  )
-  rgb(var(--background-start-rgb));
+/*
+.fc-header-toolbar .fc-button-active {
+  background-color: #f8d06d !important; // Change button background color
+  color: #1e1810 !important; // Change button text color 
 }
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
+*/
