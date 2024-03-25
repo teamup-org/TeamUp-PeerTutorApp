@@ -157,33 +157,33 @@ export default function SchedulePage() {
             </Tabs>
 
             { (tab === 0) ?
-              ( <Box>
-                  <FullCalendar 
-                    ref={calendar}
-                    plugins={[ interactionPlugin, dayGridPlugin, timeGridPlugin ]}
-                    initialView="timeGridWeek"
-                    allDaySlot={false}
-                    selectable={true}
-                    selectAllow={(selectInfo) => {
-                      // Allow selection only on dates, not time slots
-                      return selectInfo.start.getTime() === selectInfo.end.getTime();
-                    }}
-                    // dateClick={handleDateSelect}
-                    headerToolbar={{
-                      left: 'prev,next today',
-                      center: 'title',
-                      right: 'dayGridMonth,timeGridWeek,timeGridDay',
-                    }}
-                    buttonText={{
-                      today: 'Today',
-                      month: 'Month',
-                      week: 'Week',
-                      day: 'Day',
-                    }}
-                    events={getEvents()} eventClick={handleEventClick} eventColor={theme.palette.primary.main} eventTextColor={theme.palette.secondary.main}
-                    nowIndicator scrollTime={currentTime.toLocaleTimeString('it-IT')} scrollTimeReset={false}
-                    height="500px"
-                  />
+              ( <>
+                <FullCalendar 
+                  ref={calendar}
+                  plugins={[ interactionPlugin, dayGridPlugin, timeGridPlugin ]}
+                  initialView="timeGridWeek"
+                  allDaySlot={false}
+                  selectable={true}
+                  selectAllow={(selectInfo) => {
+                    // Allow selection only on dates, not time slots
+                    return selectInfo.start.getTime() === selectInfo.end.getTime();
+                  }}
+                  // dateClick={handleDateSelect}
+                  headerToolbar={{
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay',
+                  }}
+                  buttonText={{
+                    today: 'Today',
+                    month: 'Month',
+                    week: 'Week',
+                    day: 'Day',
+                  }}
+                  events={getEvents()} eventClick={handleEventClick} eventColor={theme.palette.primary.main} eventTextColor={theme.palette.secondary.main}
+                  nowIndicator scrollTime={currentTime.toLocaleTimeString('it-IT')} scrollTimeReset={false}
+                  height="500px"
+                />
 
                   { event && <EventItem appointment={event} /> }
                 </Box> )
