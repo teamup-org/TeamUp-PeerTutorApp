@@ -445,7 +445,8 @@ export default function Registration() {
   
   const [tab, setTab] = React.useState(0);
   
-  const [inputs, setInputs] = useState<Tutor["coursePreferences"]>([{ majorAbbreviation: '', courseNumber: 0, courseGrade: '', tutorEmail: '' }]);
+  //const [inputs, setInputs] = useState<Tutor["coursePreferences"]>([{ majorAbbreviation: '', courseNumber: 0, courseGrade: '', tutorEmail: '' }]);
+  const [inputs, setInputs] = useState([{ courseType: '', courseNumber: '', courseGrade: '' }]);
 
   const [peerTutorFormData, setPeerTutorFormData] = useState({
     firstName: '',
@@ -510,7 +511,7 @@ export default function Registration() {
       else if (activeStep === 1) {
   
         for (var i = 0; i < inputs.length; i++) {
-          if (!(inputs[i].majorAbbreviation) || !(inputs[i].courseNumber) || !(inputs[i].courseGrade)) {
+          if (!(inputs[i].courseType) || !(inputs[i].courseNumber) || !(inputs[i].courseGrade)) {
             alert("Fill out all fields first before continuing");
             return;
           }
@@ -530,10 +531,10 @@ export default function Registration() {
           majorAbbreviation: peerTutorFormData.major,
           seniorityName: selected as Seniority,
           coursePreferences: inputs.map((input, index) => ({
-            tutorEmail: input.tutorEmail,
-            majorAbbreviation: input.majorAbbreviation,
+            tutorEmail: session?.user?.email || '',
+            majorAbbreviation: input.courseType,
             courseGrade: input.courseGrade,
-            courseNumber: input.courseNumber
+            courseNumber: Number(input.courseNumber)
           })),
           averageRating: 5,
           numberOfRatings: 0 
@@ -585,7 +586,7 @@ export default function Registration() {
       const course = {
         course_grade: inputs[i].courseGrade,
         course_number: inputs[i].courseNumber,
-        major_abbreviation: inputs[i].majorAbbreviation,
+        major_abbreviation: inputs[i].courseType,
         tutor_email: session?.user?.email
       }
 
