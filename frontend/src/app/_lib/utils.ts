@@ -20,3 +20,16 @@ export function toPhoneNumber(phone: string) {
   phone = phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
   return phone;
 }
+
+// Styles the appearance of the date in the appointment header
+export function toAppointmentTime(startDate: Date, endDate: Date) {
+  const date = startDate.getDate();
+  const month = startDate.getMonth() + 1;
+  const year = startDate.getFullYear();
+
+  const startTime = `${startDate.getHours()}:${startDate.getMinutes().toString().padEnd(2, '0')}`;
+  const endTime = `${endDate.getHours()}:${endDate.getMinutes().toString().padEnd(2, '0')}`;
+  const interval = `${startTime} - ${endTime}`
+
+  return `${month}/${date}/${year} | ${interval}`;
+}

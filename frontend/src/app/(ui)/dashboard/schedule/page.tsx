@@ -22,7 +22,7 @@ from '@fullcalendar/core/index.js';
 import type { EventImpl } 
 from '@fullcalendar/core/internal';
 
-import { toTitleCase } 
+import { toTitleCase, toPhoneNumber, toAppointmentTime } 
 from '@/app/_lib/utils';
 import { TableFetch, TableUpdate } 
 from '@/app/_lib/data';
@@ -30,27 +30,7 @@ import EventItem from './event-item';
 import theme from '@/app/(ui)/theme';
 
 
-const columns: GridColDef<(typeof rows)[number]>[] = [
-  { field: 'id', headerName: 'ID', width: 90 },
-  {
-    field: 'firstName',
-    headerName: 'First name',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'lastName',
-    headerName: 'Last name',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'age',
-    headerName: 'Age',
-    type: 'number',
-    width: 110,
-    editable: true,
-  },
+const columns: GridColDef[] = [
   {
     field: 'fullName',
     headerName: 'Full name',
@@ -59,18 +39,39 @@ const columns: GridColDef<(typeof rows)[number]>[] = [
     width: 160,
     valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
   },
-];
-
-const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 14 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 31 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 31 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 11 },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+  {
+    field: 'firstName',
+    headerName: 'First name',
+    width: 100,
+    // editable: true,
+  },
+  {
+    field: 'lastName',
+    headerName: 'Last name',
+    width: 100,
+    // editable: true,
+  },
+  {
+    field: 'email',
+    headerName: 'Email',
+    width: 150,
+  },
+  {
+    field: 'phone',
+    headerName: 'Phone',
+    width: 150,
+  },
+  {
+    field: 'time',
+    headerName: 'Time',
+    width: 250,
+  },
+  
+  {
+    field: 'location',
+    headerName: 'Location',
+    width: 200,
+  },
 ];
 
 
@@ -90,13 +91,26 @@ export default function SchedulePage() {
   const getEvents = () => {
     return data?.data?.map((appointment: Appointment) => (
       { 
-        title: toTitleCase(appointment.tutorFirstName + " " + appointment.tutorLastName),
+        title: toTitleCase(`${appointment.tuteeFirstName} ${appointment.tuteeLastName}`),
         start: appointment.startDateTimeString,
         end: appointment.endDateTimeString,
         data: appointment,
       }
     ));
   };
+
+  const rows = data?.data?.map((appointment: Appointment, index) => (
+    {
+      id: index,
+      firstName: appointment.tuteeFirstName,
+      lastName: appointment.tuteeLastName,
+      email: appointment.tuteeEmail,
+      phone: toPhoneNumber(appointment.tuteePhoneNumber.toString()),
+      time: toAppointmentTime(new Date(appointment.startDateTimeString), new Date(appointment.endDateTimeString)),
+      date: '',
+      location: appointment.locationName,
+    }
+  ));
   
   const handleEventClick = (selectedEvent: EventClickArg) => {
     setEvent(selectedEvent.event.extendedProps.data);
@@ -154,7 +168,7 @@ export default function SchedulePage() {
                     // Allow selection only on dates, not time slots
                     return selectInfo.start.getTime() === selectInfo.end.getTime();
                   }}
-                  dateClick={handleDateSelect}
+                  // dateClick={handleDateSelect}
                   headerToolbar={{
                     left: 'prev,next today',
                     center: 'title',
@@ -190,8 +204,7 @@ export default function SchedulePage() {
                     },
                   }}
                   pageSizeOptions={[5]}
-                  checkboxSelection
-                  disableRowSelectionOnClick
+                  checkboxSelection disableRowSelectionOnClick
                 />
               </> )
             }
