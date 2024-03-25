@@ -43,7 +43,7 @@ interface RowData {
   courseGrade: string;
 }
 
-interface Tutor {
+/*interface Tutor {
   firstName: string;
   lastName: string;
   pictureUrl: string;
@@ -57,7 +57,7 @@ interface Tutor {
   majorAbbreviation: string;
   seniority: string;
   coursePreferences: {id: number, majorAbbreviation: string, courseNumber: number}[];
-}
+}*/
 
 interface PeerTutorData {
   firstName: string;
@@ -381,7 +381,7 @@ function DynamicTextFieldForm(props: any) {
   const { inputs, updateInputs, setInputs } = props;
 
   const addRow = () => {
-    setInputs([...inputs, { courseType: '', courseNumber: '', courseGrade: '' }]);
+    setInputs([...inputs, { majorAbbreviation: '', courseNumber: 0, courseGrade: '', tutorEmail: '' }]);
   };
 
   const handleFieldChange = (index: any, event: any) => {
@@ -445,7 +445,7 @@ export default function Registration() {
   
   const [tab, setTab] = React.useState(0);
   
-  const [inputs, setInputs] = useState([{ courseType: '', courseNumber: '', courseGrade: '' }]);
+  const [inputs, setInputs] = useState<Tutor["coursePreferences"]>([{ majorAbbreviation: '', courseNumber: 0, courseGrade: '', tutorEmail: '' }]);
 
   const [peerTutorFormData, setPeerTutorFormData] = useState({
     firstName: '',
@@ -458,6 +458,8 @@ export default function Registration() {
   });
 
   const [tutor, setTutor] = React.useState<Tutor>({
+    activeStatusName: "active",
+    locationPreferences: [ { locationName: '', tutorEmail: '' } ],
     firstName: '',
     lastName: '',
     pictureUrl: '',
@@ -469,7 +471,7 @@ export default function Registration() {
     phoneNumber: -1,
     email: '',
     majorAbbreviation: '',
-    seniority: '',
+    seniorityName: 'Freshman',
     coursePreferences: []
   });
 
@@ -508,13 +510,15 @@ export default function Registration() {
       else if (activeStep === 1) {
   
         for (var i = 0; i < inputs.length; i++) {
-          if (!(inputs[i].courseType) || !(inputs[i].courseNumber) || !(inputs[i].courseGrade)) {
+          if (!(inputs[i].majorAbbreviation) || !(inputs[i].courseNumber) || !(inputs[i].courseGrade)) {
             alert("Fill out all fields first before continuing");
             return;
           }
         }
   
         const newTutor: Tutor = {
+          activeStatusName: 'active',
+          locationPreferences: [ { locationName: '', tutorEmail: '' } ],
           firstName: peerTutorFormData.firstName,
           lastName: peerTutorFormData.lastName,
           bioText: peerTutorFormData.bioText,
@@ -524,11 +528,12 @@ export default function Registration() {
           phoneNumber: Number(peerTutorFormData.phoneNumber),
           email: session?.user?.email || '',
           majorAbbreviation: peerTutorFormData.major,
-          seniority: selected,
+          seniorityName: selected as Seniority,
           coursePreferences: inputs.map((input, index) => ({
-            id: index,
-            majorAbbreviation: input.courseType,
-            courseNumber: Number(input.courseNumber)
+            tutorEmail: input.tutorEmail,
+            majorAbbreviation: input.majorAbbreviation,
+            courseGrade: input.courseGrade,
+            courseNumber: input.courseNumber
           })),
           averageRating: 5,
           numberOfRatings: 0 
@@ -569,7 +574,7 @@ export default function Registration() {
       pay_rate: tutor.payRate,
       phone_number: tutor.phoneNumber,
       picture_url: tutor.pictureUrl,
-      seniority_name: tutor.seniority
+      seniority_name: tutor.seniorityName
     }
 
     requests.push('/tutor?' + objectToQueryString(tutorCreateData));
@@ -580,7 +585,7 @@ export default function Registration() {
       const course = {
         course_grade: inputs[i].courseGrade,
         course_number: inputs[i].courseNumber,
-        major_abbreviation: inputs[i].courseType,
+        major_abbreviation: inputs[i].majorAbbreviation,
         tutor_email: session?.user?.email
       }
 
@@ -599,7 +604,7 @@ export default function Registration() {
   return (
     <>
     <header>
-      <ResponsiveAppBar position="static" display={{ xs: 'none', md: 'flex' }} links={links} />
+      <ResponsiveAppBar links={links} settings={[]} />
     </header>
     <Container component="main" maxWidth="sm">
       <CssBaseline />

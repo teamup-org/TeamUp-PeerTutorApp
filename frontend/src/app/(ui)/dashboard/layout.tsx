@@ -21,7 +21,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <header>
-        <ResponsiveAppBar position="static" links={links} settings={settings}/>
+        <ResponsiveAppBar links={links} settings={settings}/>
       </header>
       <main>
         {children}

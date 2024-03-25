@@ -123,7 +123,7 @@ export default function TutorFilter(
 
         <Stack direction="row" spacing={2}>
           <Stack direction="column" width="50%" spacing={1}>
-            <Typography fontWeight="bold"> Tutor's Major </Typography>
+            <Typography fontWeight="bold"> Tutor&apos;s Major </Typography>
             <Autocomplete 
               fullWidth loading={majorIsLoading}
               id="autocomplete-major" 
@@ -136,7 +136,7 @@ export default function TutorFilter(
           </Stack>
 
           <Stack direction="column" width="50%" spacing={1}>
-            <Typography fontWeight="bold"> Tutor's Course </Typography>
+            <Typography fontWeight="bold"> Tutor&apos;s Course </Typography>
             <Autocomplete 
               fullWidth 
               id="autocomplete-course" 

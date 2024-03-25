@@ -58,7 +58,7 @@ export default function TutorPage() {
   
   useEffect(() => {
     setPage(Math.min(page, (tutorData ? tutorData?.metaData?.totalNumberPages : page)))
-  }, [tutorData]);
+  }, [page, tutorData]);
 
   const printTutors = () => {
     if (tutorIsLoading || tutorIsFetching) {
