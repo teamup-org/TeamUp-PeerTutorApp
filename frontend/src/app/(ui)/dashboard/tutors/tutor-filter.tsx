@@ -58,7 +58,6 @@ export default function TutorFilter(
   const handleSortChange = (event: SelectChangeEvent) => {
     let newSortBy: string = event.target.value;
     setSort(newSortBy);
-    // window.scrollTo(0, 0);
   };
 
   const handleMajorChange = (event: any, value: string | null) => {

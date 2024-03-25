@@ -36,7 +36,6 @@ export default function TutorPage() {
   const [page, setPage] = useState(1);
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
-    // if (!tutorIsLoading || !tutorIsFetching) window.scrollTo(0, 0);
   };
 
   const [search, setSearch] = useState<string>("");
@@ -57,7 +56,7 @@ export default function TutorPage() {
   );
   
   useEffect(() => {
-    setPage(Math.min(page, (tutorData ? tutorData?.metaData?.totalNumberPages : page)))
+    setPage(Math.max(Math.min(page, (tutorData ? tutorData?.metaData?.totalNumberPages : page)), 1));
   }, [page, tutorData]);
 
   const printTutors = () => {
@@ -77,13 +76,20 @@ export default function TutorPage() {
     )
   };
 
+  const [test, setTest] = useState(true);
+  useEffect(() => {
+    tutorRefetch();
+  }, [test]);
 
   const searchAdornments: React.JSX.Element = (
     <Stack direction="row" height="100%"> 
       { 
         search && ( 
           <Tooltip title="Clear">
-            <IconButton aria-label="Clear" onClick={ () => setSearch("") }> 
+            <IconButton aria-label="Clear" onClick={ () => {
+                setSearch("");
+                setTest(!test);
+                } }> 
               <ClearIcon />
             </IconButton> 
           </Tooltip>
@@ -109,7 +115,7 @@ export default function TutorPage() {
               <TextField 
                 id="outlined-tutor-search" label="Search" variant="outlined"
                 value={search} onChange={handleSearchChange} onKeyUp={ (event) => {if (event.key === "Enter") tutorRefetch();} }
-                fullWidth InputProps={{ endAdornment: searchAdornments }}
+                fullWidth InputProps={{ endAdornment: searchAdornments }} sx={{ bgcolor: 'white' }}
               />
 
               { printTutors() }
