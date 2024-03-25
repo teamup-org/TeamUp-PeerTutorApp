@@ -686,10 +686,10 @@ export default function Registration() {
               </Button>
             </>
           )}
-          {tab === 1  && (tuteeResult?.data.length === 0) && !tuteeRegistered && (
+          {tab === 1  && (tutorResult?.data.length === 0) && !tuteeRegistered && (
             <TuteeForm tuteeIsRegistered={tuteeRegistered} setTuteeIsRegistered={setTuteeRegistered}/>)
           }
-          {tab === 1  && (tuteeResult?.data.length === 0) && tuteeRegistered && (
+          {tab === 1  && (tutorResult?.data.length === 0) && tuteeRegistered && (
             <>
             <Typography align="center"> Thank you for Registering as a Tutee! </Typography>
             <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
@@ -697,7 +697,7 @@ export default function Registration() {
             </Button>
           </>
           )}
-          {tab === 1  && (tuteeResult?.data.length !== 0) && (
+          {tab === 1  && (tutorResult?.data.length !== 0) && (
             <>
               <Typography align="center"> You have already registered as a Tutee! </Typography>
               <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
