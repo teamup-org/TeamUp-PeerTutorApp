@@ -5,21 +5,9 @@ import * as React from 'react';
 
 import { Stack, Avatar, Typography, Button }
 from '@mui/material';
-import { toTitleCase, toPhoneNumber } from '@/app/_lib/utils';
 
+import { toTitleCase, toPhoneNumber, toAppointmentTime } from '@/app/_lib/utils';
 
-// Styles the appearance of the date in the appointment header
-function toAppointmentTime(startDate: Date, endDate: Date) {
-  const date = startDate.getDate();
-  const month = startDate.getMonth() + 1;
-  const year = startDate.getFullYear();
-
-  const startTime = `${startDate.getHours()}:${startDate.getMinutes().toString().padEnd(2, '0')}`;
-  const endTime = `${endDate.getHours()}:${endDate.getMinutes().toString().padEnd(2, '0')}`;
-  const interval = `${startTime} - ${endTime}`
-
-  return `${month}/${date}/${year} | ${interval}`;
-}
 
 export default function EventItem({ appointment }: { appointment: Appointment}) {
   const [startDate, endDate] = [new Date(appointment.startDateTimeString), new Date(appointment.endDateTimeString)];
