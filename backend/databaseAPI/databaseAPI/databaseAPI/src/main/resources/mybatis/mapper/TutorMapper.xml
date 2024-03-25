@@ -209,18 +209,13 @@
 
     <select id="getTotalNumberEntries" resultType="Integer">
         SELECT COUNT( DISTINCT t.active_status_name,
-            t.bio_text,
             t.email,
             t.first_name,
             t.last_name,
-            t.listing_title,
             t.major_abbreviation,
             t.pay_rate,
             t.phone_number,
-            t.picture_url,
-            t.seniority_name,
-            r.average_rating,
-            r.number_of_ratings)
+            t.seniority_name)
         FROM tutor as t
         LEFT JOIN tutor_average_rating AS r ON t.email = r.email
         LEFT JOIN tutor_course_preference AS c ON t.email = c.tutor_email
