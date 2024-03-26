@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { useSession, signOut }
 from 'next-auth/react';
 
-import { Box, Menu, MenuItem, Typography, Tooltip, IconButton, Avatar }
+import { Box, Menu, MenuItem, Typography, Tooltip, IconButton, Avatar, Link }
 from '@mui/material';
 
 const settings = [ 'Profile', 'Log Out' ];
@@ -26,6 +26,10 @@ export default function UserMenu() {
   const handleLogOut = async () => {
     await signOut();
     setAnchorElUser(null);
+  };
+
+  const handleProfile = () => {
+    
   };
 
   const { data: session, status } = useSession();
@@ -55,13 +59,23 @@ export default function UserMenu() {
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}
       >
-        {settings.map((setting) => (
-            <MenuItem key={setting} onClick={setting === 'Log Out' ? handleLogOut : handleCloseUserMenu}>
+        {/* {settings.map((setting) => (
+            <MenuItem key={setting} onClick={setting === 'Log Out' ? handleLogOut : handleProfile}>
               <Typography variant="inherit" textAlign="center">
                 {setting}
               </Typography>
             </MenuItem>
-          ))}
+          ))} */}
+        <MenuItem key={settings[0]} component={Link} href={'dashboard/profile'}>
+          <Typography variant="inherit" textAlign="center">
+            {settings[0]}
+          </Typography>
+        </MenuItem>
+        <MenuItem key={settings[1]} onClick={handleLogOut} >
+          <Typography variant="inherit" textAlign="center">
+            {settings[1]}
+          </Typography>
+        </MenuItem>
       </Menu>
     </Box>
   );
