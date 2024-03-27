@@ -115,13 +115,13 @@ export default function SchedulePage() {
   const handleEventClick = (selectedEvent: EventClickArg) => {
     setEvent(selectedEvent.event.extendedProps.data);
   };
-  /*
-  const handleClickOutside(event) {
-    setSelectedEvent(null);
+  
+  const handleClickOutside = (event: MouseEvent) => {
+    //if (event.target)
+    //setEvent();
   }
-
   document.addEventListener("mousedown", handleClickOutside);
-  */
+  
   const handleCancel = () => {
     const {data, isError} = TableUpdate("appointment_listing", "appointmentStatusName", "cancelled");
   };
@@ -147,50 +147,46 @@ export default function SchedulePage() {
 
 
   return (
-    <Box position="static" mt={4} mb={4}>
-      <Container maxWidth="lg">
+    <Box position="static" p={4}>
+      <Container maxWidth="lg" sx={{ minWidth: 750 }}>
         <Paper elevation={4} sx={{ px: 4, pb: 4 }}>
           <Stack direction="column" spacing={4}>
-            <Tabs value={tab} onChange={handleTabChange} aria-label="tabs-my_schedule_view" sx={{ p: 0, borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs value={tab} onChange={handleTabChange} aria-label="tabs-my_schedule_view" sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tab icon={<CalendarMonthIcon fontSize="medium" />} iconPosition="top" label="Calendar" sx={{ p: 0 }} />
               <Tab icon={<ListIcon />} iconPosition="top" label="List" sx={{ p: 0 }} />
             </Tabs>
 
             { (tab === 0) ?
-              ( <>
-                <FullCalendar 
-                  ref={calendar}
-                  plugins={[ interactionPlugin, dayGridPlugin, timeGridPlugin ]}
-                  initialView="timeGridWeek"
-                  allDaySlot={false}
-                  selectable={true}
-                  selectAllow={(selectInfo) => {
-                    // Allow selection only on dates, not time slots
-                    return selectInfo.start.getTime() === selectInfo.end.getTime();
-                  }}
-                  // dateClick={handleDateSelect}
-                  headerToolbar={{
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay',
-                  }}
-                  buttonText={{
-                    today: 'Today',
-                    month: 'Month',
-                    week: 'Week',
-                    day: 'Day',
-                  }}
-                  events={getEvents()} eventClick={handleEventClick} eventColor={theme.palette.primary.main} eventTextColor={theme.palette.secondary.main}
-                  nowIndicator scrollTime={currentTime.toLocaleTimeString('it-IT')} scrollTimeReset={false}
-                  height="500px"
-                />
+              ( <Box>
+                  <FullCalendar 
+                    ref={calendar}
+                    plugins={[ interactionPlugin, dayGridPlugin, timeGridPlugin ]}
+                    initialView="timeGridWeek"
+                    allDaySlot={false}
+                    selectable={true}
+                    selectAllow={(selectInfo) => {
+                      // Allow selection only on dates, not time slots
+                      return selectInfo.start.getTime() === selectInfo.end.getTime();
+                    }}
+                    // dateClick={handleDateSelect}
+                    headerToolbar={{
+                      left: 'prev,next today',
+                      center: 'title',
+                      right: 'dayGridMonth,timeGridWeek,timeGridDay',
+                    }}
+                    buttonText={{
+                      today: 'Today',
+                      month: 'Month',
+                      week: 'Week',
+                      day: 'Day',
+                    }}
+                    events={getEvents()} eventClick={handleEventClick} eventColor={theme.palette.primary.main} eventTextColor={theme.palette.secondary.main}
+                    nowIndicator scrollTime={currentTime.toLocaleTimeString('it-IT')} scrollTimeReset={false}
+                    height="500px"
+                  />
 
-
-                
-                <Stack direction="column">
                   { event && <EventItem appointment={event} /> }
-                </Stack>
-              </> )
+                </Box> )
               :
               ( <>
                 <DataGrid 
@@ -208,8 +204,6 @@ export default function SchedulePage() {
                 />
               </> )
             }
-
-            
           </Stack>
         </Paper>
       </Container>
