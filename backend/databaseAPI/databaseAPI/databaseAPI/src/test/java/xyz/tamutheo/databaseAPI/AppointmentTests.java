@@ -46,20 +46,25 @@ public class AppointmentTests {
         verify(appointmentService).create(any(AppointmentModel.class));
     }
 
-    // Test for reading appointments with filters
+    // Test for accepting an appointment
     @Test
-    public void testReadAppointments() throws Exception {
-        mockMvc.perform(get("/appointment")
-                .param("tutor_email_contains", "sol@r.eclipse")
-                .contentType(MediaType.APPLICATION_JSON))
+    public void testTutorAcceptsTuteeRequest() throws Exception {
+        mockMvc.perform(put("/appointment")
+                .param("tutee_email_old", "aggie@gig.em")
+                .param("tutor_email_old", "sol@r.eclipse")
+                .param("start_date_time_old", "2024-04-08T13:37")
+                .param("end_date_time_old", "2024-04-08T13:42")
+                .param("is_confirmed_new", "true")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().isOk());
 
-        verify(appointmentService).read(null, null, null, null, null, null, null, null, "sol@r.eclipse", null, 1, null);
+        verify(appointmentService).update(any(AppointmentModel.class), any(AppointmentModel.class));
     }
 
-    // Test for updating an appointment
+
+    // Test for cancelling an appointment
     @Test
-    public void testUpdateAppointment() throws Exception {
+    public void testTuteeCancelsTutorRequest() throws Exception {
         mockMvc.perform(put("/appointment")
                 .param("tutee_email_old", "aggie@gig.em")
                 .param("tutor_email_old", "sol@r.eclipse")
@@ -71,6 +76,17 @@ public class AppointmentTests {
                 .andExpect(status().isOk());
 
         verify(appointmentService).update(any(AppointmentModel.class), any(AppointmentModel.class));
+    }
+
+    // Test for reading appointments with filters
+    @Test
+    public void testReadAppointments() throws Exception {
+        mockMvc.perform(get("/appointment")
+                .param("tutor_email_contains", "sol@r.eclipse")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(appointmentService).read(null, null, null, null, null, null, null, null, "sol@r.eclipse", null, 1, null);
     }
 
     // Test for handling invalid input for appointment creation
