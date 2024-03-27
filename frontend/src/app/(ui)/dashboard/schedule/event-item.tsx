@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 
-import { Stack, Avatar, Typography, Button }
+import { Box, Stack, Avatar, Typography, Button }
 from '@mui/material';
 
 import { toTitleCase, toPhoneNumber, toAppointmentTime } from '@/app/_lib/utils';
@@ -14,11 +14,17 @@ export default function EventItem({ appointment }: { appointment: Appointment}) 
   const appointmentTime = toAppointmentTime(startDate, endDate);
 
   return (
-    <Stack direction="column" spacing={2}>
-      <Stack direction="row" alignItems="end" justifyContent="space-between" borderBottom={1} borderColor="divider">
-        <Typography variant="h4" fontWeight="bold"> Appointment </Typography>
-        <Typography variant="h5"> {appointmentTime} </Typography>
-        <Typography variant="h5"> {toTitleCase(appointment.locationName)} </Typography>
+    <Stack direction="column" spacing={2} pt={2}>
+      <Stack direction="row" alignItems="end" borderBottom={1} borderColor="divider" spacing={4}>
+        <Box flex={1} display="flex" justifyContent="start">
+          <Typography variant="h4" fontWeight="bold"> Appointment </Typography>
+        </Box>
+        <Box flex={1} display="flex" justifyContent="center">
+          <Typography variant="h5"> {appointmentTime} </Typography>
+        </Box>
+        <Box flex={1} display="flex" justifyContent="end">
+          <Typography variant="h5"> {toTitleCase(appointment.locationName)} </Typography>
+        </Box>
       </Stack>
 
       <Stack direction="row" spacing={4}>
