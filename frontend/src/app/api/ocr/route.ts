@@ -67,6 +67,7 @@ export async function GET (request: Request) {
 export async function POST(req: Request, res: Response){
     const data = await req.json()
     const { transcript } = data;
-    await quickstart(transcript);
+    console.log(transcript);
+    //await quickstart(transcript);
     return Response.json({ status: 200})
 }
