@@ -15,13 +15,14 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import xyz.tamutheo.databaseAPI.appointment.AppointmentController;
 import xyz.tamutheo.databaseAPI.appointment.AppointmentMapper;
 import xyz.tamutheo.databaseAPI.appointment.AppointmentModel;
 import xyz.tamutheo.databaseAPI.appointment.AppointmentService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AppointmentController.class)
-public class AppointmentControllerTest {
+public class AppointmentTests {
     
     @Autowired
     private MockMvc mockMvc;
