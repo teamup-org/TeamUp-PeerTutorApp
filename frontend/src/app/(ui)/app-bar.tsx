@@ -36,7 +36,7 @@ export default function ResponsiveAppBar(props : AppBarProps) {
   return (
     <AppBar position="static" color="tertiary">
       <Container maxWidth="lg">
-        <Toolbar disableGutters sx={{ maxHeight: '100px' }}>
+        <Toolbar disableGutters>
           <TheoLogo flexGrow="1"/>
 
           <Box sx={{ display: { xs: 'flex', md: 'none' }, }}>

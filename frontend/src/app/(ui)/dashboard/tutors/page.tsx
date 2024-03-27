@@ -4,9 +4,10 @@
 import React, { useEffect, useState } 
 from 'react';
 
-import SearchIcon from '@mui/icons-material/Search';
-import ClearIcon from '@mui/icons-material/Clear';
-import { Box, Container, Grid, Stack, Skeleton, Pagination, TextField, Typography, ToggleButtonGroup, ToggleButton, IconButton, Tooltip }
+import CloseIcon from '@mui/icons-material/Close';
+import { TransitionProps } from '@mui/material/transitions';
+import { Box, Container, Grid, Stack, Skeleton, Pagination, Typography, ToggleButtonGroup, ToggleButton, 
+  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, IconButton, Slide, ButtonBase }
 from '@mui/material';
 
 import TutorCard from '@/app/(ui)/tutor-card';
@@ -20,13 +21,27 @@ const tutorsPerPageOptions = [ 5, 10, 15 ];
 const tutorSkeleton: Tutor = { activeStatusName: "active", averageRating: 0, bioText: "", coursePreferences: [], email: "", firstName: "", lastName: "", 
   listingTitle: "", locationPreferences: [], majorAbbreviation: "", numberOfRatings: 0, payRate: 0, phoneNumber: 0, pictureUrl: "", seniorityName: "Freshman" };
 
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export default function TutorPage() {
+  const [search, setSearch] = useState<string>("");
   const [sort, setSort] = useState("average_rating_descending");
   const [rate, setRate] = useState([0, 200]);
   const [major, setMajor] = useState<string | null>(null);
   const [course, setCourse] = useState<string | null>(null);
   const [seniority, setSeniority] = useState<Seniority>("All");
+  const [tutor, setTutor] = useState(0);
+
+  const handleTutorChange = (newTutor: number) => {
+    setTutor(newTutor);
+  };
 
   const [tutorsPerPage, setTutorsPerPage] = useState(5);
   const handleTutorsPerPageChange = (event: any, value: number) => {
@@ -36,11 +51,6 @@ export default function TutorPage() {
   const [page, setPage] = useState(1);
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
-  };
-
-  const [search, setSearch] = useState<string>("");
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
   };
 
 
@@ -59,6 +69,8 @@ export default function TutorPage() {
     setPage(Math.max(Math.min(page, (tutorData ? tutorData?.metaData?.totalNumberPages : page)), 1));
   }, [page, tutorData]);
 
+
+  // Display tutor information as tutor cards
   const printTutors = () => {
     if (tutorIsLoading || tutorIsFetching) {
       return (
@@ -67,7 +79,9 @@ export default function TutorPage() {
     } 
     else if (tutorData && tutorData?.data?.length > 0) { 
       return tutorData?.data?.map((tutor: Tutor, index: number) => (
-        <TutorCard tutor={tutor} key={index} />
+        <ButtonBase onClick={handleTutorProfileOpen} disableRipple> 
+          <TutorCard tutor={tutor} key={index} />
+        </ButtonBase>
       ));
     }
     
@@ -76,30 +90,14 @@ export default function TutorPage() {
     )
   };
 
-  const [test, setTest] = useState(true);
-  useEffect(() => {
-    tutorRefetch();
-  }, [test]);
-
-  const searchAdornments: React.JSX.Element = (
-    <Stack direction="row" height="100%"> 
-      { 
-        search && ( 
-          <Tooltip title="Clear">
-            <IconButton aria-label="Clear" onClick={ () => {
-                setSearch("");
-                setTest(!test);
-                } }> 
-              <ClearIcon />
-            </IconButton> 
-          </Tooltip>
-        ) 
-      } 
-      <IconButton onClick={ () => tutorRefetch() }> 
-        <SearchIcon /> 
-      </IconButton> 
-    </Stack>
-  );
+  const [tutorProfileOpen, setTutorProfileOpen] = useState(false);
+  const handleTutorProfileOpen = () => {
+    // setTutor(newTutor);
+    setTutorProfileOpen(true);
+  };
+  const handleTutorProfileClose = () => {
+    setTutorProfileOpen(false);
+  };
 
 
   return (
@@ -107,18 +105,41 @@ export default function TutorPage() {
       <Container maxWidth="lg" sx={{ width: '100%' }}>
         <Grid container direction="row" spacing={2} my="10px">
           <Grid item xs={0} md={4}>
-            <TutorFilter rate={[rate, setRate]} sort={[sort, setSort]} major={[major, setMajor]} course={[course, setCourse]} seniority={[seniority, setSeniority]} tutorRefetch={tutorRefetch} />
+            <TutorFilter 
+              rate={[rate, setRate]} 
+              sort={[sort, setSort]} 
+              major={[major, setMajor]} course={[course, setCourse]} 
+              seniority={[seniority, setSeniority]} 
+              tutorRefetch={tutorRefetch}
+              search={[search, setSearch]}   
+            />
           </Grid>
 
           <Grid item xs={12} md={8}>
             <Stack direction="column" spacing={2} alignItems="center">
-              <TextField 
-                id="outlined-tutor-search" label="Search" variant="outlined"
-                value={search} onChange={handleSearchChange} onKeyUp={ (event) => {if (event.key === "Enter") tutorRefetch();} }
-                fullWidth InputProps={{ endAdornment: searchAdornments }} sx={{ bgcolor: 'white' }}
-              />
-
               { printTutors() }
+
+              <Dialog 
+                open={tutorProfileOpen} TransitionComponent={Transition} keepMounted 
+                onClose={handleTutorProfileClose} aria-describedby="alert-tutor-profile"
+                maxWidth="xl" fullWidth
+              >
+                <DialogTitle> <Typography variant="h2"> Tutor Title </Typography> </DialogTitle>
+                <IconButton aria-label="close" onClick={handleTutorProfileClose} 
+                  sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: 8,
+                  }}
+                > 
+                  <CloseIcon /> 
+                </IconButton>
+
+                <DialogContent dividers>
+
+                </DialogContent>
+
+              </Dialog>
 
               <Stack direction="row" width="100%" alignItems="center">
                 <Box display="flex" flexGrow={1} justifyContent="center">
