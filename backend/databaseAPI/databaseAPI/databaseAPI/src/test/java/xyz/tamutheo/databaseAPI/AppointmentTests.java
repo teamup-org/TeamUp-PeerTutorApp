@@ -73,4 +73,15 @@ public class AppointmentTests {
         verify(appointmentService).update(any(AppointmentModel.class), any(AppointmentModel.class));
     }
 
+    // Test for handling invalid input for appointment creation
+    @Test
+    public void testCreateAppointmentInvalidInput() throws Exception {
+        mockMvc.perform(post("/appointment")
+                .param("appointment_size_name", "single")
+                // missing other required parameters
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isBadRequest());
+
+        verify(appointmentService, never()).create(any(AppointmentModel.class));
+    }
 }
