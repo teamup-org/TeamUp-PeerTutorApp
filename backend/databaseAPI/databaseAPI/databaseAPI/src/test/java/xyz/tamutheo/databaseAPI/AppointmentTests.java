@@ -45,4 +45,16 @@ public class AppointmentTests {
 
         verify(appointmentService).create(any(AppointmentModel.class));
     }
+
+    // Test for reading appointments with filters
+    @Test
+    public void testReadAppointments() throws Exception {
+        mockMvc.perform(get("/appointment")
+                .param("tutor_email_contains", "sol@r.eclipse")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(appointmentService).read(null, null, null, null, null, null, null, null, "sol@r.eclipse", null, 1, null);
+    }
+
 }
