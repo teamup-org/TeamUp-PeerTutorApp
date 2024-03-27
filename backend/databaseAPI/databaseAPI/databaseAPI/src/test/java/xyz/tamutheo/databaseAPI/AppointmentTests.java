@@ -57,4 +57,20 @@ public class AppointmentTests {
         verify(appointmentService).read(null, null, null, null, null, null, null, null, "sol@r.eclipse", null, 1, null);
     }
 
+    // Test for updating an appointment
+    @Test
+    public void testUpdateAppointment() throws Exception {
+        mockMvc.perform(put("/appointment")
+                .param("tutee_email_old", "aggie@gig.em")
+                .param("tutor_email_old", "sol@r.eclipse")
+                .param("start_date_time_old", "2024-04-08T13:37")
+                .param("end_date_time_old", "2024-01-01T13:42")
+                .param("is_cancelled_new", "true")
+                .param("cancellation_reason_new", "Solar Eclipse")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk());
+
+        verify(appointmentService).update(any(AppointmentModel.class), any(AppointmentModel.class));
+    }
+
 }
