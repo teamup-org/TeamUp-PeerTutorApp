@@ -30,5 +30,19 @@ public class AppointmentTests {
     @MockBean
     private AppointmentService appointmentService;
 
+    // Test for creating an appointment
+    @Test
+    public void testCreateAppointment() throws Exception {
+        mockMvc.perform(post("/appointment")
+                .param("appointment_size_name", "single")
+                .param("location_name", "Valley Mills, TX")
+                .param("tutor_email", "sol@r.eclipse")
+                .param("tutee_email", "aggie@gig.em")
+                .param("start_date_time", "2024-04-08T13:37")
+                .param("end_date_time", "2024-04-08T13:42")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk());
 
+        verify(appointmentService).create(any(AppointmentModel.class));
+    }
 }
