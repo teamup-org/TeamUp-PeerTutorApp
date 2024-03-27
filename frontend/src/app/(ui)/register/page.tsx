@@ -404,7 +404,7 @@ function DynamicTextFieldForm(props: any) {
       console.error('Error reading file:', error);
     };
 
-    fr.readAsText(file, 'base64');
+    fr.readAsText(file);
   }
 
   return (
@@ -533,6 +533,7 @@ export default function Registration() {
       },
       body: JSON.stringify(userData)
     });
+    console.log(userData);
     const text = await response.text();
     console.log(text);
   }
