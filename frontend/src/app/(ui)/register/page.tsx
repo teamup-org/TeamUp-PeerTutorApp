@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import ResponsiveAppBar from '../app-bar'
 import { Login, HowToReg } from '@mui/icons-material'
@@ -440,6 +440,7 @@ export default function Registration() {
   const [tuteeRegistered, setTuteeRegistered] = useState(false);   // This will be set to true when registration is submitted
 
   const { data: session, status } = useSession();
+  const email = session?.user?.email;
 
   const [activeStep, setActiveStep] = React.useState(0);
   
@@ -549,9 +550,13 @@ export default function Registration() {
   };
 
   // Checks to see if account is already registered --------------------------------------------------------------
+  const { data: tutorResult, isLoading: tutorIsLoading, isFetching: tutorIsFetching, refetch: tutorRefetch } = TableFetch<TutorQuery>("tutor", [], `email_contains=${email}`);
+  const { data: tuteeResult, isLoading: tuteeIsLoading, isFetching: tuteeIsFetching, refetch: tuteeRefetch } = TableFetch<TuteeQuery>("tutee", [], `email_contains=${email}`);
 
-  const {data: tutorResult} = TableFetch<TutorQuery>("tutor", [], `email_contains=${session?.user?.email}`);
-  const {data: tuteeResult} = TableFetch<TuteeQuery>("tutee", [], `email_contains=${session?.user?.email}`);
+  useEffect(() => {
+    tutorRefetch();
+    tuteeRefetch();
+  }, [email]);
 
   // Operations for database insertions ---------------------------------------------------------------------------
 
@@ -679,7 +684,7 @@ export default function Registration() {
             </Button>
           </>
           )}
-          {tab === 0 && (tutorResult?.data.length !== 0) && (
+          {tab === 0 && (tutorResult?.data.length) && (
             <>
               <Typography align="center"> You have already registered as a Peer Tutor! </Typography>
               <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
@@ -687,10 +692,10 @@ export default function Registration() {
               </Button>
             </>
           )}
-          {tab === 1  && (tutorResult?.data.length === 0) && !tuteeRegistered && (
+          {tab === 1  && (tuteeResult?.length === 0) && !tuteeRegistered && (
             <TuteeForm tuteeIsRegistered={tuteeRegistered} setTuteeIsRegistered={setTuteeRegistered}/>)
           }
-          {tab === 1  && (tutorResult?.data.length === 0) && tuteeRegistered && (
+          {tab === 1  && (tuteeResult?.length === 0) && tuteeRegistered && (
             <>
             <Typography align="center"> Thank you for Registering as a Tutee! </Typography>
             <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
@@ -698,7 +703,7 @@ export default function Registration() {
             </Button>
           </>
           )}
-          {tab === 1  && (tutorResult?.data.length !== 0) && (
+          {tab === 1  && (tuteeResult?.length) && (
             <>
               <Typography align="center"> You have already registered as a Tutee! </Typography>
               <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
@@ -706,7 +711,6 @@ export default function Registration() {
               </Button>
             </>
           )}
-
         </Box>
       </Paper>
     </Container>
