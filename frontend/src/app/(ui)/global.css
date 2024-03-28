@@ -1,11 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 
 .fc-header-toolbar .fc-button {
   background-color: #f8d06d; /* Change button background color */
-  color: #1e1810; /* Change button text color */
+  color: hsl(34, 30%, 9%); /* Change button text color */
 }
 
 .fc-header-toolbar .fc-button:disabled {

@@ -1,17 +1,16 @@
 'use client';
 
 
-import React, { useEffect, useState } 
-from 'react';
+import * as React from 'react';
 
-import CloseIcon from '@mui/icons-material/Close';
-import { TransitionProps } from '@mui/material/transitions';
-import { Box, Container, Grid, Stack, Skeleton, Pagination, Typography, ToggleButtonGroup, ToggleButton, 
-  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, IconButton, Slide, ButtonBase }
+import { Box, Container, Grid, Stack, Skeleton, Pagination, Typography, ToggleButtonGroup, ToggleButton, ButtonBase 
+, Avatar}
 from '@mui/material';
 
-import TutorCard from '@/app/(ui)/tutor-card';
+import { TutorCard, TutorSkeleton }
+  from '@/app/(ui)/tutor-card';
 import TutorFilter from './tutor-filter';
+import TutorProfile from './tutor-profile';
 import { TableFetch } 
 from '@/app/_lib/data';
 
@@ -21,34 +20,22 @@ const tutorsPerPageOptions = [ 5, 10, 15 ];
 const tutorSkeleton: Tutor = { activeStatusName: "active", averageRating: 0, bioText: "", coursePreferences: [], email: "", firstName: "", lastName: "", 
   listingTitle: "", locationPreferences: [], majorAbbreviation: "", numberOfRatings: 0, payRate: 0, phoneNumber: 0, pictureUrl: "", seniorityName: "Freshman" };
 
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<any, any>;
-  },
-  ref: React.Ref<unknown>,
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 export default function TutorPage() {
-  const [search, setSearch] = useState<string>("");
-  const [sort, setSort] = useState("average_rating_descending");
-  const [rate, setRate] = useState([0, 200]);
-  const [major, setMajor] = useState<string | null>(null);
-  const [course, setCourse] = useState<string | null>(null);
-  const [seniority, setSeniority] = useState<Seniority>("All");
-  const [tutor, setTutor] = useState(0);
+  const [search, setSearch] = React.useState<string>("");
+  const [sort, setSort] = React.useState("average_rating_descending");
+  const [rate, setRate] = React.useState([0, 200]);
+  const [major, setMajor] = React.useState<string | null>(null);
+  const [course, setCourse] = React.useState<string | null>(null);
+  const [seniority, setSeniority] = React.useState<Seniority>("All");
+  const [selectedTutor, setSelectedTutor] = React.useState<Tutor | null>(null);
 
-  const handleTutorChange = (newTutor: number) => {
-    setTutor(newTutor);
-  };
-
-  const [tutorsPerPage, setTutorsPerPage] = useState(5);
+  const [tutorsPerPage, setTutorsPerPage] = React.useState(5);
   const handleTutorsPerPageChange = (event: any, value: number) => {
     value && setTutorsPerPage(value);
   };
   
-  const [page, setPage] = useState(1);
+  const [page, setPage] = React.useState(1);
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
@@ -65,22 +52,22 @@ export default function TutorPage() {
     `contains=${search}`,
   );
   
-  useEffect(() => {
+  // Listen to page or tutorData change. Restrains page number to less than total pages from pagination data
+  // If page is larger than total pages, set to max page to prevent display error, i.e. Current Page 3 > Total Pages 2
+  React.useEffect(() => {
     setPage(Math.max(Math.min(page, (tutorData ? tutorData?.metaData?.totalNumberPages : page)), 1));
   }, [page, tutorData]);
 
 
   // Display tutor information as tutor cards
   const printTutors = () => {
-    if (tutorIsLoading || tutorIsFetching) {
-      return (
-        <Skeleton animation="wave" variant="rounded" width="100%"> <TutorCard tutor={tutorSkeleton} /> </Skeleton>
-      );
+    if (tutorIsLoading) {
+      return ( <TutorSkeleton /> );
     } 
     else if (tutorData && tutorData?.data?.length > 0) { 
       return tutorData?.data?.map((tutor: Tutor, index: number) => (
-        <ButtonBase onClick={handleTutorProfileOpen} disableRipple> 
-          <TutorCard tutor={tutor} key={index} />
+        <ButtonBase onClick={() => setSelectedTutor(tutor)} disableRipple key={index}> 
+          <TutorCard elevation={4} tutor={tutor} key={index} />
         </ButtonBase>
       ));
     }
@@ -88,15 +75,6 @@ export default function TutorPage() {
     return (
       <Typography variant="h4"> Could not find any tutors. . . </Typography>
     )
-  };
-
-  const [tutorProfileOpen, setTutorProfileOpen] = useState(false);
-  const handleTutorProfileOpen = () => {
-    // setTutor(newTutor);
-    setTutorProfileOpen(true);
-  };
-  const handleTutorProfileClose = () => {
-    setTutorProfileOpen(false);
   };
 
 
@@ -115,31 +93,11 @@ export default function TutorPage() {
             />
           </Grid>
 
+          <TutorProfile tutorState={[selectedTutor, setSelectedTutor]} />
+
           <Grid item xs={12} md={8}>
-            <Stack direction="column" spacing={2} alignItems="center">
+            <Stack direction="column" spacing={2}>
               { printTutors() }
-
-              <Dialog 
-                open={tutorProfileOpen} TransitionComponent={Transition} keepMounted 
-                onClose={handleTutorProfileClose} aria-describedby="alert-tutor-profile"
-                maxWidth="xl" fullWidth
-              >
-                <DialogTitle> <Typography variant="h2"> Tutor Title </Typography> </DialogTitle>
-                <IconButton aria-label="close" onClick={handleTutorProfileClose} 
-                  sx={{
-                    position: 'absolute',
-                    right: 8,
-                    top: 8,
-                  }}
-                > 
-                  <CloseIcon /> 
-                </IconButton>
-
-                <DialogContent dividers>
-
-                </DialogContent>
-
-              </Dialog>
 
               <Stack direction="row" width="100%" alignItems="center">
                 <Box display="flex" flexGrow={1} justifyContent="center">
