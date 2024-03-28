@@ -96,7 +96,7 @@ declare global {
   }
 
   type TuteeQuery = Tutee[];
-
+  
   // REST API: /major
   type Major = {
     majorAbbreviation: string,

@@ -558,6 +558,7 @@ export default function Registration() {
   const [tutorTimePreferences, setTutorTimePreferences] = useState<TutorTime[]>([]);
 
   const { data: session, status } = useSession();
+  const email = session?.user?.email;
 
   const [activeStep, setActiveStep] = React.useState(0);
   
