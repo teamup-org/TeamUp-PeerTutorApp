@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { Container, Paper } from '@mui/material';
 
-import { ViewState, EditingState, ChangeSet } from '@devexpress/dx-react-scheduler';
+/*import { ViewState, EditingState, ChangeSet } from '@devexpress/dx-react-scheduler';
 import {
   Scheduler,
   WeekView,
@@ -118,5 +118,11 @@ export default function Test() {
         </Scheduler>
       </Paper>
     </Container>
+  );
+} */
+
+export default function Test() {
+  return (
+    <iframe src="https://calendar.google.com/calendar/embed?src=kylel35775%40gmail.com&ctz=America%2FChicago"  width="800" height="600"  scrolling="no"></iframe>
   );
 }
