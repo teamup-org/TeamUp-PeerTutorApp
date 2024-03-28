@@ -3,10 +3,8 @@
 
 import * as React from 'react';
 
-import CloseIcon from '@mui/icons-material/Close';
-import { TransitionProps } from '@mui/material/transitions';
-import { Box, Container, Grid, Stack, Skeleton, Pagination, Typography, ToggleButtonGroup, ToggleButton, 
-  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, IconButton, Slide, ButtonBase }
+import { Box, Container, Grid, Stack, Skeleton, Pagination, Typography, ToggleButtonGroup, ToggleButton, ButtonBase 
+, Avatar}
 from '@mui/material';
 
 import { TutorCard, TutorSkeleton }
@@ -22,14 +20,6 @@ const tutorsPerPageOptions = [ 5, 10, 15 ];
 const tutorSkeleton: Tutor = { activeStatusName: "active", averageRating: 0, bioText: "", coursePreferences: [], email: "", firstName: "", lastName: "", 
   listingTitle: "", locationPreferences: [], majorAbbreviation: "", numberOfRatings: 0, payRate: 0, phoneNumber: 0, pictureUrl: "", seniorityName: "Freshman" };
 
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<any, any>;
-  },
-  ref: React.Ref<unknown>,
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 export default function TutorPage() {
   const [search, setSearch] = React.useState<string>("");
@@ -87,15 +77,6 @@ export default function TutorPage() {
     )
   };
 
-  const [tutorProfileOpen, setTutorProfileOpen] = useState(false);
-  const handleTutorProfileOpen = () => {
-    // setTutor(newTutor);
-    setTutorProfileOpen(true);
-  };
-  const handleTutorProfileClose = () => {
-    setTutorProfileOpen(false);
-  };
-
 
   return (
     <Box position="static" mb="40px">
@@ -112,35 +93,11 @@ export default function TutorPage() {
             />
           </Grid>
 
-          { selectedTutor &&
-            <TutorProfile tutorState={[selectedTutor, setSelectedTutor]} />
-          }
-            
+          <TutorProfile tutorState={[selectedTutor, setSelectedTutor]} />
+
           <Grid item xs={12} md={8}>
-            <Stack direction="column" spacing={2} alignItems="center">
+            <Stack direction="column" spacing={2}>
               { printTutors() }
-
-              <Dialog 
-                open={tutorProfileOpen} TransitionComponent={Transition} keepMounted 
-                onClose={handleTutorProfileClose} aria-describedby="alert-tutor-profile"
-                maxWidth="xl" fullWidth
-              >
-                <DialogTitle> <Typography variant="h2"> Tutor Title </Typography> </DialogTitle>
-                <IconButton aria-label="close" onClick={handleTutorProfileClose} 
-                  sx={{
-                    position: 'absolute',
-                    right: 8,
-                    top: 8,
-                  }}
-                > 
-                  <CloseIcon /> 
-                </IconButton>
-
-                <DialogContent dividers>
-
-                </DialogContent>
-
-              </Dialog>
 
               <Stack direction="row" width="100%" alignItems="center">
                 <Box display="flex" flexGrow={1} justifyContent="center">

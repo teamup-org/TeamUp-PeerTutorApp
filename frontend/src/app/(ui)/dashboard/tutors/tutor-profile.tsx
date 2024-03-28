@@ -6,7 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { TransitionProps }
   from '@mui/material/transitions';
 import { Dialog, DialogTitle, DialogContent, Divider, Container, IconButton, Box, Slide, Typography, 
-  LinearProgress, Stack, Rating, Select, FormControl, InputLabel, MenuItem, Grid }
+  LinearProgress, Stack, Rating, Select }
   from '@mui/material';
 
 import FullCalendar from '@fullcalendar/react';
@@ -14,12 +14,13 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 
-import TutorProfileReviews from './tutor-profile-reviews';
+import Review from '@/app/(ui)/review';
 import { TutorCard } 
   from '@/app/(ui)/tutor-card';
 
 
-
+const tutorSkeleton: Tutor = { activeStatusName: "active", averageRating: 0, bioText: "", coursePreferences: [], email: "", firstName: "", lastName: "", 
+  listingTitle: "", locationPreferences: [], majorAbbreviation: "", numberOfRatings: 0, payRate: 0, phoneNumber: 0, pictureUrl: "", seniorityName: "Freshman" };
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -44,17 +45,22 @@ export default function TutorProfile(
       aria-describedby="alert-tutor-profile"
       maxWidth="xl" fullWidth
     >
-      <DialogTitle> 
-        <IconButton aria-label="close" onClick={() => setSelectedTutor(null)} > 
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
+      <DialogTitle> <Typography variant="h2"> Tutor Title </Typography> </DialogTitle>
+      <IconButton aria-label="close" onClick={() => setSelectedTutor(null)} 
+        sx={{
+          position: 'absolute',
+          right: 8,
+          top: 8,
+        }}
+      > 
+        <CloseIcon /> 
+      </IconButton>
       
       <DialogContent dividers sx={{ p: 0, pb: 8 }}>
-        <Container maxWidth="xl">
-          { selectedTutor &&
-            <TutorCard elevation={0} tutor={selectedTutor} /> 
-          }
+        <Container maxWidth="lg">
+          <TutorCard elevation={0} tutor={selectedTutor ? selectedTutor : tutorSkeleton} />
+
+          <Divider sx={{ my: 8 }} />
 
           <Box>
             <FullCalendar 
@@ -86,10 +92,58 @@ export default function TutorProfile(
           </Box>
 
           <Divider sx={{ my: 8 }} />
-          
-          { selectedTutor &&
-            <TutorProfileReviews tutor={selectedTutor} />
-          }
+
+          <Stack direction="column" spacing={2}>
+            <Stack direction="row" spacing={4} justifyItems="center" borderBottom={1} pb={2} borderColor="divider">
+              <Stack direction="column" alignItems="center" justifyItems="center">
+                <Typography variant="h2"> 4.7 </Typography>
+
+                <Rating value={4.7} precision={0.5} />
+
+                <Typography variant="body1"> (30k) </Typography>
+              </Stack>
+
+              <Stack direction="column" width={500}>
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <Typography variant="body1" width={50}> 5 star </Typography>
+
+                  <LinearProgress variant="determinate" value={85} sx={{ width: '90%', height: 8, borderRadius: 8 }} />
+                </Stack>
+
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <Typography variant="body1" width={50}> 4 star </Typography>
+
+                  <LinearProgress variant="determinate" value={10} sx={{ width: '90%', height: 8, borderRadius: 8 }} />
+                </Stack>
+
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <Typography variant="body1" width={50}> 3 star </Typography>
+
+                  <LinearProgress variant="determinate" value={2} sx={{ width: '90%', height: 8, borderRadius: 8 }} />
+                </Stack>
+
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <Typography variant="body1" width={50}> 2 star </Typography>
+
+                  <LinearProgress variant="determinate" value={2} sx={{ width: '90%', height: 8, borderRadius: 8 }} />
+                </Stack>
+
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <Typography variant="body1" width={50}> 1 star </Typography>
+
+                  <LinearProgress variant="determinate" value={1} sx={{ width: '90%', height: 8, borderRadius: 8 }} />
+                </Stack>
+              </Stack>
+            </Stack>
+
+            <Stack direction="row" spacing={4}>
+              <Select size="small">
+
+              </Select>
+              
+              <Review />
+            </Stack>
+          </Stack>
         </Container>
       </DialogContent>
 
