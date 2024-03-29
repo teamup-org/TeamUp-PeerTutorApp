@@ -25,16 +25,10 @@ import { useSession } from 'next-auth/react';
 
 
 import axios from 'axios';
-<<<<<<< HEAD
 import { truncate } from 'fs/promises';
 const development = "http://localhost:8080";
 const deployment = "https://tamutheo.xyz/database_api";
 axios.defaults.baseURL = development;
-=======
-// const development = "http://localhost:8080";
-// const deployment = "https://tamutheo.xyz/database_api";
-// axios.defaults.baseURL = development;
->>>>>>> Transcript is sent to API
 
 const steps = ['General Info', 'Transcript', 'Submit Registration','Course Preferences'];
 
@@ -319,14 +313,6 @@ function TranscriptUpload(props: any) {
     } else {
       console.log("No file selected");
     }
-=======
-function DynamicTextFieldForm(props: any) {
-  const { inputs, updateInputs, setInputs } = props;
-  const { setTranscript } = props;
-
-  const addRow = () => {
-    setInputs([...inputs, { courseType: '', courseNumber: '', courseGrade: '' }]);
->>>>>>> Transcript is sent to API
   };
 
   return (
@@ -377,25 +363,20 @@ function CoursePreferences(props: any) {
     });
   };
 
-  async function file(formData: FormData) {
-    const file = formData.get("file") as File;
-    const fr = new FileReader();
-
-    fr.onload = (event: any) => {
-      const transcriptWords = event.target.result as string;
-      setTranscript(transcriptWords);
-    };
-    
-    fr.onerror = (error) => {
-      console.error('Error reading file:', error);
-    };
-
-    fr.readAsText(file);
-  }
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      // Access the first file in the files array
+      const file = files[0];
+      setTranscript(file);
+      formData.append('transcript', file);
+    } else {
+      console.log("No file selected");
+    }
+  };
 
   return (
     <div>
-<<<<<<< HEAD
       <Typography> Select the courses you want to Peer Tutor For! </Typography>
       <FormGroup>
         {eligibleCourses.map((item: Course, index: any) => (
@@ -408,26 +389,7 @@ function CoursePreferences(props: any) {
               />
             }
             label={`${item.majorAbbreviation} ${item.courseNumber} - ${item.courseGrade}`}
-=======
-      <form action={file}>
-        <label htmlFor="file">Transcript: </label>
-        <input type="file" name="file" id="file" />
-        <button type="submit" id="upload">
-          Upload File
-        </button>
-      </form>
 
-      {inputs.map((input: any, index: any) => (
-        <div key={index} style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
-          <TextField
-            label="Course Type"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            name="courseType"
-            value={input.courseType}
-            onChange={(event) => handleFieldChange(index, event)}
->>>>>>> Transcript is sent to API
           />
         ))}
       </FormGroup>
@@ -449,9 +411,6 @@ export default function Registration() {
   const [coursePreferences, setCoursePreferences] = useState<Course[]>();
   const [eligibleCourses, setEligibleCourses] = useState<Course[]  | undefined>(undefined);
   const [checkedItems, setCheckedItems] = useState<{ [index: number]: boolean }>({});
-=======
-  const [transcript, setTranscript] = useState("");
->>>>>>> Transcript is sent to API
 
   const { data: session, status } = useSession();
 
@@ -504,20 +463,21 @@ export default function Registration() {
   };
 
   const ocrAPI = async () => {
-    axios.defaults.baseURL = 'http://localhost:3000';
-    const userData = {
-      transcript: transcript
-    };
-    const response = await fetch("http://localhost:3000/api/ocr", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(userData)
+    formData.append("email_old", 'wells.t.2024@tamu.edu');
+
+    axios({
+      method: "put",
+      url: "/tutor?email_old=wells.t.2024@tamu.edu&first_name_new=Trey"
+    })
+    .then(function (response) {
+      //handle success
+      console.log(response);
+    })
+    .catch(function (response) {
+      //handle error
+      console.log(response);
     });
-    console.log(userData);
-    const text = await response.text();
-    console.log(text);
+
   }
 
   const handleNext = () => {
@@ -563,17 +523,6 @@ export default function Registration() {
   
         setTutor(newTutor);
   
-      }
-      else if (activeStep === 2) {
-
-        TutorCreation();
-
-      }
-      else if (activeStep === 3) {
-
-        const newVariables = eligibleCourses?.filter((_: any, index: any) => checkedItems[index]);
-        setCoursePreferences(newVariables);
-
       }
     }
     
@@ -872,78 +821,6 @@ export default function Registration() {
 
 
           })()}
-=======
-          {tab === 0 && (tutorResult?.data.length === 0) && !(tutorRegistered) && (
-            <>
-              <Stepper activeStep={activeStep} alternativeLabel>
-                {steps.map((label) => (
-                  <Step key={label}>
-                    <StepLabel>{label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
-              {activeStep === 0 && <PeerTutorForm formData={peerTutorFormData} setFormData={setPeerTutorFormData} />}
-              {activeStep === 1 && <DynamicTextFieldForm inputs={inputs} updateInputs={updateInputs} setInputs={setInputs} setTranscript={setTranscript} />}
-              {activeStep === 2 && (
-                <Grid container rowSpacing={3}>
-                  <Grid item xs={12}> <Typography align="center"> Here is your Tutor Card!! </Typography> </Grid>
-                  <Grid item xs={12}> <TutorCard tutor={tutor} /> </Grid>
-                  <Grid item xs={12}> 
-                    <Box
-                      display="flex"
-                      justifyContent="center"
-                      alignItems="center"
-                    >
-                      <Button color="secondary" onClick={handleTutor}>Register as Peer Tutor!</Button> 
-                    </Box>
-                  </Grid>
-                </Grid>
-              )}
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
-                <Button disabled={activeStep === 0} onClick={handleBack}>
-                  Back
-                </Button>
-                <Button disabled={activeStep === 2} onClick={handleNext}>Next</Button>
-              </Box>
-            </>
-          )}
-          {tab === 0 && (tutorResult?.data.length === 0) && tutorRegistered && (
-            <>
-            <Typography align="center"> Thank you for Registering as a Peer Tutor! </Typography>
-            <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
-              <Typography align="center"> Click Here to See Your Profile! </Typography>
-            </Button>
-          </>
-          )}
-          {tab === 0 && (tutorResult?.data.length !== 0) && (
-            <>
-              <Typography align="center"> You have already registered as a Peer Tutor! </Typography>
-              <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
-                <Typography align="center"> Click Here to Update Profile </Typography>
-              </Button>
-            </>
-          )}
-          {tab === 1  && (tuteeResult?.data.length === 0) && !tuteeRegistered && (
-            <TuteeForm tuteeIsRegistered={tuteeRegistered} setTuteeIsRegistered={setTuteeRegistered}/>)
-          }
-          {tab === 1  && (tuteeResult?.data.length === 0) && tuteeRegistered && (
-            <>
-            <Typography align="center"> Thank you for Registering as a Tutee! </Typography>
-            <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
-              <Typography align="center"> Click Here to See Your Profile! </Typography>
-            </Button>
-          </>
-          )}
-          {tab === 1  && (tuteeResult?.data.length !== 0) && (
-            <>
-              <Typography align="center"> You have already registered as a Tutee! </Typography>
-              <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
-                <Typography align="center"> Click Here to Update Profile </Typography>
-              </Button>
-            </>
-          )}
->>>>>>> Transcript is sent to API
-
         </Box>
       </Paper>
     </Container>
