@@ -23,7 +23,7 @@ const filterOptions = [
 ];
 
 
-export default function TutorProfileReviews({ tutorEmail }: { tutorEmail: string }) {
+export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
   const [sort, setSort] = React.useState(sortOptions[0].query);
   const [filter, setFilter] = React.useState(filterOptions[0].query);
   const [starWeights, setStarWeights] = React.useState([0, 0, 0, 0, 0]);
@@ -69,8 +69,8 @@ export default function TutorProfileReviews({ tutorEmail }: { tutorEmail: string
   };
 
   const { data: reviewData, isLoading: reviewIsLoading, isFetching: reviewIsFetching, refetch: reviewRefetch } = 
-    TableFetch<ReviewQuery>("tutor_review", [sort, filter, tutorEmail], 
-      `tutor_email_contains=${tutorEmail}`,
+    TableFetch<ReviewQuery>("tutor_review", [sort, filter, tutor], 
+      `tutor_email_contains=${tutor.email}`,
       `page_number=${1}`,
       `number_entries_per_page=${5}`,
       `number_stars_greater_than_or_equals=${filter[0]}`,
@@ -90,35 +90,43 @@ export default function TutorProfileReviews({ tutorEmail }: { tutorEmail: string
     <Container maxWidth="xl">
       <Grid container direction="row" spacing={4}>
         <Grid item xs={12} md={5}>
-          <Stack direction="column" spacing={2} borderBottom={1} borderColor="divider" pb={2} position="sticky" top={20}>
-            <Stack direction="row" spacing={4} justifyItems="center">
-              <Stack direction="column" alignItems="center" justifyItems="center">
-                <Typography variant="h2"> {rating} </Typography>
+          <Stack direction="column" spacing={4} position="sticky" top={20}>
+            <Stack direction="column" spacing={2} borderBottom={1} borderColor="divider" pb={2}>
+              <Stack direction="row" spacing={4} justifyItems="center">
+                <Stack direction="column" alignItems="center" justifyItems="center">
+                  <Typography variant="h2"> {tutor.averageRating.toFixed(1)} </Typography>
 
-                <Rating value={rating} precision={0.5} readOnly />
+                  <Rating value={tutor.averageRating} precision={0.5} readOnly />
 
-                <Typography variant="body1"> (30k) </Typography>
+                  <Typography variant="body1"> ({tutor.numberOfRatings}) </Typography>
+                </Stack>
+
+                <Stack direction="column" width={500}>
+                  { mapStars() }
+                </Stack>
               </Stack>
 
-              <Stack direction="column" width={500}>
-                { mapStars() }
+              <Stack direction="row" spacing={2}>
+                <FormControl fullWidth>
+                  <InputLabel id="sort-select-label"> Sort By </InputLabel>
+                  <Select value={sort} onChange={handleSortChange} labelId="sort-select-label" id="sort-select" label="Sort By">
+                    { mapOptions(sortOptions) }
+                  </Select>
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <InputLabel id="filter-select-label"> Filter By </InputLabel>
+                  <Select value={filter} onChange={handleFilterChange} labelId="filter-select-label" id="filter-select" label="Filter By">
+                    { mapOptions(filterOptions) }
+                  </Select>
+                </FormControl>
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={2}>
-              <FormControl fullWidth>
-                <InputLabel id="sort-select-label"> Sort By </InputLabel>
-                <Select value={sort} onChange={handleSortChange} labelId="sort-select-label" id="sort-select" label="Sort By">
-                  { mapOptions(sortOptions) }
-                </Select>
-              </FormControl>
+            <Stack direction="column">
+              <Typography variant="h6" fontWeight="bold"> Leave a Review! </Typography>
 
-              <FormControl fullWidth>
-                <InputLabel id="filter-select-label"> Filter By </InputLabel>
-                <Select value={filter} onChange={handleFilterChange} labelId="filter-select-label" id="filter-select" label="Filter By">
-                  { mapOptions(filterOptions) }
-                </Select>
-              </FormControl>
+              <Review editable />
             </Stack>
           </Stack>
         </Grid>

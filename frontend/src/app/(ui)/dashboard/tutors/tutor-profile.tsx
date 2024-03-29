@@ -93,7 +93,7 @@ export default function TutorProfile(
 
           <Divider sx={{ my: 8 }} />
           
-          <TutorProfileReviews tutorEmail={selectedTutor ? selectedTutor.email : ""} />
+          <TutorProfileReviews tutor={selectedTutor ? selectedTutor : tutorSkeleton} />
         </Container>
       </DialogContent>
 
