@@ -34,15 +34,27 @@ export function TableFetch<T>(tableName: string, vars: any[], ...args: string[])
   };
 }
 
-export function TableUpdate(tableName: string, field: string, value: any) {
-  const { data, isError } = useMutation({
-    mutationFn: async () => {
-      const response = await axios.put("/" + tableName, (field + '=' + value));
-      return response;
-    },
-  });
+// export function TableUpdate(tableName: string, field: string, value: any) {
+//   const { data, isError } = useMutation({
+//     mutationFn: async () => {
+//       const response = await axios.put("/" + tableName, (field + '=' + value));
+//       return response;
+//     },
+//   });
 
-  return { data, isError };
+//   return { data, isError };
+// }
+
+export function TableUpdate<T>(tableName: string, vars: any[], ...args: string[]) {
+  return {
+    ...useMutation<T>({
+      mutationKey: [tableName, {...vars}],
+      mutationFn: async () => {
+        const req = `/${tableName}?${args.join('&')}`;
+        return (await axios.put(req)).data;
+      },
+    })
+  };
 }
 
 

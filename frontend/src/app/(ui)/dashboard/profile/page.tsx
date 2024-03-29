@@ -1,10 +1,14 @@
 'use client'
 import React, { useState, ChangeEvent, useEffect } from 'react';
 import { Card, CardContent, Skeleton, CardMedia, TextField, Grid, Button, Typography, Divider, Avatar, Paper, Link } from '@mui/material';
-import { TableFetch } from '@/app/_lib/data';
+import { TableFetch, TableUpdate } from '@/app/_lib/data';
 
 import { useSession } from 'next-auth/react';
 import { ConnectingAirportsOutlined } from '@mui/icons-material';
+
+const mutateData = (email: string) => {
+  TableUpdate<void>('tutor', [], `email_old=${email}`, `first_name_new=Corbin`);
+};
 
 interface EditableProfileFieldProps {
   label: string;
@@ -76,6 +80,8 @@ function ProfilePage() {
 
   const { data: tutorData, isLoading: tutorIsLoading, isFetching: tutorIsFetching, refetch: tutorRefetch } = 
     TableFetch<TutorQuery>("tutor", [], `email_contains=${email}`);
+    
+  TableUpdate<void>('tutor', [], `email_old=${email}`, `first_name_new=Corbin`);
 
     useEffect(() => {
       tutorRefetch();
@@ -179,6 +185,9 @@ function ProfilePage() {
               />
             </Grid>
           </Grid>
+          <Button variant="contained" color="primary" onClick={() => email && mutateData(email)}>
+            Click me!
+          </Button>
         </CardContent>
       </Card>
 
