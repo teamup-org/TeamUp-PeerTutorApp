@@ -2,8 +2,11 @@ package xyz.tamutheo.databaseAPI.tutor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceMapper;
 import xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceModel;
+import xyz.tamutheo.databaseAPI.tutorEligibleCourse.TutorEligibleCourseMapper;
+import xyz.tamutheo.databaseAPI.tutorEligibleCourse.TutorEligibleCourseService;
 import xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceMapper;
 import xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceModel;
 import xyz.tamutheo.databaseAPI.util.paginationContainer.PaginationContainerModel;
@@ -17,9 +20,13 @@ public class TutorService {
     @Autowired
     private TutorMapper tutorMapper;
     @Autowired
+    private TutorEligibleCourseMapper tutorEligibleCourseMapper;
+    @Autowired
     private TutorCoursePreferenceMapper tutorCoursePreferenceMapper;
     @Autowired
     private TutorLocationPreferenceMapper tutorLocationPreferenceMapper;
+    @Autowired
+    private TutorEligibleCourseService tutorEligibleCourseService;
 
     public PaginationContainerModel read(String activeStatusNameEquals,
                                  Double averageRatingGreaterThanOrEquals,
@@ -39,12 +46,18 @@ public class TutorService {
                                  String pictureUrlContains,
                                  List<String> seniorityNameInList,
                                  String sortBy,
+                                 // tutor_eligible_course parameters
+                                 List<String> eligibleCourseGradeInList,
+                                 Integer eligibleCourseNumberEquals,
+                                 Integer eligibleCourseNumberGreaterThanOrEquals,
+                                 Integer eligibleCourseNumberLessThanOrEquals,
+                                 String eligibleCourseMajorAbbreviationContains,
                                  // tutor_course_preference parameters
-                                 List<String> courseGradeInList,
-                                 Integer courseNumberEquals,
-                                 Integer courseNumberGreaterThanOrEquals,
-                                 Integer courseNumberLessThanOrEquals,
-                                 String courseMajorAbbreviationContains,
+                                 List<String> coursePreferenceGradeInList,
+                                 Integer coursePreferenceNumberEquals,
+                                 Integer coursePreferenceNumberGreaterThanOrEquals,
+                                 Integer coursePreferenceNumberLessThanOrEquals,
+                                 String coursePreferenceMajorAbbreviationContains,
                                  // tutor_location_preference parameters
                                  List<String> locationNameInList,
                                  Integer pageNumber,
@@ -69,23 +82,37 @@ public class TutorService {
                 pictureUrlContains,
                 seniorityNameInList,
                 sortBy,
+                // tutor_eligible_course parameters
+                eligibleCourseGradeInList,
+                eligibleCourseNumberEquals,
+                eligibleCourseNumberGreaterThanOrEquals,
+                eligibleCourseNumberLessThanOrEquals,
+                eligibleCourseMajorAbbreviationContains,
                 // tutor_course_preference parameters
-                courseGradeInList,
-                courseNumberEquals,
-                courseNumberGreaterThanOrEquals,
-                courseNumberLessThanOrEquals,
-                courseMajorAbbreviationContains,
+                coursePreferenceGradeInList,
+                coursePreferenceNumberEquals,
+                coursePreferenceNumberGreaterThanOrEquals,
+                coursePreferenceNumberLessThanOrEquals,
+                coursePreferenceMajorAbbreviationContains,
                 // tutor_location_preference parameters
                 locationNameInList,
                 limit,
                 offset);
         for (TutorModel tutorModel : tutorModelList) {
             String currTutorEmail = tutorModel.getEmail();
-            tutorModel.setCoursePreferences(tutorCoursePreferenceMapper.read(courseGradeInList,
-                    courseNumberEquals,
-                    courseNumberGreaterThanOrEquals,
-                    courseNumberLessThanOrEquals,
-                    courseMajorAbbreviationContains,
+            tutorModel.setEligibleCourses(tutorEligibleCourseMapper.read(eligibleCourseGradeInList,
+                    eligibleCourseNumberEquals,
+                    eligibleCourseNumberGreaterThanOrEquals,
+                    eligibleCourseNumberLessThanOrEquals,
+                    eligibleCourseMajorAbbreviationContains,
+                    currTutorEmail,
+                    null,
+                    null));
+            tutorModel.setCoursePreferences(tutorCoursePreferenceMapper.read(coursePreferenceGradeInList,
+                    coursePreferenceNumberEquals,
+                    coursePreferenceNumberGreaterThanOrEquals,
+                    coursePreferenceNumberLessThanOrEquals,
+                    coursePreferenceMajorAbbreviationContains,
                     currTutorEmail,
                     null,
                     null));
@@ -109,12 +136,18 @@ public class TutorService {
                 pictureUrlContains,
                 seniorityNameInList,
                 sortBy,
+                // tutor_eligible_course parameters
+                eligibleCourseGradeInList,
+                eligibleCourseNumberEquals,
+                eligibleCourseNumberGreaterThanOrEquals,
+                eligibleCourseNumberLessThanOrEquals,
+                eligibleCourseMajorAbbreviationContains,
                 // tutor_course_preference parameters
-                courseGradeInList,
-                courseNumberEquals,
-                courseNumberGreaterThanOrEquals,
-                courseNumberLessThanOrEquals,
-                courseMajorAbbreviationContains,
+                coursePreferenceGradeInList,
+                coursePreferenceNumberEquals,
+                coursePreferenceNumberGreaterThanOrEquals,
+                coursePreferenceNumberLessThanOrEquals,
+                coursePreferenceMajorAbbreviationContains,
                 // tutor_location_preference parameters
                 locationNameInList);
         Integer totalNumberPages = numberEntriesPerPage != null ? (int) (Math.ceil((double) totalNumberEntries / numberEntriesPerPage)) : 1;
@@ -134,7 +167,10 @@ public class TutorService {
         this.tutorMapper.create(tutorModel);
     }
 
-    public void update(TutorModel tutorModelOld, TutorModel tutorModelNew) {
+    public void update(TutorModel tutorModelOld, TutorModel tutorModelNew, MultipartFile transcript) {
+        if (transcript != null) {
+            this.tutorEligibleCourseService.create(tutorModelOld.getEmail(), transcript);
+        }
         if (tutorModelNew.getCoursePreferences() != null) {
             this.tutorCoursePreferenceMapper.deleteAll(tutorModelOld.getEmail());
             for (TutorCoursePreferenceModel tutorCoursePreferenceModel : tutorModelNew.getCoursePreferences()) {
