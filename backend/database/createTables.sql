@@ -1,5 +1,6 @@
 DROP TABLE `capstone`.`appointment`, `capstone`.`appointment_size`, `capstone`.`course`, `capstone`.`location`, `capstone`.`major`, `capstone`.`rating`, `capstone`.`seniority`, `capstone`.`tutee`, `capstone`.`tutor`, `capstone`.`tutor_course_preference`, `capstone`.`tutor_eligible_course`, `capstone`.`tutor_location_preference`, `capstone`.`tutor_review`, `capstone`.`tutor_time_preference`, `capstone`.`user_active_status`, `capstone`.`weekday`;
 DROP VIEW `capstone`.`tutor_average_rating`;
+DROP VIEW `capstone`.`tutor_rating_counts`;
 
 CREATE TABLE major (
 	major_abbreviation CHAR(4) NOT NULL,
@@ -164,3 +165,53 @@ SELECT t.email, AVG(tr.number_stars) AS average_rating, COUNT(tutor_email) AS nu
 FROM tutor as t
 INNER JOIN tutor_review AS tr ON t.email = tr.tutor_email
 GROUP BY tutor_email;
+
+CREATE VIEW tutor_rating_counts AS
+SELECT 
+    t.email, 
+    IFNULL(number_one_star_ratings, 0) AS number_one_star_ratings,
+    IFNULL(number_two_star_ratings, 0) AS number_two_star_ratings,
+    IFNULL(number_three_star_ratings, 0) AS number_three_star_ratings,
+    IFNULL(number_four_star_ratings, 0) AS number_four_star_ratings,
+    IFNULL(number_five_star_ratings, 0) AS number_five_star_ratings
+FROM tutor AS t
+
+LEFT JOIN 
+(SELECT t.email, COUNT(*) AS number_one_star_ratings
+FROM tutor as t
+INNER JOIN tutor_review AS tr ON t.email = tr.tutor_email
+WHERE number_stars = 1
+GROUP BY t.email) AS one_star
+ON t.email = one_star.email
+
+LEFT JOIN 
+(SELECT t.email, COUNT(*) AS number_two_star_ratings
+FROM tutor as t
+INNER JOIN tutor_review AS tr ON t.email = tr.tutor_email
+WHERE number_stars = 2
+GROUP BY t.email) AS two_star
+ON t.email = two_star.email
+
+LEFT JOIN 
+(SELECT t.email, COUNT(*) AS number_three_star_ratings
+FROM tutor as t
+INNER JOIN tutor_review AS tr ON t.email = tr.tutor_email
+WHERE number_stars = 3
+GROUP BY t.email) AS three_star
+ON t.email = three_star.email
+
+LEFT JOIN 
+(SELECT t.email, COUNT(*) AS number_four_star_ratings
+FROM tutor as t
+INNER JOIN tutor_review AS tr ON t.email = tr.tutor_email
+WHERE number_stars = 4
+GROUP BY t.email) AS four_star
+ON t.email = four_star.email
+
+LEFT JOIN 
+(SELECT t.email, COUNT(*) AS number_five_star_ratings
+FROM tutor as t
+INNER JOIN tutor_review AS tr ON t.email = tr.tutor_email
+WHERE number_stars = 5
+GROUP BY t.email) AS five_star
+ON t.email = five_star.email;
