@@ -23,7 +23,7 @@ export function TutorCard(props: TutorCardProps) {
 
   const printChips = () => {
     return props?.tutor?.coursePreferences?.map((course: { courseGrade: string, courseNumber: number, majorAbbreviation: string, tutorEmail: string }, index: number) => (
-      <Chip label={course.majorAbbreviation.toUpperCase() + course.courseNumber} color="error" sx={{ width:100, }} key={index}/>
+      <Chip label={course.majorAbbreviation.toUpperCase() + course.courseNumber} color="primary" sx={{ width:100, }} key={index}/>
     ));
   };
 
