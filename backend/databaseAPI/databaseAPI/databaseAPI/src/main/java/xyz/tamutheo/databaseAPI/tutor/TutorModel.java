@@ -28,6 +28,11 @@ public class TutorModel {
     List<TutorLocationPreferenceModel> locationPreferences;
     String majorAbbreviation;
     Integer numberOfRatings;
+    Integer numberOneStarRatings;
+    Integer numberTwoStarRatings;
+    Integer numberThreeStarRatings;
+    Integer numberFourStarRatings;
+    Integer numberFiveStarRatings;
     Double payRate;
     Long phoneNumber;
     String pictureUrl;
