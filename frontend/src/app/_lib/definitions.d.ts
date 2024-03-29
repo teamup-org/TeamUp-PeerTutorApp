@@ -123,4 +123,19 @@ declare global {
     data: Appointment[],
     metaData: Metadata,
   };
+
+  // 
+  type Review = {
+    appointmentId: number,
+    numberStars: number,
+    reviewText: string,
+    tuteeEmail: string,
+    tutorEmail: string,
+  };
+
+  // REST API: /tutor_review
+  type ReviewQuery = {
+    data: Review[],
+    metaData: Metadata,
+  };
 }

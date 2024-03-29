@@ -82,7 +82,7 @@ export default function TutorPage() {
     <Box position="static" mb="40px">
       <Container maxWidth="lg" sx={{ width: '100%' }}>
         <Grid container direction="row" spacing={2} my="10px">
-          <Grid item xs={0} md={4}>
+          <Grid item xs={12} md={4}>
             <TutorFilter 
               rate={[rate, setRate]} 
               sort={[sort, setSort]} 
