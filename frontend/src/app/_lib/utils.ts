@@ -33,3 +33,11 @@ export function toAppointmentTime(startDate: Date, endDate: Date) {
 
   return `${month}/${date}/${year} | ${interval}`;
 }
+
+export function toDate(day: Date) {
+  const date = day.getDate();
+  const month = day.getMonth() + 1;
+  const year = day.getFullYear();
+
+  return `${month}/${date}/${year}`;
+}
