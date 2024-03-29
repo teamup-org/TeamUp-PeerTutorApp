@@ -11,6 +11,11 @@
         <result property="listingTitle" column="listing_title"/>
         <result property="majorAbbreviation" column="major_abbreviation"/>
         <result property="numberOfRatings" column="number_of_ratings"/>
+        <result property="numberOneStarRatings" column="number_one_star_ratings"/>
+        <result property="numberTwoStarRatings" column="number_two_star_ratings"/>
+        <result property="numberThreeStarRatings" column="number_three_star_ratings"/>
+        <result property="numberFourStarRatings" column="number_four_star_ratings"/>
+        <result property="numberFiveStarRatings" column="number_five_star_ratings"/>
         <result property="payRate" column="pay_rate"/>
         <result property="phoneNumber" column="phone_number"/>
         <result property="pictureUrl" column="picture_url"/>
@@ -36,9 +41,15 @@
             t.picture_url,
             t.seniority_name,
             r.average_rating,
-            r.number_of_ratings
+            r.number_of_ratings,
+            rc.number_one_star_ratings,
+            rc.number_two_star_ratings,
+            rc.number_three_star_ratings,
+            rc.number_four_star_ratings,
+            rc.number_five_star_ratings
         FROM tutor as t
         LEFT JOIN tutor_average_rating AS r ON t.email = r.email
+        LEFT JOIN tutor_rating_counts AS rc ON t.email = rc.email
         LEFT JOIN tutor_eligible_course AS e ON t.email = e.tutor_email
         LEFT JOIN tutor_course_preference AS c ON t.email = c.tutor_email
         LEFT JOIN tutor_location_preference AS l on t.email = l.tutor_email
@@ -239,6 +250,7 @@
             t.seniority_name)
         FROM tutor as t
         LEFT JOIN tutor_average_rating AS r ON t.email = r.email
+        LEFT JOIN tutor_rating_counts AS rc ON t.email = rc.email
         LEFT JOIN tutor_eligible_course AS e ON t.email = e.tutor_email
         LEFT JOIN tutor_course_preference AS c ON t.email = c.tutor_email
         LEFT JOIN tutor_location_preference AS l on t.email = l.tutor_email
