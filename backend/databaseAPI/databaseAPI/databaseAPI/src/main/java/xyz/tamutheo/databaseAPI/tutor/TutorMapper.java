@@ -26,12 +26,18 @@ public interface TutorMapper {
                           @Param("pictureUrlContains") String pictureUrlContains,
                           @Param("seniorityNameInList") List<String> seniorityNameInList,
                           @Param("sortBy") String sortBy,
+                          // tutor_eligible_course parameters
+                          @Param("eligibleCourseGradeInList") List<String> eligibleCourseGradeInList,
+                          @Param("eligibleCourseNumberEquals") Integer eligibleCourseNumberEquals,
+                          @Param("eligibleCourseNumberGreaterThanOrEquals") Integer eligibleCourseNumberGreaterThanOrEquals,
+                          @Param("eligibleCourseNumberLessThanOrEquals") Integer eligibleCourseNumberLessThanOrEquals,
+                          @Param("eligibleCourseMajorAbbreviationContains") String eligibleCourseMajorAbbreviationContains,
                           // tutor_course_preference parameters
-                          @Param("courseGradeInList") List<String> courseGradeInList,
-                          @Param("courseNumberEquals") Integer courseNumberEquals,
-                          @Param("courseNumberGreaterThanOrEquals") Integer courseNumberGreaterThanOrEquals,
-                          @Param("courseNumberLessThanOrEquals") Integer courseNumberLessThanOrEquals,
-                          @Param("courseMajorAbbreviationContains") String courseMajorAbbreviationContains,
+                          @Param("coursePreferenceGradeInList") List<String> coursePreferenceGradeInList,
+                          @Param("coursePreferenceNumberEquals") Integer coursePreferenceNumberEquals,
+                          @Param("coursePreferenceNumberGreaterThanOrEquals") Integer coursePreferenceNumberGreaterThanOrEquals,
+                          @Param("coursePreferenceNumberLessThanOrEquals") Integer coursePreferenceNumberLessThanOrEquals,
+                          @Param("coursePreferenceMajorAbbreviationContains") String coursePreferenceMajorAbbreviationContains,
                           // tutor_location_preference parameters
                           @Param("locationNameInList") List<String> locationNameInList,
                           @Param("limit") Integer limit,
@@ -57,12 +63,18 @@ public interface TutorMapper {
                                   @Param("pictureUrlContains") String pictureUrlContains,
                                   @Param("seniorityNameInList") List<String> seniorityNameInList,
                                   @Param("sortBy") String sortBy,
+                                  // tutor_eligible_course parameters
+                                  @Param("eligibleCourseGradeInList") List<String> eligibleCourseGradeInList,
+                                  @Param("eligibleCourseNumberEquals") Integer eligibleCourseNumberEquals,
+                                  @Param("eligibleCourseNumberGreaterThanOrEquals") Integer eligibleCourseNumberGreaterThanOrEquals,
+                                  @Param("eligibleCourseNumberLessThanOrEquals") Integer eligibleCourseNumberLessThanOrEquals,
+                                  @Param("eligibleCourseMajorAbbreviationContains") String eligibleCourseMajorAbbreviationContains,
                                   // tutor_course_preference parameters
-                                  @Param("courseGradeInList") List<String> courseGradeInList,
-                                  @Param("courseNumberEquals") Integer courseNumberEquals,
-                                  @Param("courseNumberGreaterThanOrEquals") Integer courseNumberGreaterThanOrEquals,
-                                  @Param("courseNumberLessThanOrEquals") Integer courseNumberLessThanOrEquals,
-                                  @Param("courseMajorAbbreviationContains") String courseMajorAbbreviationContains,
+                                  @Param("coursePreferenceGradeInList") List<String> coursePreferenceGradeInList,
+                                  @Param("coursePreferenceNumberEquals") Integer coursePreferenceNumberEquals,
+                                  @Param("coursePreferenceNumberGreaterThanOrEquals") Integer coursePreferenceNumberGreaterThanOrEquals,
+                                  @Param("coursePreferenceNumberLessThanOrEquals") Integer coursePreferenceNumberLessThanOrEquals,
+                                  @Param("coursePreferenceMajorAbbreviationContains") String coursePreferenceMajorAbbreviationContains,
                                   // tutor_location_preference parameters
                                   @Param("locationNameInList") List<String> locationNameInList);
 }
