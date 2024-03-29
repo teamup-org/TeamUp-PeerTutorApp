@@ -8,7 +8,6 @@ xyz\tamutheo\databaseAPI\tutorReview\TutorReviewController.class
 xyz\tamutheo\databaseAPI\tutorReview\TutorReviewModel$TutorReviewModelBuilder.class
 xyz\tamutheo\databaseAPI\major\MajorModel$MajorModelBuilder.class
 xyz\tamutheo\databaseAPI\rating\RatingController.class
-xyz\tamutheo\databaseAPI\tutorLocationPreference\TutorLocationPreferenceController.class
 xyz\tamutheo\databaseAPI\seniority\SeniorityController.class
 xyz\tamutheo\databaseAPI\tutorCoursePreference\TutorCoursePreferenceMapper.class
 xyz\tamutheo\databaseAPI\tutorLocationPreference\TutorLocationPreferenceModel$TutorLocationPreferenceModelBuilder.class
@@ -65,11 +64,9 @@ xyz\tamutheo\databaseAPI\util\tamuMajorAndCourse\tamuCourse\TamuCourseModel$Tamu
 xyz\tamutheo\databaseAPI\major\MajorMapper.class
 xyz\tamutheo\databaseAPI\DatabaseApiApplication.class
 xyz\tamutheo\databaseAPI\tutorReview\TutorReviewService.class
-xyz\tamutheo\databaseAPI\tutorCoursePreference\TutorCoursePreferenceController.class
 xyz\tamutheo\databaseAPI\userActiveStatus\UserActiveStatusModel.class
 xyz\tamutheo\databaseAPI\tutorCoursePreference\TutorCoursePreferenceService.class
 xyz\tamutheo\databaseAPI\tutee\TuteeModel.class
-xyz\tamutheo\databaseAPI\tutorEligibleCourse\TutorEligibleCourseController.class
 xyz\tamutheo\databaseAPI\userActiveStatus\UserActiveStatusModel$UserActiveStatusModelBuilder.class
 xyz\tamutheo\databaseAPI\major\MajorModel.class
 xyz\tamutheo\databaseAPI\appointmentSize\AppointmentSizeMapper.class

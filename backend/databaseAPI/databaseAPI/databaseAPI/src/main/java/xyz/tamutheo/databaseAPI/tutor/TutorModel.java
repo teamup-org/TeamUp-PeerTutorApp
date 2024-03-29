@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceModel;
+import xyz.tamutheo.databaseAPI.tutorEligibleCourse.TutorEligibleCourseModel;
 import xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceModel;
+import xyz.tamutheo.databaseAPI.tutorTimePreference.TutorTimePreferenceModel;
 
 import java.util.List;
 
@@ -18,6 +20,7 @@ public class TutorModel {
     Double averageRating;
     String bioText;
     List<TutorCoursePreferenceModel> coursePreferences;
+    List<TutorEligibleCourseModel> eligibleCourses;
     String email;
     String firstName;
     String lastName;
@@ -29,4 +32,5 @@ public class TutorModel {
     Long phoneNumber;
     String pictureUrl;
     String seniorityName;
+    List<TutorTimePreferenceModel> timePreferences;
 }

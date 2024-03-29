@@ -2,6 +2,7 @@ package xyz.tamutheo.databaseAPI.tutor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceModel;
 import xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceModel;
 import xyz.tamutheo.databaseAPI.util.paginationContainer.PaginationContainerModel;
@@ -61,21 +62,34 @@ public class TutorController {
                                          @RequestParam(name = "picture_url_contains", required = false) String pictureUrlContains,
                                          @RequestParam(name = "seniority_name_in", required = false) String seniorityNameIn,
                                          @RequestParam(name = "sort_by", required = false) String sortBy,
+                                         // tutor_eligible_course parameters
+                                         @RequestParam(name = "eligible_course_grade_in", required = false) String eligibleCourseGradeIn,
+                                         @RequestParam(name = "eligible_course_number_equals", required = false) Integer eligibleCourseNumberEquals,
+                                         @RequestParam(name = "eligible_course_number_greater_than_or_equals", required = false) Integer eligibleCourseNumberGreaterThanOrEquals,
+                                         @RequestParam(name = "eligible_course_number_less_than_or_equals", required = false) Integer eligibleCourseNumberLessThanOrEquals,
+                                         @RequestParam(name = "eligible_course_major_abbreviation_contains", required = false) String eligibleCourseMajorAbbreviationContains,
                                          // tutor_course_preference parameters
-                                         @RequestParam(name = "course_grade_in", required = false) String courseGradeIn,
-                                         @RequestParam(name = "course_number_equals", required = false) Integer courseNumberEquals,
-                                         @RequestParam(name = "course_number_greater_than_or_equals", required = false) Integer courseNumberGreaterThanOrEquals,
-                                         @RequestParam(name = "course_number_less_than_or_equals", required = false) Integer courseNumberLessThanOrEquals,
-                                         @RequestParam(name = "course_major_abbreviation_contains", required = false) String courseMajorAbbreviationContains,
+                                         @RequestParam(name = "course_preference_grade_in", required = false) String coursePreferenceGradeIn,
+                                         @RequestParam(name = "course_preference_number_equals", required = false) Integer coursePreferenceNumberEquals,
+                                         @RequestParam(name = "course_preference_number_greater_than_or_equals", required = false) Integer coursePreferenceNumberGreaterThanOrEquals,
+                                         @RequestParam(name = "course_preference_number_less_than_or_equals", required = false) Integer coursePreferenceNumberLessThanOrEquals,
+                                         @RequestParam(name = "course_preference_major_abbreviation_contains", required = false) String coursePreferenceMajorAbbreviationContains,
                                          // tutor_location_preference parameters
                                          @RequestParam(name = "location_name_in", required = false) String locationNameIn,
                                          @RequestParam(name = "page_number", required = false, defaultValue = "1") Integer pageNumber,
                                          @RequestParam(name = "number_entries_per_page", required = false) Integer numberEntriesPerPage) {
-        List<String> courseGradeInList = null;
-        if (courseGradeIn != null) {
-            courseGradeInList = Arrays.asList(courseGradeIn.split(", "));
-            for (int idx = 0; idx < courseGradeInList.size(); idx++) {
-                courseGradeInList.set(idx, courseGradeInList.get(idx).trim());
+        List<String> eligibleCourseGradeInList = null;
+        if (eligibleCourseGradeIn != null) {
+            eligibleCourseGradeInList = Arrays.asList(eligibleCourseGradeIn.split(", "));
+            for (int idx = 0; idx < eligibleCourseGradeInList.size(); idx++) {
+                eligibleCourseGradeInList.set(idx, eligibleCourseGradeInList.get(idx).trim());
+            }
+        }
+        List<String> coursePreferenceGradeInList = null;
+        if (coursePreferenceGradeIn != null) {
+            coursePreferenceGradeInList = Arrays.asList(coursePreferenceGradeIn.split(", "));
+            for (int idx = 0; idx < coursePreferenceGradeInList.size(); idx++) {
+                coursePreferenceGradeInList.set(idx, coursePreferenceGradeInList.get(idx).trim());
             }
         }
         List<String> locationNameInList = null;
@@ -110,12 +124,18 @@ public class TutorController {
                 pictureUrlContains,
                 seniorityNameInList,
                 sortBy,
+                // tutor_eligible_course parameters
+                eligibleCourseGradeInList,
+                eligibleCourseNumberEquals,
+                eligibleCourseNumberGreaterThanOrEquals,
+                eligibleCourseNumberLessThanOrEquals,
+                eligibleCourseMajorAbbreviationContains,
                 // tutor_course_preference parameters
-                courseGradeInList,
-                courseNumberEquals,
-                courseNumberGreaterThanOrEquals,
-                courseNumberLessThanOrEquals,
-                courseMajorAbbreviationContains,
+                coursePreferenceGradeInList,
+                coursePreferenceNumberEquals,
+                coursePreferenceNumberGreaterThanOrEquals,
+                coursePreferenceNumberLessThanOrEquals,
+                coursePreferenceMajorAbbreviationContains,
                 // tutor_location_preference parameters
                 locationNameInList,
                 pageNumber,
@@ -125,6 +145,7 @@ public class TutorController {
     public void update(@RequestParam(name = "email_old") String emailOld,
                        @RequestParam(name = "active_status_name_new", required = false) String activeStatusNameNew,
                        @RequestParam(name = "bio_text_new", required = false) String bioTextNew,
+                       @RequestParam(name = "transcript", required = false) MultipartFile transcript,
                        // expects input as a comma separated String
                        // template: <major_abbreviation> <course_number> <course_grade>
                        // example: csce 121 a, csce 314 b
@@ -187,6 +208,6 @@ public class TutorController {
                 .pictureUrl(pictureUrlNew)
                 .seniorityName(seniorityNameNew)
                 .build();
-        this.tutorService.update(tutorModelOld, tutorModelNew);
+        this.tutorService.update(tutorModelOld, tutorModelNew, transcript);
     }
 }

@@ -39,6 +39,7 @@
             r.number_of_ratings
         FROM tutor as t
         LEFT JOIN tutor_average_rating AS r ON t.email = r.email
+        LEFT JOIN tutor_eligible_course AS e ON t.email = e.tutor_email
         LEFT JOIN tutor_course_preference AS c ON t.email = c.tutor_email
         LEFT JOIN tutor_location_preference AS l on t.email = l.tutor_email
         <where>
@@ -117,25 +118,45 @@
                     #{item}
                 </foreach>
             </if>
-            <!-- tutor_course_preference parameters-->
-            <if test="courseGradeInList != null" >
-                AND c.course_grade in
-                <foreach item="item" index="index" collection="courseGradeInList" open="(" separator="," close=")">
+            <!-- tutor_eligible_course parameters-->
+            <if test="eligibleCourseGradeInList != null" >
+                AND e.course_grade in
+                <foreach item="item" index="index" collection="eligibleCourseGradeInList" open="(" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
-            <if test="courseNumberEquals != null" >
-                AND c.course_number = #{courseNumberEquals}
+            <if test="eligibleCourseNumberEquals != null" >
+                AND e.course_number = #{eligibleCourseNumberEquals}
             </if>
-            <if test="courseNumberGreaterThanOrEquals != null" >
-                AND c.course_number &gt;= #{courseNumberGreaterThanOrEquals}
+            <if test="eligibleCourseNumberGreaterThanOrEquals != null" >
+                AND e.course_number &gt;= #{eligibleCourseNumberGreaterThanOrEquals}
             </if>
-            <if test="courseNumberLessThanOrEquals != null" >
-                AND c.course_number &lt;= #{courseNumberLessThanOrEquals}
+            <if test="eligibleCourseNumberLessThanOrEquals != null" >
+                AND e.course_number &lt;= #{eligibleCourseNumberLessThanOrEquals}
             </if>
-            <if test="courseMajorAbbreviationContains != null" >
-                <bind name="courseMajorAbbreviationContainsPattern" value = "'%' + courseMajorAbbreviationContains + '%'" />
-                AND LOWER(c.major_abbreviation) LIKE LOWER(#{courseMajorAbbreviationContainsPattern})
+            <if test="eligibleCourseMajorAbbreviationContains != null" >
+                <bind name="eligibleCourseMajorAbbreviationContainsPattern" value = "'%' + eligibleCourseMajorAbbreviationContains + '%'" />
+                AND LOWER(e.major_abbreviation) LIKE LOWER(#{eligibleCourseMajorAbbreviationContainsPattern})
+            </if>
+            <!-- tutor_course_preference parameters-->
+            <if test="coursePreferenceGradeInList != null" >
+                AND c.course_grade in
+                <foreach item="item" index="index" collection="coursePreferenceGradeInList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="coursePreferenceNumberEquals != null" >
+                AND c.course_number = #{coursePreferenceNumberEquals}
+            </if>
+            <if test="coursePreferenceNumberGreaterThanOrEquals != null" >
+                AND c.course_number &gt;= #{coursePreferenceNumberGreaterThanOrEquals}
+            </if>
+            <if test="coursePreferenceNumberLessThanOrEquals != null" >
+                AND c.course_number &lt;= #{coursePreferenceNumberLessThanOrEquals}
+            </if>
+            <if test="coursePreferenceMajorAbbreviationContains != null" >
+                <bind name="coursePreferenceMajorAbbreviationContainsPattern" value = "'%' + coursePreferenceMajorAbbreviationContains + '%'" />
+                AND LOWER(c.major_abbreviation) LIKE LOWER(#{coursePreferenceMajorAbbreviationContainsPattern})
             </if>
             <!-- tutor_location_preference parameters-->
             <if test="locationNameInList != null">
@@ -218,6 +239,7 @@
             t.seniority_name)
         FROM tutor as t
         LEFT JOIN tutor_average_rating AS r ON t.email = r.email
+        LEFT JOIN tutor_eligible_course AS e ON t.email = e.tutor_email
         LEFT JOIN tutor_course_preference AS c ON t.email = c.tutor_email
         LEFT JOIN tutor_location_preference AS l on t.email = l.tutor_email
         <where>
@@ -296,25 +318,45 @@
                     #{item}
                 </foreach>
             </if>
-            <!-- tutor_course_preference parameters-->
-            <if test="courseGradeInList != null" >
-                AND c.course_grade in
-                <foreach item="item" index="index" collection="courseGradeInList" open="(" separator="," close=")">
+            <!-- tutor_eligible_course parameters-->
+            <if test="eligibleCourseGradeInList != null" >
+                AND e.course_grade in
+                <foreach item="item" index="index" collection="eligibleCourseGradeInList" open="(" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
-            <if test="courseNumberEquals != null" >
-                AND c.course_number = #{courseNumberEquals}
+            <if test="eligibleCourseNumberEquals != null" >
+                AND e.course_number = #{eligibleCourseNumberEquals}
             </if>
-            <if test="courseNumberGreaterThanOrEquals != null" >
-                AND c.course_number &gt;= #{courseNumberGreaterThanOrEquals}
+            <if test="eligibleCourseNumberGreaterThanOrEquals != null" >
+                AND e.course_number &gt;= #{eligibleCourseNumberGreaterThanOrEquals}
             </if>
-            <if test="courseNumberLessThanOrEquals != null" >
-                AND c.course_number &lt;= #{courseNumberLessThanOrEquals}
+            <if test="eligibleCourseNumberLessThanOrEquals != null" >
+                AND e.course_number &lt;= #{eligibleCourseNumberLessThanOrEquals}
             </if>
-            <if test="courseMajorAbbreviationContains != null" >
-                <bind name="courseMajorAbbreviationContainsPattern" value = "'%' + courseMajorAbbreviationContains + '%'" />
-                AND LOWER(c.major_abbreviation) LIKE LOWER(#{courseMajorAbbreviationContainsPattern})
+            <if test="eligibleCourseMajorAbbreviationContains != null" >
+                <bind name="eligibleCourseMajorAbbreviationContainsPattern" value = "'%' + eligibleCourseMajorAbbreviationContains + '%'" />
+                AND LOWER(e.major_abbreviation) LIKE LOWER(#{eligibleCourseMajorAbbreviationContainsPattern})
+            </if>
+            <!-- tutor_course_preference parameters-->
+            <if test="coursePreferenceGradeInList != null" >
+                AND c.course_grade in
+                <foreach item="item" index="index" collection="coursePreferenceGradeInList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="coursePreferenceNumberEquals != null" >
+                AND c.course_number = #{coursePreferenceNumberEquals}
+            </if>
+            <if test="coursePreferenceNumberGreaterThanOrEquals != null" >
+                AND c.course_number &gt;= #{coursePreferenceNumberGreaterThanOrEquals}
+            </if>
+            <if test="coursePreferenceNumberLessThanOrEquals != null" >
+                AND c.course_number &lt;= #{coursePreferenceNumberLessThanOrEquals}
+            </if>
+            <if test="coursePreferenceMajorAbbreviationContains != null" >
+                <bind name="coursePreferenceMajorAbbreviationContainsPattern" value = "'%' + coursePreferenceMajorAbbreviationContains + '%'" />
+                AND LOWER(c.major_abbreviation) LIKE LOWER(#{coursePreferenceMajorAbbreviationContainsPattern})
             </if>
             <!-- tutor_location_preference parameters-->
             <if test="locationNameInList != null">

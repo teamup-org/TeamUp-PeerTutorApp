@@ -44,7 +44,7 @@
         </if>
     </select>
     <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutorEligibleCourse.TutorEligibleCourseModel">
-        INSERT into tutor_eligible_course
+        INSERT IGNORE into tutor_eligible_course
         (course_grade, course_number, major_abbreviation, tutor_email)
         VALUES
         (#{courseGrade}, #{courseNumber}, #{majorAbbreviation}, #{tutorEmail})
