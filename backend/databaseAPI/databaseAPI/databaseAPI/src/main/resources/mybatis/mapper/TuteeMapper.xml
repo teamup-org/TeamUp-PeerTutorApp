@@ -9,12 +9,13 @@
         <result property="majorAbbreviation" column="major_abbreviation"/>
         <result property="phoneNumber" column="phone_number"/>
         <result property="seniorityName" column="seniority_name"/>
+        <result property="pictureUrl" column="picture_url" />
     </resultMap>
     <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutee.TuteeModel">
         INSERT INTO tutee
-        (active_status_name, email, first_name, last_name, major_abbreviation, phone_number, seniority_name)
+        (active_status_name, email, first_name, last_name, major_abbreviation, phone_number, seniority_name, picture_url)
         VALUES
-        (#{activeStatusName}, #{email}, #{firstName}, #{lastName}, #{majorAbbreviation}, #{phoneNumber}, #{seniorityName})
+        (#{activeStatusName}, #{email}, #{firstName}, #{lastName}, #{majorAbbreviation}, #{phoneNumber}, #{seniorityName}, #{pictureUrl})
     </insert>
     <select id="read" resultMap="TuteeResultMap">
         SELECT *
@@ -80,6 +81,9 @@
             </if>
             <if test="tuteeModelNew.seniorityName != null">
                 seniority_name = #{tuteeModelNew.seniorityName},
+            </if>
+            <if test="tuteeModelNew.pictureUrl != null">
+                picture_url = #{tuteeModelNew.pictureUrl},
             </if>
         </set>
         WHERE

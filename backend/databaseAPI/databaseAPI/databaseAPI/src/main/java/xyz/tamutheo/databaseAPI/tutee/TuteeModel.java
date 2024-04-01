@@ -21,4 +21,5 @@ public class TuteeModel {
     String majorAbbreviation;
     Long phoneNumber;
     String seniorityName;
+    String pictureUrl;
 }

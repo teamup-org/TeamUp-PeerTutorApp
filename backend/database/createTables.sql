@@ -112,6 +112,7 @@ CREATE TABLE tutee (
 	last_name VARCHAR(20) NOT NULL,
     active_status_name VARCHAR(20) NOT NULL,
     major_abbreviation CHAR(4) NOT NULL,
+    picture_url VARCHAR(2000),
     phone_number BIGINT NOT NULL,
     seniority_name VARCHAR(25) NOT NULL,
 	PRIMARY KEY (email),
