@@ -271,22 +271,22 @@ VALUES
 INSERT INTO tutee
     (first_name, last_name, major_abbreviation, seniority_name, phone_number, email, active_status_name, picture_url)
 VALUES
-    ('amber', 'awesome', 'csce', 'freshman', 1111111111, 'amber@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Branden_Loera_Headshot.jpg"),
-    ('bobby', 'bold', 'meen', 'sophomore', 2222222222, 'bobby@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Alan_Bates_vintage_headshot_from_%22The_Entertainer%22_(1960).jpg"),
-    ('calvin', 'cool', 'ecen', 'junior', 3333333333, 'calvin@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Leah%2BElson%2BHeadshot%2B2022%2B(2).jpg"),
-    ('denise', 'dangerous', 'aero', 'senior', 4444444444, 'denise@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Actors_Headshot_by_Headshot_London_Photography.jpg"),
-    ('edgar', 'excellent', 'cven', 'freshman', 5555555555, 'edgar@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Miriam_Rodr%C3%ADguez_Headshot.jpg"),
-    ('sophia', 'dupont', 'csce', 'freshman', 9876543210, 'sophia@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Jen_schultz_headshot_2_FOR_WEB_(2)."),
-    ('liam', 'garcia', 'meen', 'sophomore', 8765432109, 'liam@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Sir_Ian_Bauckham_-_UK_Government_headshot,_2022.png"),
-    ('olivia', 'lopez', 'ecen', 'junior', 7654321098, 'olivia@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Rhonda_Saunders_photo.jpg"),
-    ('noah', 'martinez', 'aero', 'senior', 6543210987, 'noah@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Louis_E._Deveau.jpg"),
-    ('ava', 'hernandez', 'cven', 'freshman', 5432109876, 'ava@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Jocelyn_Miyara_headshot.jpg"),
-    ('william', 'young', 'csce', 'freshman', 4321098765, 'william@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Amanda_Candido.jpg"),
-    ('isabella', 'lee', 'meen', 'sophomore', 3210987654, 'isabella@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:David_Graziano_Headshot.jpg"),
-    ('james', 'nguyen', 'ecen', 'junior', 2109876543, 'james@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Headshot_AAlikhan.jpg"),
-    ('emma', 'kim', 'aero', 'senior', 1098765432, 'emma@gmail.com', 'inactive', "https://commons.wikimedia.org/wiki/File:Zachariah_Fincher_Headshot.jpg"),
-    ('benjamin', 'patel', 'cven', 'freshman', 8901234567, 'benjamin@gmail.com', 'banned', "https://commons.wikimedia.org/wiki/File:Best_Headshot_2024.jpg"),
-    ('kyle', 'lang', 'csce', 'senior', 3256276760, 'lang.kyl24@tamu.edu', 'active', "https://commons.wikimedia.org/wiki/File:Headshot_Renaud_Laplanche.jpg");
+    ('amber', 'awesome', 'csce', 'freshman', 1111111111, 'amber@gmail.com', 'active', "https://upload.wikimedia.org/wikipedia/commons/e/e3/Branden_Loera_Headshot.jpg"),
+    ('bobby', 'bold', 'meen', 'sophomore', 2222222222, 'bobby@gmail.com', 'active', "https://upload.wikimedia.org/wikipedia/commons/2/28/Alan_Bates_vintage_headshot_from_%22The_Entertainer%22_%281960%29.jpg"),
+    ('calvin', 'cool', 'ecen', 'junior', 3333333333, 'calvin@gmail.com', 'active', "https://upload.wikimedia.org/wikipedia/commons/7/79/Leah%2BElson%2BHeadshot%2B2022%2B%282%29.jpg"),
+    ('denise', 'dangerous', 'aero', 'senior', 4444444444, 'denise@gmail.com', 'active', "https://upload.wikimedia.org/wikipedia/commons/3/3a/Actors_Headshot_by_Headshot_London_Photography.jpg"),
+    ('edgar', 'excellent', 'cven', 'freshman', 5555555555, 'edgar@gmail.com', 'active', "https://upload.wikimedia.org/wikipedia/commons/b/b4/Miriam_Rodr%C3%ADguez_Headshot.jpg"),
+    ('sophia', 'dupont', 'csce', 'freshman', 9876543210, 'sophia@gmail.com', 'active', "https://upload.wikimedia.org/wikipedia/commons/2/2e/Jen_schultz_headshot_2_FOR_WEB_%282%29.jpg"),
+    ('liam', 'garcia', 'meen', 'sophomore', 8765432109, 'liam@gmail.com', 'active', "https://upload.wikimedia.org/wikipedia/commons/e/e7/Sir_Ian_Bauckham_-_UK_Government_headshot%2C_2022.png"),
+    ('olivia', 'lopez', 'ecen', 'junior', 7654321098, 'olivia@gmail.com', 'active', "https://upload.wikimedia.org/wikipedia/commons/f/fc/Rhonda_Saunders_photo.jpg"),
+    ('noah', 'martinez', 'aero', 'senior', 6543210987, 'noah@gmail.com', 'active', "https://upload.wikimedia.org/wikipedia/commons/0/03/Louis_E._Deveau.jpg"),
+    ('ava', 'hernandez', 'cven', 'freshman', 5432109876, 'ava@gmail.com', 'active', "https://upload.wikimedia.org/wikipedia/commons/b/b9/Jocelyn_Miyara_headshot.jpg"),
+    ('william', 'young', 'csce', 'freshman', 4321098765, 'william@gmail.com', 'active', "https://upload.wikimedia.org/wikipedia/commons/f/f9/Amanda_Candido.jpg"),
+    ('isabella', 'lee', 'meen', 'sophomore', 3210987654, 'isabella@gmail.com', 'active', "https://upload.wikimedia.org/wikipedia/commons/6/6e/David_Graziano_Headshot.jpg"),
+    ('james', 'nguyen', 'ecen', 'junior', 2109876543, 'james@gmail.com', 'active', "https://upload.wikimedia.org/wikipedia/commons/c/ce/Headshot_AAlikhan.jpg"),
+    ('emma', 'kim', 'aero', 'senior', 1098765432, 'emma@gmail.com', 'inactive', "https://upload.wikimedia.org/wikipedia/commons/7/71/Zachariah_Fincher_Headshot.jpg"),
+    ('benjamin', 'patel', 'cven', 'freshman', 8901234567, 'benjamin@gmail.com', 'banned', "https://upload.wikimedia.org/wikipedia/commons/1/14/Best_Headshot_2024.jpg"),
+    ('kyle', 'lang', 'csce', 'senior', 3256276760, 'lang.kyl24@tamu.edu', 'active', "https://upload.wikimedia.org/wikipedia/commons/7/79/Headshot_Renaud_Laplanche.jpg");
 
 INSERT INTO appointment_size
     (appointment_size_name)
