@@ -65,7 +65,7 @@ public class TutorReviewService {
                 null);
         if (appointmentModelList.size() != 1) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Cannot find review this appointment.");
+                    HttpStatus.BAD_REQUEST, "Cannot review this appointment.");
         }
        this.tutorReviewMapper.create(tutorReviewModel);
     }
