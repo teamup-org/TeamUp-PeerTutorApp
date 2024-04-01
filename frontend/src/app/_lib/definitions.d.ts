@@ -59,6 +59,7 @@ declare global {
     majorAbbreviation: string,
     payRate: number,
     seniorityName: Seniority,
+    numberOfRatings: number
   };
 
   // REST API: /tutor
