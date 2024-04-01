@@ -6,9 +6,11 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -99,5 +101,23 @@ public class AppointmentTests {
                 .andExpect(status().isBadRequest());
 
         verify(appointmentService, never()).create(any(AppointmentModel.class));
+    }
+
+    // Test for preventing overlapping appointments
+    @Test
+    public void testPreventOverlappingAppointments() throws Exception {
+        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Overlapping appointment")).when(appointmentService).create(any(AppointmentModel.class));
+
+        mockMvc.perform(post("/appointment")
+                .param("appointment_size_name", "single")
+                .param("location_name", "Valley Mills, TX")
+                .param("tutor_email", "sol@r.eclipse")
+                .param("tutee_email", "aggie@gig.em")
+                .param("start_date_time", "2024-04-08T13:37")
+                .param("end_date_time", "2024-04-08T13:42")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isBadRequest());
+
+        verify(appointmentService).create(any(AppointmentModel.class));
     }
 }
