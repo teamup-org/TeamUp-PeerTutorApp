@@ -19,8 +19,7 @@ import { TutorCard }
   from '@/app/(ui)/tutor-card';
 
 
-const tutorSkeleton: Tutor = { activeStatusName: "active", averageRating: 0, bioText: "", coursePreferences: [], email: "", firstName: "", lastName: "", 
-  listingTitle: "", locationPreferences: [], majorAbbreviation: "", numberOfRatings: 0, payRate: 0, phoneNumber: 0, pictureUrl: "", seniorityName: "Freshman" };
+
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -45,22 +44,17 @@ export default function TutorProfile(
       aria-describedby="alert-tutor-profile"
       maxWidth="xl" fullWidth
     >
-      <DialogTitle> <Typography variant="h2"> Tutor Title </Typography> </DialogTitle>
-      <IconButton aria-label="close" onClick={() => setSelectedTutor(null)} 
-        sx={{
-          position: 'absolute',
-          right: 8,
-          top: 8,
-        }}
-      > 
-        <CloseIcon /> 
-      </IconButton>
+      <DialogTitle> 
+        <IconButton aria-label="close" onClick={() => setSelectedTutor(null)} > 
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       
       <DialogContent dividers sx={{ p: 0, pb: 8 }}>
         <Container maxWidth="xl">
-          <TutorCard elevation={0} tutor={selectedTutor ? selectedTutor : tutorSkeleton} />
-
-          <Divider sx={{ my: 8 }} />
+          { selectedTutor &&
+            <TutorCard elevation={0} tutor={selectedTutor} /> 
+          }
 
           <Box>
             <FullCalendar 
@@ -93,7 +87,9 @@ export default function TutorProfile(
 
           <Divider sx={{ my: 8 }} />
           
-          <TutorProfileReviews tutor={selectedTutor ? selectedTutor : tutorSkeleton} />
+          { selectedTutor &&
+            <TutorProfileReviews tutor={selectedTutor} />
+          }
         </Container>
       </DialogContent>
 
