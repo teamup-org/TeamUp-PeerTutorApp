@@ -14,7 +14,7 @@ const tabLabels = ["Register as Peer Tutor", "Register as Tutee"];
 
 import { 
   Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Paper, InputLabel, MenuItem, Select, SelectChangeEvent,
-  OutlinedInput, InputAdornment, Tabs, Tab, Step, Stepper, StepLabel, FormGroup, Checkbox, FormControlLabel, Alert
+  OutlinedInput, InputAdornment, Tabs, Tab, Step, Stepper, StepLabel, FormGroup, Checkbox, FormControlLabel, Alert, Skeleton
 } from '@mui/material';
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
@@ -486,7 +486,8 @@ export default function Registration() {
     coursePreferences: [],
     eligibleCourses: [],
     locationPreferences: [],
-    activeStatusName: "active"
+    activeStatusName: "active",
+    numberOfRatings: 0
   });
 
   // Button and Update Functions -------------------------------------------------------------
@@ -550,11 +551,12 @@ export default function Registration() {
           phoneNumber: Number(peerTutorFormData.phoneNumber),
           email: session?.user?.email || '',
           majorAbbreviation: peerTutorFormData.major,
-          seniorityName: selected || "Senior",
+          seniorityName: selected,
           coursePreferences: [],
           eligibleCourses: [],
           locationPreferences: [],
-          averageRating: 5
+          averageRating: 5,
+          numberOfRatings: 0
         };
   
         setTutor(newTutor);
@@ -794,38 +796,49 @@ export default function Registration() {
                   }
 
                   // Course Preferences Page
-                  else if (activeStep === 3 && tutorRegistered && tutorRefetched) {
-                    if (!preferencesSet) {
+                  else if (activeStep === 3) {
+                    if (tutorRegistered && tutorRefetched) {
+                      if (!preferencesSet) {
+                        return (
+                          <>
+                          <Stepper activeStep={activeStep} alternativeLabel>
+                            {steps.map((label) => (
+                              <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
+                              </Step>
+                            ))}
+                          </Stepper>
+                          <CoursePreferences  eligibleCourses={eligibleCourses} checkedItems={checkedItems} setCheckedItems={setCheckedItems}/>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
+                            <Button disabled={true} onClick={handleBack}>
+                              Back
+                            </Button>
+                            <Button onClick={handleNext}>Next</Button>
+                          </Box>
+                          </>
+                        );
+                      }
+                    }
+                    else {
                       return (
                         <>
-                        <Stepper activeStep={activeStep} alternativeLabel>
-                          {steps.map((label) => (
-                            <Step key={label}>
-                              <StepLabel>{label}</StepLabel>
-                            </Step>
-                          ))}
-                        </Stepper>
-                        <CoursePreferences  eligibleCourses={eligibleCourses} checkedItems={checkedItems} setCheckedItems={setCheckedItems}/>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
-                          <Button disabled={true} onClick={handleBack}>
-                            Back
-                          </Button>
-                          <Button onClick={handleNext}>Next</Button>
-                        </Box>
+                        <Skeleton animation="wave" variant="rounded" width="100%" height={120}></Skeleton>
                         </>
-                      );
+                      )
                     }
                   }
 
-                  else if (activeStep === 4 && preferencesSet) {
-                    return (
-                    <>
-                    <Typography align="center"> Thank you for Registering as a Peer Tutor! </Typography>
-                    <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
-                      <Typography align="center"> Click Here to See Your Profile! </Typography>
-                    </Button>
-                    </>
-                    );
+                  else if (activeStep === 4) {
+                    if (preferencesSet) {
+                      return (
+                      <>
+                      <Typography align="center"> Thank you for Registering as a Peer Tutor! </Typography>
+                      <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
+                        <Typography align="center"> Click Here to See Your Profile! </Typography>
+                      </Button>
+                      </>
+                      );
+                    }
                   }
                 }
               }
