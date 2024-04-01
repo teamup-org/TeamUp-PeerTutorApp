@@ -316,10 +316,14 @@ function TranscriptUpload(props: any) {
 
   return (
     <div>
-      <form>
-        <input type="file" onChange={handleFileChange}/>
-      </form>
-    </div>
+    <Typography component="h2" variant="h5"> Please upload a pdf of your most current transcript </Typography>
+    <form id="uploadForm">
+      <div >
+        <label>Select Transcript File: </label>
+        <input type="file" accept=".pdf" onChange={handleFileChange} required/>
+      </div>
+    </form>
+  </div>
   );
 }
 
