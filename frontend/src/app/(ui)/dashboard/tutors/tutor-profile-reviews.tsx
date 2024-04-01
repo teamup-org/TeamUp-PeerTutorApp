@@ -1,11 +1,12 @@
 
 import * as React from 'react';
 
-import { Container, Box, Grid, Stack, Typography, Rating, LinearProgress, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent }
+import { Container, Box, Grid, Stack, Typography, Rating, LinearProgress, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Button }
   from '@mui/material';
 
 import Review from './review';
 import { TableFetch } from '@/app/_lib/data';
+import { tutors } from '@/app/_lib/placeholder-data';
 
 
 const sortOptions = [
@@ -22,19 +23,27 @@ const filterOptions = [
   { label: "1 Stars", query: "11" }, 
 ];
 
+const calculateRatingDistribution = (tutor: Tutor) => {
+  var dist = [
+    (tutor.numberOneStarRatings   / tutor.numberOfRatings) * 100,
+    (tutor.numberTwoStarRatings   / tutor.numberOfRatings) * 100,
+    (tutor.numberThreeStarRatings / tutor.numberOfRatings) * 100,
+    (tutor.numberFourStarRatings  / tutor.numberOfRatings) * 100,
+    (tutor.numberFiveStarRatings  / tutor.numberOfRatings) * 100,
+  ];
+  
+  return dist;
+};
 
 export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
   const [sort, setSort] = React.useState(sortOptions[0].query);
   const [filter, setFilter] = React.useState(filterOptions[0].query);
-  const [starWeights, setStarWeights] = React.useState([0, 0, 0, 0, 0]);
+  const [starWeights, setStarWeights] = React.useState<number[]>([]);
+  React.useEffect(() => {
+    setStarWeights(calculateRatingDistribution(tutor));
+  }, [tutor]);
   const [rating, setRating] = React.useState(0.0);
 
-  const review: Review = {
-    appointmentId: 2, numberStars: 4, 
-    reviewText: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Blandit libero volutpat sed cras ornare arcu. Id porta nibh venenatis cras sed felis eget. Sed velit dignissim sodales ut eu sem integer vitae. Etiam sit amet nisl purus in. Elementum pulvinar etiam non quam lacus suspendisse faucibus interdum posuere. Pulvinar neque laoreet suspendisse interdum. Neque ornare aenean euismod elementum. Et ultrices neque ornare aenean euismod elementum nisi quis. Volutpat est velit egestas dui id ornare arcu odio ut. Lectus vestibulum mattis ullamcorper velit sed ullamcorper morbi. Donec et odio pellentesque diam volutpat.
-    In iaculis nunc sed augue lacus. A lacus vestibulum sed arcu non odio euismod lacinia at. Facilisis gravida neque convallis a cras semper. Elit scelerisque mauris pellentesque pulvinar pellentesque habitant morbi. Adipiscing commodo elit at imperdiet dui. Diam ut venenatis tellus in. Ante metus dictum at tempor commodo. Vulputate eu scelerisque felis imperdiet. Egestas pretium aenean pharetra magna ac placerat vestibulum. Nisi lacus sed viverra tellus. Enim blandit volutpat maecenas volutpat blandit aliquam etiam erat velit. Suspendisse sed nisi lacus sed viverra tellus in. Ipsum consequat nisl vel pretium lectus quam. Id interdum velit laoreet id donec ultrices. Sed arcu non odio euismod lacinia at. Risus pretium quam vulputate dignissim. Aenean et tortor at risus. At quis risus sed vulputate odio ut enim blandit volutpat.`, 
-    tuteeEmail: "kylel@gmail.com", tutorEmail: "jon" 
-  };
 
   const mapOptions = (options: {label: string, query: string}[]) => {
     return options.map((option, index) => (
@@ -43,21 +52,18 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
   };
 
   const mapStars = () => {
-    var stars: React.JSX.Element[] = [];
-    
-    for (let i = 5; i > 0; i--) {
-      stars.push(
-        <Stack key={5 - i} direction="row" spacing={1} alignItems="center">
-          <Typography variant="body1" width={50} align="right"> {i} star </Typography>
+    console.log(starWeights);
 
-          <LinearProgress variant="determinate" value={starWeights[i - 1]} sx={{ width: '90%', height: 12, borderRadius: 8 }} />
+    return starWeights.toReversed().map((weight: number, index) => (
+        <Stack key={index} direction="row" spacing={1} alignItems="center">
+          <Typography variant="body1" width={50} align="right"> {5 - index} star </Typography>
 
-          <Typography variant="body1" width={25} align="right"> {starWeights[i - 1]}% </Typography>
+          <LinearProgress variant="determinate" value={weight} sx={{ width: '90%', height: 12, borderRadius: 8 }} />
+
+          <Typography variant="body1" width={25} align="right"> {weight}% </Typography>
         </Stack>
-      );
-    }
-
-    return stars;
+      )
+    );
   };
 
   const handleSortChange = (event: SelectChangeEvent) => {
@@ -70,7 +76,7 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
 
   const { data: reviewData, isLoading: reviewIsLoading, isFetching: reviewIsFetching, refetch: reviewRefetch } = 
     TableFetch<ReviewQuery>("tutor_review", [sort, filter, tutor], 
-      `tutor_email_contains=${tutor.email}`,
+      `tutor_email_contains=${tutor?.email}`,
       `page_number=${1}`,
       `number_entries_per_page=${5}`,
       `number_stars_greater_than_or_equals=${filter[0]}`,
@@ -89,23 +95,29 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
   return (
     <Container maxWidth="xl">
       <Grid container direction="row" spacing={4}>
+
+        {/* Left side of grid */}
         <Grid item xs={12} md={5}>
           <Stack direction="column" spacing={4} position="sticky" top={20}>
+
             <Stack direction="column" spacing={2} borderBottom={1} borderColor="divider" pb={2}>
+
+              {/* Average rating + review distribution row */}
               <Stack direction="row" spacing={4} justifyItems="center">
+                {/* Average rating column */}
                 <Stack direction="column" alignItems="center" justifyItems="center">
-                  <Typography variant="h2"> {tutor.averageRating.toFixed(1)} </Typography>
-
-                  <Rating value={tutor.averageRating} precision={0.5} readOnly />
-
-                  <Typography variant="body1"> ({tutor.numberOfRatings}) </Typography>
+                  <Typography variant="h2"> {tutor?.averageRating ? tutor.averageRating.toFixed(1) : Number(0.0).toFixed(1)} </Typography>
+                  <Rating value={tutor?.averageRating} precision={0.5} readOnly />
+                  <Typography variant="body1"> ({tutor?.numberOfRatings ? tutor.numberOfRatings : 0}) </Typography>
                 </Stack>
 
+                {/* Print review distribution from 1 to 5 stars */}
                 <Stack direction="column" width={500}>
                   { mapStars() }
                 </Stack>
               </Stack>
 
+              {/* Filter row */}
               <Stack direction="row" spacing={2}>
                 <FormControl fullWidth>
                   <InputLabel id="sort-select-label"> Sort By </InputLabel>
@@ -121,21 +133,26 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
                   </Select>
                 </FormControl>
               </Stack>
+
             </Stack>
 
-            <Stack direction="column">
+            {/* Review section */}
+            <Stack direction="column" spacing={1}>
               <Typography variant="h6" fontWeight="bold"> Leave a Review! </Typography>
-
               <Review editable />
             </Stack>
+
           </Stack>
         </Grid>
         
+        
+        {/* Right side of grid */}
         <Grid item md={7}>
           <Stack direction="column" spacing={4}>
             { printReviews() }
           </Stack>
         </Grid>
+
       </Grid>
     </Container>
   );

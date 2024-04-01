@@ -2,7 +2,7 @@
 // author: Brandon Nguyen, Kyle Lang
 
 // Asynchronous state management for backend queries (https://tanstack.com/query/latest/docs/framework/react/overview)
-import { useQuery, useMutation, keepPreviousData } from "@tanstack/react-query";
+import { useQuery, useMutation, keepPreviousData, useQueryClient } from "@tanstack/react-query";
 
 // HTTP client for node.js and the browser (https://axios-http.com/docs/intro)
 import axios from "axios";
@@ -11,7 +11,7 @@ import axios from "axios";
 const development = "http://localhost:8080";            // For use in local development, forwards to a local instance on port 8080, in this case forwarding to Java Sprint Boot
 const deployment = "https://tamutheo.xyz/database_api"; // For use on deployment server, forwards to Spring Boot endpoint 'database-api'
 axios.defaults.baseURL = development;
-
+axios.defaults.headers['Content-Type'] = 'multipart/form-data';
 
 function objectToQueryString(obj: any) {
   return Object.keys(obj)
@@ -39,7 +39,20 @@ export function TablePush(tableName: string) {
     mutationKey: [tableName],
     mutationFn: async (data: any) => {
       const req = `${tableName}`;
-      return (await axios.post(req, data, {
+      return (await axios.post(req, data));
+    },
+    /*onSuccess: (data, variables) => {
+      useQueryClient().setQueryData([tableName, {...variables}], data);
+    },*/
+  });
+}
+
+export function TableUpdate(tableName: string) {
+  return useMutation({
+    mutationKey: [tableName],
+    mutationFn: async (data: any) => {
+      const req = `${tableName}`;
+      return (await axios.put(req, data, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -48,24 +61,13 @@ export function TablePush(tableName: string) {
   });
 }
 
-export function TableUpdate<T>(tableName: string, vars: any[], ...args: string[]) {
-  return {
-    ...useMutation<T>({
-      mutationKey: [tableName, {...vars}],
-      mutationFn: async () => {
-        const req = `/${tableName}?${args.join('&')}`;
-        return (await axios.put(req)).data;
-      },
-    })
-  };
-}
-
 
 // ============== DATABASE TUTOR QUERIES ==============
 // active_status_name_equals
 // average_rating_greater_than_or_equals
 // average_rating_less_than_or_equals
 // bio_text_contains
+// contains
 // email_contains
 // first_name_contains
 // last_name_contains
@@ -79,23 +81,21 @@ export function TableUpdate<T>(tableName: string, vars: any[], ...args: string[]
 // picture_url_contains
 // seniority_name_in
 // sort_by
-          // average_rating_ascending --> equivalent front end label "lowest rating"
-          // average_rating_descending --> equivalent front end label "highest rating"
-          // pay_rate_ascending --> equivalent front end label "lowest pay rate"
-          // pay_rate_descending --> equivalent front end label "highest pay rate"
 
-// tutor_course_preference parameters
-
-// course_grade_in
-// course_number_equals
-// course_number_greater_than_or_equals
-// course_number_less_than_or_equals
-// course_major_abbreviation_contains
-
-// tutor_location_preference parameters
-
+// ---------------------------------tutor_eligible_course parameters
+// eligible_course_grade_in
+// eligible_course_number_equals
+// eligible_course_number_greater_than_or_equals
+// eligible_course_number_less_than_or_equals
+// eligible_course_major_abbreviation_contains
+// ---------------------------------tutor_course_preference parameters
+// course_preference_grade_in
+// course_preference_number_equals
+// course_preference_number_greater_than_or_equals
+// course_preference_number_less_than_or_equals
+// course_preference_major_abbreviation_contains
+// ---------------------------------tutor_location_preference parameters
 // location_name_in
-
 // page_number
 // number_entries_per_page
 
