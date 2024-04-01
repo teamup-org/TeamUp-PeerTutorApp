@@ -25,4 +25,5 @@ public class TutorReviewModel {
     String tuteeLastName;
     String tuteeSeniority;
     String tuteeMajorAbbreviation;
+    String tuteePictureUrl;
 }

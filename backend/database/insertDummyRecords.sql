@@ -49,7 +49,7 @@ VALUES
     ("nathan", "bernard", 'aero', 'freshman', 50.00, "Nice to meet you! I'm Nathan Bernard.", "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/William_G._Johnsson.jpg/640px-William_G._Johnsson.jpg", 7654321098, "nathan@gmail.com", 'active', "Engineering Tutor"),
     ("chloe", "girard", 'cven', 'sophomore', 55.00, "Hey everyone! I'm Chloe Girard.", "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/WGJ_original_editor_shot_copy.jpg/640px-WGJ_original_editor_shot_copy.jpg", 6543210987, "chloe@gmail.com", 'active', "Psychology Tutor"),
     ("louis", "moreau", 'csce', 'junior', 60.00, "Hello world! I'm Louis Moreau.", "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Dr_Prash_Ladva.jpg/640px-Dr_Prash_Ladva.jpg", 5432109876, "louis@gmail.com", 'active', "Business Tutor"),
-    ("lea", "rousseau", 'meen', 'senior', 65.00, "Greetings from Lea Rousseau!", "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Aphrodite_in-person on-campus_Primary_Headshots_%282%29.jpg/640px-Aphrodite_in-person on-campus_Primary_Headshots_%282%29.jpg", 4321098765, "lea@gmail.com", 'active', "Computer Science Tutor"),
+    ("lea", "rousseau", 'meen', 'senior', 65.00, "Greetings from Lea Rousseau!", "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Virginia-Vallejo-by-Hernan-Diaz-in1987.jpg/640px-Virginia-Vallejo-by-Hernan-Diaz-in1987.jpg", 4321098765, "lea@gmail.com", 'active', "Computer Science Tutor"),
     ("hugo", "durand", 'ecen', 'freshman', 70.00, "Hi, I'm Hugo Durand!", "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Kim_Hunter_1950s_autographed_portrait_%28front%29.jpg/640px-Kim_Hunter_1950s_autographed_portrait_%28front%29.jpg", 3210987654, "hugo@gmail.com", 'active', "Biology Tutor"),
     ("manon", "laurent", 'aero', 'sophomore', 75.00, "Nice to meet you! I'm Manon Laurent.", "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/01_RickBrennan-Headshot.jpg/640px-01_RickBrennan-Headshot.jpg", 2109876543, "manon@gmail.com", 'inactive', "Psychology Tutor"),
     ("gabriel", "simon", 'cven', 'junior', 80.00, "Hey there! I'm Gabriel Simon.", "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Pat_Rowley_Headshot_-_Dairy_Australia.jpg/640px-Pat_Rowley_Headshot_-_Dairy_Australia.jpg", 1098765432, "gabriel@gmail.com", 'banned', "Engineering Tutor");
@@ -269,24 +269,24 @@ VALUES
     ("gabriel@gmail.com", 'online');
 
 INSERT INTO tutee
-    (first_name, last_name, major_abbreviation, seniority_name, phone_number, email, active_status_name)
+    (first_name, last_name, major_abbreviation, seniority_name, phone_number, email, active_status_name, picture_url)
 VALUES
-    ('amber', 'awesome', 'csce', 'freshman', 1111111111, 'amber@gmail.com', 'active'),
-    ('bobby', 'bold', 'meen', 'sophomore', 2222222222, 'bobby@gmail.com', 'active'),
-    ('calvin', 'cool', 'ecen', 'junior', 3333333333, 'calvin@gmail.com', 'active'),
-    ('denise', 'dangerous', 'aero', 'senior', 4444444444, 'denise@gmail.com', 'active'),
-    ('edgar', 'excellent', 'cven', 'freshman', 5555555555, 'edgar@gmail.com', 'active'),
-    ('sophia', 'dupont', 'csce', 'freshman', 9876543210, 'sophia@gmail.com', 'active'),
-    ('liam', 'garcia', 'meen', 'sophomore', 8765432109, 'liam@gmail.com', 'active'),
-    ('olivia', 'lopez', 'ecen', 'junior', 7654321098, 'olivia@gmail.com', 'active'),
-    ('noah', 'martinez', 'aero', 'senior', 6543210987, 'noah@gmail.com', 'active'),
-    ('ava', 'hernandez', 'cven', 'freshman', 5432109876, 'ava@gmail.com', 'active'),
-    ('william', 'young', 'csce', 'freshman', 4321098765, 'william@gmail.com', 'active'),
-    ('isabella', 'lee', 'meen', 'sophomore', 3210987654, 'isabella@gmail.com', 'active'),
-    ('james', 'nguyen', 'ecen', 'junior', 2109876543, 'james@gmail.com', 'active'),
-    ('emma', 'kim', 'aero', 'senior', 1098765432, 'emma@gmail.com', 'inactive'),
-    ('benjamin', 'patel', 'cven', 'freshman', 8901234567, 'benjamin@gmail.com', 'banned'),
-    ('kyle', 'lang', 'csce', 'senior', 3256276760, 'lang.kyl24@tamu.edu', 'active');
+    ('amber', 'awesome', 'csce', 'freshman', 1111111111, 'amber@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Branden_Loera_Headshot.jpg"),
+    ('bobby', 'bold', 'meen', 'sophomore', 2222222222, 'bobby@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Alan_Bates_vintage_headshot_from_%22The_Entertainer%22_(1960).jpg"),
+    ('calvin', 'cool', 'ecen', 'junior', 3333333333, 'calvin@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Leah%2BElson%2BHeadshot%2B2022%2B(2).jpg"),
+    ('denise', 'dangerous', 'aero', 'senior', 4444444444, 'denise@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Actors_Headshot_by_Headshot_London_Photography.jpg"),
+    ('edgar', 'excellent', 'cven', 'freshman', 5555555555, 'edgar@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Miriam_Rodr%C3%ADguez_Headshot.jpg"),
+    ('sophia', 'dupont', 'csce', 'freshman', 9876543210, 'sophia@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Jen_schultz_headshot_2_FOR_WEB_(2)."),
+    ('liam', 'garcia', 'meen', 'sophomore', 8765432109, 'liam@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Sir_Ian_Bauckham_-_UK_Government_headshot,_2022.png"),
+    ('olivia', 'lopez', 'ecen', 'junior', 7654321098, 'olivia@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Rhonda_Saunders_photo.jpg"),
+    ('noah', 'martinez', 'aero', 'senior', 6543210987, 'noah@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Louis_E._Deveau.jpg"),
+    ('ava', 'hernandez', 'cven', 'freshman', 5432109876, 'ava@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Jocelyn_Miyara_headshot.jpg"),
+    ('william', 'young', 'csce', 'freshman', 4321098765, 'william@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Amanda_Candido.jpg"),
+    ('isabella', 'lee', 'meen', 'sophomore', 3210987654, 'isabella@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:David_Graziano_Headshot.jpg"),
+    ('james', 'nguyen', 'ecen', 'junior', 2109876543, 'james@gmail.com', 'active', "https://commons.wikimedia.org/wiki/File:Headshot_AAlikhan.jpg"),
+    ('emma', 'kim', 'aero', 'senior', 1098765432, 'emma@gmail.com', 'inactive', "https://commons.wikimedia.org/wiki/File:Zachariah_Fincher_Headshot.jpg"),
+    ('benjamin', 'patel', 'cven', 'freshman', 8901234567, 'benjamin@gmail.com', 'banned', "https://commons.wikimedia.org/wiki/File:Best_Headshot_2024.jpg"),
+    ('kyle', 'lang', 'csce', 'senior', 3256276760, 'lang.kyl24@tamu.edu', 'active', "https://commons.wikimedia.org/wiki/File:Headshot_Renaud_Laplanche.jpg");
 
 INSERT INTO appointment_size
     (appointment_size_name)

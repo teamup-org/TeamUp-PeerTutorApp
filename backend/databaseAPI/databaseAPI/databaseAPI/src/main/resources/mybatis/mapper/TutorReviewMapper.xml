@@ -12,6 +12,7 @@
         <result property="tuteeLastName" column="tutee_last_name"/>
         <result property="tuteeSeniority" column="tutee_seniority"/>
         <result property="tuteeMajorAbbreviation" column="tutee_major_abbreviation"/>
+        <result property="tuteePictureUrl" column="tutee_picture_url" />
     </resultMap>
 
     <resultMap id="AppointmentResultMap" type="xyz.tamutheo.databaseAPI.appointment.AppointmentModel">
@@ -50,7 +51,8 @@
             t.first_name AS tutee_first_name,
             t.last_name AS tutee_last_name,
             t.seniority_name AS tutee_seniority,
-            t.major_abbreviation AS tutee_major_abbreviation
+            t.major_abbreviation AS tutee_major_abbreviation,
+            t.picture_url AS tutee_picture_url
         FROM tutor_review AS r
         JOIN tutee AS t ON r.tutee_email = t.email
         <where>
