@@ -75,9 +75,7 @@ declare global {
     seniorityName: string
   }
 
-  type TuteeQuery = {
-    data: Tutee[]
-  }
+  type TuteeQuery = Tutee[];
 
   // REST API: /major
   type Major = {
