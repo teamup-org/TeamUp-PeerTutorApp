@@ -317,24 +317,24 @@ VALUES
 
 
 INSERT INTO tutor_review
-    (appointment_id, tutee_email, tutor_email, number_stars, review_text)
+    (appointment_id, tutee_email, tutor_email, number_stars, review_text, review_date)
 VALUES
-    (1, 'amber@gmail.com', 'john@gmail.com', 1, "very bad"),
-    (2, 'bobby@gmail.com', 'maria@gmail.com', 2, "somewhat bad"),
-    (3, 'calvin@gmail.com', 'james@gmail.com', 3, "okay"),
-    (4, 'denise@gmail.com', 'david@gmail.com', 4, "somewhat okay"),
-    (5, 'edgar@gmail.com', 'mary@gmail.com', 5, "very good"),
-    (6, 'sophia@gmail.com', 'sophie@gmail.com', 4, "Great tutor, highly recommend!"),
-    (7, 'liam@gmail.com', 'lucas@gmail.com', 5, "Excellent session, very informative."),
-    (8, 'olivia@gmail.com', 'emma@gmail.com', 3, "Good tutor, helpful explanations."),
-    (9, 'noah@gmail.com', 'nathan@gmail.com', 2, "Average tutoring, could improve."),
-    (10, 'ava@gmail.com', 'chloe@gmail.com', 5, "Fantastic tutor, exceeded expectations."),
-    (11, 'william@gmail.com', 'louis@gmail.com', 4, "Really helpful, clarified difficult concepts."),
-    (12, 'isabella@gmail.com', 'lea@gmail.com', 1, "Poor tutoring, not recommended."),
-    (13, 'james@gmail.com', 'hugo@gmail.com', 3, "Decent tutor, could be more engaging."),
-    (14, 'emma@gmail.com', 'manon@gmail.com', 5, "Outstanding tutor, best experience!"),
-    (15, 'emma@gmail.com', 'gabriel@gmail.com', 1, "Horrible!"),
-    (16, 'benjamin@gmail.com', 'gabriel@gmail.com', 4, "Very satisfied, would book again.");
+    (1, 'amber@gmail.com', 'john@gmail.com', 1, "very bad", "2024-03-01"),
+    (2, 'bobby@gmail.com', 'maria@gmail.com', 2, "somewhat bad", "2024-03-02"),
+    (3, 'calvin@gmail.com', 'james@gmail.com', 3, "okay", "2024-03-03"),
+    (4, 'denise@gmail.com', 'david@gmail.com', 4, "somewhat okay", "2024-03-04"),
+    (5, 'edgar@gmail.com', 'mary@gmail.com', 5, "very good", "2024-03-05"),
+    (6, 'sophia@gmail.com', 'sophie@gmail.com', 4, "Great tutor, highly recommend!", "2024-03-02"),
+    (7, 'liam@gmail.com', 'lucas@gmail.com', 5, "Excellent session, very informative.", "2024-03-03"),
+    (8, 'olivia@gmail.com', 'emma@gmail.com', 3, "Good tutor, helpful explanations.", "2024-03-04"),
+    (9, 'noah@gmail.com', 'nathan@gmail.com', 2, "Average tutoring, could improve.", "2024-03-05"),
+    (10, 'ava@gmail.com', 'chloe@gmail.com', 5, "Fantastic tutor, exceeded expectations.", "2024-03-06"),
+    (11, 'william@gmail.com', 'louis@gmail.com', 4, "Really helpful, clarified difficult concepts.", "2024-03-07"),
+    (12, 'isabella@gmail.com', 'lea@gmail.com', 1, "Poor tutoring, not recommended.", "2024-03-08"),
+    (13, 'james@gmail.com', 'hugo@gmail.com', 3, "Decent tutor, could be more engaging.", "2024-03-09"),
+    (14, 'emma@gmail.com', 'manon@gmail.com', 5, "Outstanding tutor, best experience!", "2024-03-10"),
+    (15, 'emma@gmail.com', 'gabriel@gmail.com', 1, "Horrible!", "2024-03-11"),
+    (16, 'benjamin@gmail.com', 'gabriel@gmail.com', 4, "Very satisfied, would book again.", "2024-03-12");
 
 
     
