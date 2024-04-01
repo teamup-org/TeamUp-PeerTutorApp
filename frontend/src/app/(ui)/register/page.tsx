@@ -296,7 +296,6 @@ function TuteeForm(props: any) {
   );
 }
 
-<<<<<<< HEAD
 function TranscriptUpload(props: any) {
   const { setTranscript } = props;
   
@@ -369,7 +368,6 @@ function CoursePreferences(props: any) {
       // Access the first file in the files array
       const file = files[0];
       setTranscript(file);
-      formData.append('transcript', file);
     } else {
       console.log("No file selected");
     }
@@ -398,13 +396,47 @@ function CoursePreferences(props: any) {
 
 }
 
+function CoursePreferences(props: any) {
+
+  const { eligibleCourses } = props;
+  const { checkedItems, setCheckedItems} = props;
+
+
+  const handleCheckboxChange = (index: number) => {
+    setCheckedItems({
+      ...checkedItems,
+      [index]: !checkedItems[index]
+    });
+  };
+
+  return (
+    <div>
+      <Typography> Select the courses you want to Peer Tutor For! </Typography>
+      <FormGroup>
+        {eligibleCourses.map((item: Course, index: any) => (
+          <FormControlLabel
+            key={index}
+            control={
+              <Checkbox
+                checked={checkedItems[index] || false}
+                onChange={() => handleCheckboxChange(index)}
+              />
+            }
+            label={`${item.majorAbbreviation} ${item.courseNumber} - ${item.courseGrade}`}
+          />
+        ))}
+      </FormGroup>
+    </div>
+  )
+
+}
+
 export default function Registration() {
 
   // Variable Initializing ------------------------------------------------------------------------
 
   const [tutorRegistered, setTutorRegistered] = useState(false);   // This will be set to true when registration is submitted
   const [tuteeRegistered, setTuteeRegistered] = useState(false);   // This will be set to true when registration is submitted
-<<<<<<< HEAD
   const [preferencesSet, setPreferencesSet] = useState(false);
   const [tutorRefetched, setTutorRefetched] = useState(false);
   const [transcript, setTranscript] = useState(null);
@@ -462,23 +494,23 @@ export default function Registration() {
     setTab(newValue);
   };
 
-  const ocrAPI = async () => {
-    formData.append("email_old", 'wells.t.2024@tamu.edu');
+  // const ocrAPI = async () => {
+  //   formData.append("email_old", 'wells.t.2024@tamu.edu');
 
-    axios({
-      method: "put",
-      url: "/tutor?email_old=wells.t.2024@tamu.edu&first_name_new=Trey"
-    })
-    .then(function (response) {
-      //handle success
-      console.log(response);
-    })
-    .catch(function (response) {
-      //handle error
-      console.log(response);
-    });
+  //   axios({
+  //     method: "put",
+  //     url: "/tutor?email_old=wells.t.2024@tamu.edu&first_name_new=Trey"
+  //   })
+  //   .then(function (response) {
+  //     //handle success
+  //     console.log(response);
+  //   })
+  //   .catch(function (response) {
+  //     //handle error
+  //     console.log(response);
+  //   });
 
-  }
+  // }
 
   const handleNext = () => {
   
@@ -523,6 +555,12 @@ export default function Registration() {
   
         setTutor(newTutor);
   
+      }
+      else if (activeStep === 2) {
+
+        const newVariables = eligibleCourses?.filter((_: any, index: any) => checkedItems[index]);
+        setCoursePreferences(newVariables);
+
       }
     }
     
@@ -657,7 +695,6 @@ export default function Registration() {
             </Typography>
           </Box>
 
-<<<<<<< HEAD
           {(() => {
 
             // Tutor Registration Form
