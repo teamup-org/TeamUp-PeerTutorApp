@@ -369,7 +369,7 @@ function CoursePreferences(props: any) {
   };
 
   return (
-    <div>
+    <div style={{ maxHeight: '75vh', overflowY: 'scroll' }}>
       <Typography> Select the courses you want to Peer Tutor For! </Typography>
       <FormGroup>
         {eligibleCourses.map((item: Course, index: any) => (
@@ -604,9 +604,9 @@ export default function Registration() {
     <header>
       <ResponsiveAppBar settings={settings} links={links} />
     </header>
-    <Container component="main" maxWidth="sm">
+    <Container component="main" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '5vh'}}>
       <CssBaseline />
-      <Paper elevation={4}>
+      <Paper elevation={4} style={{ width: '80%' }}>
         <Box
           sx={{
             padding: 4,
