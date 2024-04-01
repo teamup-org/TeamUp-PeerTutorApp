@@ -152,6 +152,7 @@ CREATE TABLE appointment (
 CREATE TABLE tutor_review (
 	appointment_id INTEGER NOT NULL,
 	review_text VARCHAR(1000),
+    review_date DATE DEFAULT (CURDATE()),
 	tutor_email VARCHAR(30) NOT NULL,
     number_stars INTEGER NOT NULL,
     tutee_email VARCHAR(30) NOT NULL,
