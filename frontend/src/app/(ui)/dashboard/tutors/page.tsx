@@ -17,9 +17,6 @@ from '@/app/_lib/data';
 
 const tutorsPerPageOptions = [ 5, 10, 15 ];
 
-const tutorSkeleton: Tutor = { activeStatusName: "active", averageRating: 0, bioText: "", coursePreferences: [], email: "", firstName: "", lastName: "", 
-  listingTitle: "", locationPreferences: [], majorAbbreviation: "", numberOfRatings: 0, payRate: 0, phoneNumber: 0, pictureUrl: "", seniorityName: "Freshman" };
-
 
 export default function TutorPage() {
   const [search, setSearch] = React.useState<string>("");
@@ -45,10 +42,10 @@ export default function TutorPage() {
   const { data: tutorData, isLoading: tutorIsLoading, isFetching: tutorIsFetching, refetch: tutorRefetch } = 
   TableFetch<TutorQuery>("tutor", [tutorsPerPage, page, sort, major, course, seniority], `number_entries_per_page=${tutorsPerPage}`, `page_number=${page}`, 
     `sort_by=${sort}`,
-    `pay_rate_greater_than_or_equals=${rate[0]}`, 
+    `pay_rate_greater_than_or_equals=${rate[0]}`,
     `pay_rate_less_than_or_equals=${rate[1]}`,
-    `course_major_abbreviation_contains=${major ? major : ""}`,
-    `course_number_equals=${course ? course : ""}`,
+    `course_preference_major_abbreviation_contains=${major ? major : ""}`,
+    `course_preference_number_equals=${course ? course : ""}`,
     `contains=${search}`,
   );
   
@@ -93,8 +90,10 @@ export default function TutorPage() {
             />
           </Grid>
 
-          <TutorProfile tutorState={[selectedTutor, setSelectedTutor]} />
-
+          { selectedTutor &&
+            <TutorProfile tutorState={[selectedTutor, setSelectedTutor]} />
+          }
+            
           <Grid item xs={12} md={8}>
             <Stack direction="column" spacing={2}>
               { printTutors() }

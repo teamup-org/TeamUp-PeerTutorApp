@@ -43,7 +43,14 @@ declare global {
     listingTitle: string,
     bioText: string,
     averageRating: number,
+
     numberOfRatings: number,
+    numberOneStarRatings: number,
+    numberTwoStarRatings: number,
+    numberThreeStarRatings: number,
+    numberFourStarRatings: number,
+    numberFiveStarRatings: number,
+
     coursePreferences: { 
       courseGrade: string, 
       courseNumber: number, 
@@ -126,11 +133,20 @@ declare global {
 
   // 
   type Review = {
-    appointmentId: number,
-    numberStars: number,
+    appointmentId: number | null,
+    numberStars: number | null,
     reviewText: string,
+    reviewDateString: string,
+
+    tuteePictureUrl: string,
     tuteeEmail: string,
+    tuteeFirstName: string,
+    tuteeLastName: string,
+    tuteeSeniority: string,
+    tuteeMajorAbbreviation: string,
+
     tutorEmail: string,
+
   };
 
   // REST API: /tutor_review
