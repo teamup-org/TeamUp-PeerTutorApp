@@ -54,9 +54,7 @@ declare global {
     seniorityName: string
   }
 
-  type TuteeQuery = {
-    data: Tutee[]
-  }
+  type TuteeQuery = Tutee[];
 
   type Major = {
     majorAbbreviation: string,

@@ -14,7 +14,7 @@ const tabLabels = ["Register as Peer Tutor", "Register as Tutee"];
 
 import { 
   Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Paper, InputLabel, MenuItem, Select, SelectChangeEvent,
-  OutlinedInput, InputAdornment, Tabs, Tab, Step, Stepper, StepLabel, FormGroup, Checkbox, FormControlLabel
+  OutlinedInput, InputAdornment, Tabs, Tab, Step, Stepper, StepLabel, FormGroup, Checkbox, FormControlLabel, Alert
 } from '@mui/material';
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
@@ -25,11 +25,12 @@ import { useSession } from 'next-auth/react';
 
 
 import axios from 'axios';
+import { truncate } from 'fs/promises';
 const development = "http://localhost:8080";
 const deployment = "https://tamutheo.xyz/database_api";
 axios.defaults.baseURL = development;
 
-const steps = ['General Info', 'Transcript', 'Course Preferences','Finalize'];
+const steps = ['General Info', 'Transcript', 'Submit Registration','Course Preferences'];
 
 var selected: string;
 
@@ -188,7 +189,7 @@ function TuteeForm(props: any) {
   
   const [seniority, setSeniority] = React.useState('');
 
-  const { tuteeIsRegistered, setTuteeIsRegistered } = props;
+  const { setTuteeRegistered } = props;
   
   const changeSeniority = (event: SelectChangeEvent) => {
     setSeniority(event.target.value as string);
@@ -216,7 +217,7 @@ function TuteeForm(props: any) {
     
     mutate(registrationData);
 
-    setTuteeIsRegistered(true);
+    setTuteeRegistered(true);
 
   };
 
@@ -295,8 +296,12 @@ function TuteeForm(props: any) {
   );
 }
 
-function DynamicTextFieldForm(props: any) {
+function TranscriptUpload(props: any) {
   const { setTranscript } = props;
+  
+  useEffect(() => {
+    setTranscript(null);  
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -316,6 +321,28 @@ function DynamicTextFieldForm(props: any) {
       </form>
     </div>
   );
+}
+
+function TutorCardPage(props: any) {
+
+  const { tutor } = props;
+
+  return (
+    <Grid container rowSpacing={3}>
+    <Grid item xs={12}> <Typography align="center"> Here is your Tutor Card!! </Typography> </Grid>
+    <Grid item xs={12}> <TutorCard tutor={tutor} /> </Grid>
+    <Grid item xs={12}> 
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+      </Box>
+    </Grid>
+  </Grid>
+  );
+
+
 }
 
 function CoursePreferences(props: any) {
@@ -360,6 +387,7 @@ export default function Registration() {
   const [tutorRegistered, setTutorRegistered] = useState(false);   // This will be set to true when registration is submitted
   const [tuteeRegistered, setTuteeRegistered] = useState(false);   // This will be set to true when registration is submitted
   const [preferencesSet, setPreferencesSet] = useState(false);
+  const [tutorRefetched, setTutorRefetched] = useState(false);
   const [transcript, setTranscript] = useState(null);
   const [coursePreferences, setCoursePreferences] = useState<Course[]>();
   const [eligibleCourses, setEligibleCourses] = useState<Course[]  | undefined>(undefined);
@@ -409,28 +437,6 @@ export default function Registration() {
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
   };
-  
-  const handleTutor = () => {
-    TutorCreation();
-  }
-
-  // const ocrAPI = async () => {
-  //   formData.append("email_old", 'wells.t.2024@tamu.edu');
-
-  //   axios({
-  //     method: "put",
-  //     url: "/tutor?email_old=wells.t.2024@tamu.edu&first_name_new=Trey"
-  //   })
-  //   .then(function (response) {
-  //     //handle success
-  //     console.log(response);
-  //   })
-  //   .catch(function (response) {
-  //     //handle error
-  //     console.log(response);
-  //   });
-
-  // }
 
   const handleNext = () => {
   
@@ -446,6 +452,11 @@ export default function Registration() {
         }
       }
       else if (activeStep === 1) {
+
+        if (!transcript) {
+          alert("Please upload a transcript before proceeding");
+          return;
+        }
   
         const newTutor: Tutor = {
           activeStatusName: 'Active',
@@ -471,6 +482,11 @@ export default function Registration() {
       }
       else if (activeStep === 2) {
 
+        TutorCreation();
+
+      }
+      else if (activeStep === 3) {
+
         const newVariables = eligibleCourses?.filter((_: any, index: any) => checkedItems[index]);
         setCoursePreferences(newVariables);
 
@@ -483,7 +499,7 @@ export default function Registration() {
   // Checks to see if account is already registered --------------------------------------------------------------
 
   const {data: tutorResult, isSuccess: tutorFinished, refetch: tutorRefetch } = TableFetch<TutorQuery>("tutor", [], `email_contains=${session?.user?.email}`);
-  const {data: tuteeResult} = TableFetch<TuteeQuery>("tutee", [], `email_contains=${session?.user?.email}`);
+  const {data: tuteeResult, isSuccess: tuteeFinished, refetch: tuteeRefetch } = TableFetch<TuteeQuery>("tutee", [], `email_contains=${session?.user?.email}`);
 
   // Operations for database insertions ---------------------------------------------------------------------------
 
@@ -492,8 +508,21 @@ export default function Registration() {
 
   useEffect(() => {
 
+    if (!tutorRegistered) {
+      tutorRefetch();
+    }
+
+    if (!tuteeRegistered) {
+      tuteeRefetch();
+    }
+
+  }, [session?.user?.email]);
+
+  useEffect(() => {
+
     if (tutorMutation.isSuccess) {
       console.log("transcript added");
+      setTutorRegistered(true);
       tutorRefetch();
     }
 
@@ -501,12 +530,10 @@ export default function Registration() {
 
   useEffect(() => {
 
-    if (tutorMutation.isSuccess && tutorResult) {
+    if (tutorRegistered && tutorResult) {
 
       const courses = tutorResult['data'][0]['eligibleCourses'];
-
       setEligibleCourses(courses);
-      setTutorRegistered(true);
     }
 
   }, [tutorResult]);
@@ -517,6 +544,12 @@ export default function Registration() {
       UpdateTutorPreferences();
     }
   }, [coursePreferences])
+
+  useEffect(() => {
+    if (eligibleCourses) {
+      setTutorRefetched(true);
+    }
+  }, [eligibleCourses])
 
   async function TutorCreation() {
 
@@ -591,81 +624,169 @@ export default function Registration() {
             </Typography>
           </Box>
 
-          {tab === 0 && (tutorResult?.data.length === 0) && !(tutorRegistered) && (
-            <>
-              <Stepper activeStep={activeStep} alternativeLabel>
-                {steps.map((label) => (
-                  <Step key={label}>
-                    <StepLabel>{label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
-              {activeStep === 0 && <PeerTutorForm formData={peerTutorFormData} setFormData={setPeerTutorFormData} />}
-              {activeStep === 1 && <DynamicTextFieldForm setTranscript={setTranscript} />}
-              {activeStep === 2 && (
-                <Grid container rowSpacing={3}>
-                  <Grid item xs={12}> <Typography align="center"> Here is your Tutor Card!! </Typography> </Grid>
-                  <Grid item xs={12}> <TutorCard tutor={tutor} /> </Grid>
-                  <Grid item xs={12}> 
-                    <Box
-                      display="flex"
-                      justifyContent="center"
-                      alignItems="center"
-                    >
-                      <Button color="secondary" onClick={handleTutor}>Register as Peer Tutor!</Button> 
-                    </Box>
-                  </Grid>
-                </Grid>
-              )}
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
-                <Button disabled={activeStep === 0} onClick={handleBack}>
-                  Back
-                </Button>
-                <Button disabled={activeStep === 2} onClick={handleNext}>Next</Button>
-              </Box>
-            </>
-          )}
-          {tab === 0 && tutorRegistered && !preferencesSet &&  (
-            <>
-              <CoursePreferences  eligibleCourses={eligibleCourses} checkedItems={checkedItems} setCheckedItems={setCheckedItems}/>
-              <Button onClick={handleNext}>Next</Button>
-            </>
-          )}
-          {tab === 0 && tutorRegistered && preferencesSet &&  (
-            <>
-              <Typography align="center"> Thank you for Registering as a Peer Tutor! </Typography>
-              <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
-                <Typography align="center"> Click Here to See Your Profile! </Typography>
-              </Button>
-            </>
-          )}
-          {tab === 0 && (tutorResult?.data.length !== 0) && !tutorRegistered && (
-            <>
-              <Typography align="center"> You have already registered as a Peer Tutor! </Typography>
-              <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
-                <Typography align="center"> Click Here to Update Profile </Typography>
-              </Button>
-            </>
-          )}
-          {tab === 1  && (tuteeResult?.data.length === 0) && !tuteeRegistered && (
-            <TuteeForm tuteeIsRegistered={tuteeRegistered} setTuteeIsRegistered={setTuteeRegistered}/>)
-          }
-          {tab === 1  && (tuteeResult?.data.length === 0) && tuteeRegistered && (
-            <>
-            <Typography align="center"> Thank you for Registering as a Tutee! </Typography>
-            <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
-              <Typography align="center"> Click Here to See Your Profile! </Typography>
-            </Button>
-          </>
-          )}
-          {tab === 1  && (tuteeResult?.data.length !== 0) && (
-            <>
-              <Typography align="center"> You have already registered as a Tutee! </Typography>
-              <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
-                <Typography align="center"> Click Here to Update Profile </Typography>
-              </Button>
-            </>
-          )}
+          {(() => {
+
+            // Tutor Registration Form
+            if (tab === 0) {
+
+              if (tutorFinished) {
+
+                // Already registered as Peer Tutor
+                if (tutorResult?.data && tutorResult?.data.length !== 0 && !tutorRegistered) {
+                  return (
+                    <>
+                      <Typography align="center"> You have already registered as a Peer Tutor! </Typography>
+                      <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
+                        <Typography align="center"> Click Here to Update Profile </Typography>
+                      </Button>
+                    </>
+                  );
+
+                }
+                // Not registered as Peer Tutor Yet
+                else {
+
+                  // General Info Tab
+                  if (activeStep === 0) {
+                    return (
+                      <>
+                      <Stepper activeStep={activeStep} alternativeLabel>
+                        {steps.map((label) => (
+                          <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                          </Step>
+                        ))}
+                      </Stepper>
+                      <PeerTutorForm formData={peerTutorFormData} setFormData={setPeerTutorFormData} />
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
+                        <Button disabled={true} onClick={handleBack}>
+                          Back
+                        </Button>
+                        <Button onClick={handleNext}>Next</Button>
+                      </Box>
+                      </>
+                    );
+                  }
+
+                  // Transcript Page
+                  else if (activeStep === 1) {
+                    return (
+                      <>
+                      <Stepper activeStep={activeStep} alternativeLabel>
+                        {steps.map((label) => (
+                          <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                          </Step>
+                        ))}
+                      </Stepper>
+                      <TranscriptUpload setTranscript={setTranscript} />
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
+                        <Button onClick={handleBack}>
+                          Back
+                        </Button>
+                        <Button onClick={handleNext}>Next</Button>
+                      </Box>
+                      </>
+                    );
+                  }
+
+                  // Tutor Card Page
+                  else if (activeStep === 2) {
+                    return (
+                      <>
+                      <Stepper activeStep={activeStep} alternativeLabel>
+                        {steps.map((label) => (
+                          <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                          </Step>
+                        ))}
+                      </Stepper>
+                      <TutorCardPage tutor={tutor} />
+                      <Button color="secondary" onClick={handleNext}>Register as Peer Tutor!</Button> 
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
+                        <Button onClick={handleBack}>
+                          Back
+                        </Button>
+                        <Button disabled={true} onClick={handleNext}>Next</Button>
+                      </Box>
+                      </>
+                    );
+                  }
+
+                  // Course Preferences Page
+                  else if (activeStep === 3 && tutorRegistered && tutorRefetched) {
+                    if (!preferencesSet) {
+                      return (
+                        <>
+                        <Stepper activeStep={activeStep} alternativeLabel>
+                          {steps.map((label) => (
+                            <Step key={label}>
+                              <StepLabel>{label}</StepLabel>
+                            </Step>
+                          ))}
+                        </Stepper>
+                        <CoursePreferences  eligibleCourses={eligibleCourses} checkedItems={checkedItems} setCheckedItems={setCheckedItems}/>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
+                          <Button disabled={true} onClick={handleBack}>
+                            Back
+                          </Button>
+                          <Button onClick={handleNext}>Next</Button>
+                        </Box>
+                        </>
+                      );
+                    }
+                  }
+
+                  else if (activeStep === 4 && preferencesSet) {
+                    return (
+                    <>
+                    <Typography align="center"> Thank you for Registering as a Peer Tutor! </Typography>
+                    <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
+                      <Typography align="center"> Click Here to See Your Profile! </Typography>
+                    </Button>
+                    </>
+                    );
+                  }
+                }
+              }
+            }
+            // Tutee Registtration Form
+            else if (tab === 1) {
+
+              if (tuteeFinished) {
+                if (tuteeResult && tuteeResult?.length !== 0 && !tuteeRegistered) {
+                  return (
+                    <>
+                      <Typography align="center"> You have already registered as a Tutee! </Typography>
+                      <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
+                        <Typography align="center"> Click Here to Update Profile </Typography>
+                      </Button>
+                    </>
+                  );
+                }
+                else if (tuteeResult && tuteeResult?.length === 0 && !tuteeRegistered) {
+                  return (
+                    <>
+                      <TuteeForm tuteeRegistered={tuteeRegistered} setTuteeRegistered={setTuteeRegistered}/>
+                    </>
+                  )
+                }
+
+                else if (tuteeResult && tuteeResult?.length === 0 && tuteeRegistered) {
+                  return (
+                    <>
+                    <Typography align="center"> Thank you for Registering as a Tutee! </Typography>
+                    <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
+                      <Typography align="center"> Click Here to See Your Profile! </Typography>
+                    </Button>
+                    </>
+                  )
+                }
+              }
+            }
+
+
+          })()}
 
         </Box>
       </Paper>
