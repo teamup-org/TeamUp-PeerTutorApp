@@ -7,6 +7,7 @@ import org.springframework.web.server.ResponseStatusException;
 import xyz.tamutheo.databaseAPI.appointment.AppointmentModel;
 import xyz.tamutheo.databaseAPI.util.paginationContainer.PaginationContainerModel;
 
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,9 @@ public class TutorReviewService {
                 tutorEmailContains,
                 limit,
                 offset);
+        for (TutorReviewModel tutorReviewModel : tutorReviewModelList) {
+            tutorReviewModel.setReviewDateString(tutorReviewModel.getReviewDateValue().format(DateTimeFormatter.ISO_LOCAL_DATE));
+        }
         Integer totalNumberEntries = this.tutorReviewMapper.getTotalNumberEntries(appointmentIdEquals,
                 numberStarsGreaterThanOrEquals,
                 numberStarsLessThanOrEquals,

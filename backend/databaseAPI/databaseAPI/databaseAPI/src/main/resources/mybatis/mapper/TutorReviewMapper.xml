@@ -5,8 +5,13 @@
         <result property="appointmentId" column="appointment_id"/>
         <result property="numberStars" column="number_stars"/>
         <result property="reviewText" column="review_text"/>
+        <result property="reviewDateValue" column="review_date"/>
         <result property="tuteeEmail" column="tutee_email"/>
         <result property="tutorEmail" column="tutor_email"/>
+        <result property="tuteeFirstName" column="tutee_first_name"/>
+        <result property="tuteeLastName" column="tutee_last_name"/>
+        <result property="tuteeSeniority" column="tutee_seniority"/>
+        <result property="tuteeMajorAbbreviation" column="tutee_major_abbreviation"/>
     </resultMap>
 
     <resultMap id="AppointmentResultMap" type="xyz.tamutheo.databaseAPI.appointment.AppointmentModel">
@@ -36,29 +41,39 @@
     </insert>
     <select id="read" resultMap="TutorReviewResultMap">
         SELECT
-        *
-        FROM tutor_review
+            r.appointment_id,
+            r.review_text,
+            r.review_date,
+            r.tutor_email,
+            r.number_stars,
+            r.tutee_email,
+            t.first_name AS tutee_first_name,
+            t.last_name AS tutee_last_name,
+            t.seniority_name AS tutee_seniority,
+            t.major_abbreviation AS tutee_major_abbreviation
+        FROM tutor_review AS r
+        JOIN tutee AS t ON r.tutee_email = t.email
         <where>
             <if test="appointmentIdEquals != null">
-                AND appointment_id = #{appointmentIdEquals}
+                AND r.appointment_id = #{appointmentIdEquals}
             </if>
             <if test="numberStarsGreaterThanOrEquals != null">
-                AND number_stars &gt;= #{numberStarsGreaterThanOrEquals}
+                AND r.number_stars &gt;= #{numberStarsGreaterThanOrEquals}
             </if>
             <if test="numberStarsLessThanOrEquals != null">
-                AND number_stars &lt;= #{numberStarsLessThanOrEquals}
+                AND r.number_stars &lt;= #{numberStarsLessThanOrEquals}
             </if>
             <if test="reviewTextContains != null">
                 <bind name="reviewTextContainsPattern" value = "'%' + reviewTextContains + '%'" />
-                AND LOWER(review_text) LIKE LOWER(#{reviewTextContainsPattern})
+                AND LOWER(r.review_text) LIKE LOWER(#{reviewTextContainsPattern})
             </if>
             <if test="tuteeEmailContains != null">
                 <bind name="tuteeEmailContainsPattern" value = "'%' + tuteeEmailContains + '%'" />
-                AND LOWER(tutee_email) LIKE LOWER(#{tuteeEmailContainsPattern})
+                AND LOWER(r.tutee_email) LIKE LOWER(#{tuteeEmailContainsPattern})
             </if>
             <if test="tutorEmailContains != null">
                 <bind name="tutorEmailContainsPattern" value = "'%' + tutorEmailContains + '%'" />
-                AND LOWER(tutor_email) LIKE LOWER(#{tutorEmailContainsPattern})
+                AND LOWER(r.tutor_email) LIKE LOWER(#{tutorEmailContainsPattern})
             </if>
         </where>
         <if test="limit != null">
