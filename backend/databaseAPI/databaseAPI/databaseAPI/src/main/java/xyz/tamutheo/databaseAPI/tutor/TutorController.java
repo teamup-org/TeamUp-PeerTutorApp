@@ -141,7 +141,8 @@ public class TutorController {
                 pageNumber,
                 numberEntriesPerPage);
     }
-    @PutMapping(value = {"", "/"})
+//    @PutMapping(value = {"", "/"})
+    @PostMapping(value = {"/temp"})
     public void update(@RequestParam(name = "email_old") String emailOld,
                        @RequestParam(name = "active_status_name_new", required = false) String activeStatusNameNew,
                        @RequestParam(name = "bio_text_new", required = false) String bioTextNew,
