@@ -120,4 +120,23 @@ public class AppointmentTests {
 
         verify(appointmentService).create(any(AppointmentModel.class));
     }
+
+    // Test for class schedule to block out unavailable appointment times
+    @Test
+    public void testClassScheduleBlocksUnavailableTimes() throws Exception {
+        doThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Appointment conflicts with class schedule"))
+                .when(appointmentService).create(any(AppointmentModel.class));
+
+        mockMvc.perform(post("/appointment")
+                .param("appointment_size_name", "single")
+                .param("location_name", "Valley Mills, TX")
+                .param("tutor_email", "sol@r.eclipse")
+                .param("tutee_email", "aggie@gig.em")
+                .param("start_date_time", "2024-04-08T13:37")
+                .param("end_date_time", "2024-04-08T13:42")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isBadRequest());
+
+        verify(appointmentService).create(any(AppointmentModel.class));
+    }
 }
