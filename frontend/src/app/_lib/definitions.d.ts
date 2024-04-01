@@ -43,13 +43,13 @@ declare global {
     listingTitle: string,
     bioText: string,
     averageRating: number,
-    numberOfRatings: number,
-    coursePreferences: { 
-      courseGrade: string, 
-      courseNumber: number, 
-      majorAbbreviation: string, 
-      tutorEmail: string 
-    }[],
+    bioText: string,
+    coursePreferences: Course[],
+    eligibleCourses: Course[],
+    email: string,
+    firstName: string,
+    lastName: string,
+    listingTitle: string,
     locationPreferences: { 
       locationName: string, 
       tutorEmail: string 
@@ -88,8 +88,9 @@ declare global {
   // REST API: /course
   type Course = {
     courseNumber: number,
-    courseTitle: string,
+    courseGrade: string,
     majorAbbreviation: string,
+    tutorEmail: string
   };
 
   // 

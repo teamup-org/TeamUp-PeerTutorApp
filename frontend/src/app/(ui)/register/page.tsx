@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import ResponsiveAppBar from '../app-bar'
 import { Login, HowToReg } from '@mui/icons-material'
@@ -14,12 +14,12 @@ const tabLabels = ["Register as Peer Tutor", "Register as Tutee"];
 
 import { 
   Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Paper, InputLabel, MenuItem, Select, SelectChangeEvent,
-  OutlinedInput, InputAdornment, Tabs, Tab, Step, Stepper, StepLabel, StepContent
+  OutlinedInput, InputAdornment, Tabs, Tab, Step, Stepper, StepLabel, FormGroup, Checkbox, FormControlLabel
 } from '@mui/material';
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
-import { useTuteeMutation, TableFetch } from '@/app/_lib/data';
+import { useTuteeMutation, TableFetch, TablePush } from '@/app/_lib/data';
 
 import { useSession } from 'next-auth/react';
 
@@ -78,27 +78,6 @@ interface TabPanelProps {
 }
 
 var selected: string;
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {index === 0 && <PeerTutorForm />}
-          {index === 1 && <TuteeForm />}
-        </Box>
-      )}
-    </div>
-  );
-}
 
 function PeerTutorForm(props: any) {
 
@@ -243,21 +222,6 @@ function PeerTutorForm(props: any) {
   );
 }
 
-function HorizontalLinearStepper() {
-  const [activeStep, setActiveStep] = React.useState(0);
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-
-
-}
-
 function TuteeForm(props: any) {
 
   const seniorityOptions = [
@@ -378,19 +342,7 @@ function TuteeForm(props: any) {
 }
 
 function DynamicTextFieldForm(props: any) {
-  const { inputs, updateInputs, setInputs } = props;
-  const { transcript, setTranscript } = props;
-  const { formData } = props;
-
-  const addRow = () => {
-    setInputs([...inputs, { majorAbbreviation: '', courseNumber: 0, courseGrade: '', tutorEmail: '' }]);
-  };
-
-  const handleFieldChange = (index: any, event: any) => {
-    const newInputs = [...inputs];
-    newInputs[index] = { ...newInputs[index], [event.target.name]: event.target.value };
-    updateInputs(newInputs);
-  };
+  const { setTranscript } = props;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -398,7 +350,6 @@ function DynamicTextFieldForm(props: any) {
       // Access the first file in the files array
       const file = files[0];
       setTranscript(file);
-      formData.append('transcript', file);
     } else {
       console.log("No file selected");
     }
@@ -407,47 +358,45 @@ function DynamicTextFieldForm(props: any) {
   return (
     <div>
       <form>
-      <input type="file" onChange={handleFileChange}/>
-    </form>
-
-      {inputs.map((input: any, index: any) => (
-        <div key={index} style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
-          <TextField
-            label="Course Type"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            name="courseType"
-            value={input.courseType}
-            onChange={(event) => handleFieldChange(index, event)}
-          />
-          <TextField
-            label="Course Number"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            name="courseNumber"
-            value={input.courseNumber}
-            onChange={(event) => handleFieldChange(index, event)}
-          />
-          <TextField
-            label="Grade"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            name="courseGrade"
-            value={input.courseGrade}
-            onChange={(event) => handleFieldChange(index, event)}
-          />
-        </div>
-      ))}
-      
-      <Button variant="contained" color="primary" onClick={addRow}>
-        Add Row
-      </Button>
-
+        <input type="file" onChange={handleFileChange}/>
+      </form>
     </div>
   );
+}
+
+function CoursePreferences(props: any) {
+
+  const { eligibleCourses } = props;
+  const { checkedItems, setCheckedItems} = props;
+
+
+  const handleCheckboxChange = (index: number) => {
+    setCheckedItems({
+      ...checkedItems,
+      [index]: !checkedItems[index]
+    });
+  };
+
+  return (
+    <div>
+      <Typography> Select the courses you want to Peer Tutor For! </Typography>
+      <FormGroup>
+        {eligibleCourses.map((item: Course, index: any) => (
+          <FormControlLabel
+            key={index}
+            control={
+              <Checkbox
+                checked={checkedItems[index] || false}
+                onChange={() => handleCheckboxChange(index)}
+              />
+            }
+            label={`${item.majorAbbreviation} ${item.courseNumber} - ${item.courseGrade}`}
+          />
+        ))}
+      </FormGroup>
+    </div>
+  )
+
 }
 
 export default function Registration() {
@@ -456,8 +405,11 @@ export default function Registration() {
 
   const [tutorRegistered, setTutorRegistered] = useState(false);   // This will be set to true when registration is submitted
   const [tuteeRegistered, setTuteeRegistered] = useState(false);   // This will be set to true when registration is submitted
+  const [preferencesSet, setPreferencesSet] = useState(false);
   const [transcript, setTranscript] = useState(null);
-  const [formData] = useState<FormData>(new FormData());
+  const [coursePreferences, setCoursePreferences] = useState<Course[]>();
+  const [eligibleCourses, setEligibleCourses] = useState<Course[]  | undefined>(undefined);
+  const [checkedItems, setCheckedItems] = useState<{ [index: number]: boolean }>({});
 
   const { data: session, status } = useSession();
 
@@ -492,16 +444,15 @@ export default function Registration() {
     phoneNumber: -1,
     email: '',
     majorAbbreviation: '',
-    seniorityName: 'Freshman',
-    coursePreferences: []
+    seniorityName: '',
+    coursePreferences: [],
+    eligibleCourses: [],
+    locationPreferences: [],
+    activeStatusName: "Active"
   });
 
   // Button and Update Functions -------------------------------------------------------------
 
-  const updateInputs = (newInputs: any) => {
-    setInputs(newInputs);
-  };
-  
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -512,26 +463,25 @@ export default function Registration() {
   
   const handleTutor = () => {
     TutorCreation();
-    setTutorRegistered(true);
   }
 
-  const ocrAPI = async () => {
-    formData.append("email_old", 'wells.t.2024@tamu.edu');
+  // const ocrAPI = async () => {
+  //   formData.append("email_old", 'wells.t.2024@tamu.edu');
 
-    axios({
-      method: "put",
-      url: "/tutor?email_old=wells.t.2024@tamu.edu&first_name_new=Trey"
-    })
-    .then(function (response) {
-      //handle success
-      console.log(response);
-    })
-    .catch(function (response) {
-      //handle error
-      console.log(response);
-    });
+  //   axios({
+  //     method: "put",
+  //     url: "/tutor?email_old=wells.t.2024@tamu.edu&first_name_new=Trey"
+  //   })
+  //   .then(function (response) {
+  //     //handle success
+  //     console.log(response);
+  //   })
+  //   .catch(function (response) {
+  //     //handle error
+  //     console.log(response);
+  //   });
 
-  }
+  // }
 
   const handleNext = () => {
   
@@ -548,18 +498,8 @@ export default function Registration() {
       }
       else if (activeStep === 1) {
   
-        for (var i = 0; i < inputs.length; i++) {
-          if (!(inputs[i].courseType) || !(inputs[i].courseNumber) || !(inputs[i].courseGrade)) {
-            alert("Fill out all fields first before continuing");
-            return;
-          }
-        }
-
-        ocrAPI();
-  
         const newTutor: Tutor = {
-          activeStatusName: 'active',
-          locationPreferences: [ { locationName: '', tutorEmail: '' } ],
+          activeStatusName: 'Active',
           firstName: peerTutorFormData.firstName,
           lastName: peerTutorFormData.lastName,
           bioText: peerTutorFormData.bioText,
@@ -569,19 +509,22 @@ export default function Registration() {
           phoneNumber: Number(peerTutorFormData.phoneNumber),
           email: session?.user?.email || '',
           majorAbbreviation: peerTutorFormData.major,
-          seniorityName: selected as Seniority,
-          coursePreferences: inputs.map((input, index) => ({
-            tutorEmail: session?.user?.email || '',
-            majorAbbreviation: input.courseType,
-            courseGrade: input.courseGrade,
-            courseNumber: Number(input.courseNumber)
-          })),
+          seniorityName: selected,
+          coursePreferences: [],
+          eligibleCourses: [],
+          locationPreferences: [],
           averageRating: 5,
           numberOfRatings: 0 
         };
   
         setTutor(newTutor);
   
+      }
+      else if (activeStep === 2) {
+
+        const newVariables = eligibleCourses?.filter((_: any, index: any) => checkedItems[index]);
+        setCoursePreferences(newVariables);
+
       }
     }
     
@@ -590,19 +533,43 @@ export default function Registration() {
 
   // Checks to see if account is already registered --------------------------------------------------------------
 
-  const {data: tutorResult} = TableFetch<TutorQuery>("tutor", [], `email_contains=${session?.user?.email}`);
+  const {data: tutorResult, isSuccess: tutorFinished, refetch: tutorRefetch } = TableFetch<TutorQuery>("tutor", [], `email_contains=${session?.user?.email}`);
   const {data: tuteeResult} = TableFetch<TuteeQuery>("tutee", [], `email_contains=${session?.user?.email}`);
 
   // Operations for database insertions ---------------------------------------------------------------------------
 
-  function delay(t: number) {
-    return new Promise(resolve => setTimeout(resolve, t));
-  }
+  const tutorMutation = TablePush("/tutor");
+  const tutorMutationUpdate = TablePush("/tutor/update");
+
+  useEffect(() => {
+
+    if (tutorMutation.isSuccess) {
+      console.log("transcript added");
+      tutorRefetch();
+    }
+
+  }, [tutorMutation.isSuccess]);
+
+  useEffect(() => {
+
+    if (tutorMutation.isSuccess && tutorResult) {
+
+      const courses = tutorResult['data'][0]['eligibleCourses'];
+
+      setEligibleCourses(courses);
+      setTutorRegistered(true);
+    }
+
+  }, [tutorResult]);
+
+  useEffect(() => {
+    if (tutorRegistered) {
+      setPreferencesSet(true);
+      UpdateTutorPreferences();
+    }
+  }, [coursePreferences])
 
   async function TutorCreation() {
-
-    const requests = [];
-    const results = [];
 
     const tutorCreateData = {
       active_status_name: 'active',
@@ -615,31 +582,29 @@ export default function Registration() {
       pay_rate: tutor.payRate,
       phone_number: tutor.phoneNumber,
       picture_url: tutor.pictureUrl,
-      seniority_name: tutor.seniorityName
+      seniority_name: tutor.seniorityName,
+      transcript: transcript
     }
 
-    requests.push('/tutor?' + objectToQueryString(tutorCreateData));
+    tutorMutation.mutate(tutorCreateData);
 
-    // Update the course eligibility and preferences for the tutor ----------
+  }
 
-    // for (var i = 0; i < inputs.length; i++) {
-    //   const course = {
-    //     course_grade: inputs[i].courseGrade,
-    //     course_number: inputs[i].courseNumber,
-    //     major_abbreviation: inputs[i].courseType,
-    //     tutor_email: session?.user?.email
-    //   }
+  async function UpdateTutorPreferences() {
 
-    //   requests.push('/tutor_eligible_course?' + objectToQueryString(course));
-    //   requests.push('/tutor_course_preference?' + objectToQueryString(course));
-    // }
+    const generateCourseString = (courses: Course[]): string => courses.map(course => `${course.majorAbbreviation} ${course.courseNumber} ${course.courseGrade}`).join(", ");
 
-    for (let  request  of  requests) {
-      await delay(1000);
-      console.log("running request");
-      let data = await axios.post(request);
-      results.push(data);
+    if (coursePreferences) {
+      const tutorPreferences = { 
+        email_old: session?.user?.email,
+        course_preferences_new: generateCourseString(coursePreferences)
+
+      }
+
+      tutorMutationUpdate.mutate(tutorPreferences);
     }
+
+
   }
 
   return (
@@ -687,7 +652,7 @@ export default function Registration() {
                 ))}
               </Stepper>
               {activeStep === 0 && <PeerTutorForm formData={peerTutorFormData} setFormData={setPeerTutorFormData} />}
-              {activeStep === 1 && <DynamicTextFieldForm formData={formData} inputs={inputs} updateInputs={updateInputs} setInputs={setInputs} transcript={transcript} setTranscript={setTranscript} />}
+              {activeStep === 1 && <DynamicTextFieldForm setTranscript={setTranscript} />}
               {activeStep === 2 && (
                 <Grid container rowSpacing={3}>
                   <Grid item xs={12}> <Typography align="center"> Here is your Tutor Card!! </Typography> </Grid>
@@ -711,15 +676,21 @@ export default function Registration() {
               </Box>
             </>
           )}
-          {tab === 0 && (tutorResult?.data.length === 0) && tutorRegistered && (
+          {tab === 0 && tutorRegistered && !preferencesSet &&  (
             <>
-            <Typography align="center"> Thank you for Registering as a Peer Tutor! </Typography>
-            <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
-              <Typography align="center"> Click Here to See Your Profile! </Typography>
-            </Button>
-          </>
+              <CoursePreferences  eligibleCourses={eligibleCourses} checkedItems={checkedItems} setCheckedItems={setCheckedItems}/>
+              <Button onClick={handleNext}>Next</Button>
+            </>
           )}
-          {tab === 0 && (tutorResult?.data.length !== 0) && (
+          {tab === 0 && tutorRegistered && preferencesSet &&  (
+            <>
+              <Typography align="center"> Thank you for Registering as a Peer Tutor! </Typography>
+              <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
+                <Typography align="center"> Click Here to See Your Profile! </Typography>
+              </Button>
+            </>
+          )}
+          {tab === 0 && (tutorResult?.data.length !== 0) && !tutorRegistered && (
             <>
               <Typography align="center"> You have already registered as a Peer Tutor! </Typography>
               <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
