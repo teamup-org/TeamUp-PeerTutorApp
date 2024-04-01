@@ -29,6 +29,20 @@ export function TableFetch<T>(tableName: string, vars?: any[], ...args: string[]
   };
 }
 
+export function TablePush(tableName: string) {
+  return useMutation({
+    mutationKey: [tableName],
+    mutationFn: async (data: any) => {
+      const req = `${tableName}`;
+      return (await axios.post(req, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }));
+    },
+  });
+}
+
 export function TableUpdate(tableName: string, field: string, value: any) {
   const { data, isError } = useMutation({
     mutationFn: async () => {

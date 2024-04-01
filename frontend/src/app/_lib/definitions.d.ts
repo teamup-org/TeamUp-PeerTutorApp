@@ -16,12 +16,8 @@ declare global {
     activeStatusName: string,
     averageRating: number,
     bioText: string,
-    coursePreferences: { 
-      courseGrade: string, 
-      courseNumber: number, 
-      majorAbbreviation: string, 
-      tutorEmail: string 
-    }[],
+    coursePreferences: Course[],
+    eligibleCourses: Course[],
     email: string,
     firstName: string,
     lastName: string,
@@ -69,7 +65,8 @@ declare global {
 
   type Course = {
     courseNumber: number,
-    courseTitle: string,
+    courseGrade: string,
     majorAbbreviation: string,
+    tutorEmail: string
   };
 }
