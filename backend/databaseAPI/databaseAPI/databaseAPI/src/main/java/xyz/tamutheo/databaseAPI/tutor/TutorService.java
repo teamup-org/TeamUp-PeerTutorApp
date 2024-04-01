@@ -163,8 +163,11 @@ public class TutorService {
         return paginationContainerModel;
     }
 
-    public void create(TutorModel tutorModel) {
+    public void create(TutorModel tutorModel, MultipartFile transcript) {
         this.tutorMapper.create(tutorModel);
+        if (transcript != null) {
+            this.tutorEligibleCourseService.create(tutorModel.getEmail(), transcript);
+        }
     }
 
     public void update(TutorModel tutorModelOld, TutorModel tutorModelNew, MultipartFile transcript) {
