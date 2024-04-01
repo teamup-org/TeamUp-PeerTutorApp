@@ -46,6 +46,8 @@ declare global {
     bioText: string,
     coursePreferences: Course[],
     eligibleCourses: Course[],
+    coursePreferences: Course[],
+    eligibleCourses: Course[],
     email: string,
     firstName: string,
     lastName: string,
