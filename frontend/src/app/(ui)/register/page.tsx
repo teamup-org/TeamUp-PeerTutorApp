@@ -20,6 +20,8 @@ import {
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 import { useTuteeMutation, TableFetch, TablePush } from '@/app/_lib/data';
+import { Dashboard, School, CalendarMonth } 
+from '@mui/icons-material';
 
 import { useSession } from 'next-auth/react';
 
@@ -32,7 +34,11 @@ axios.defaults.baseURL = development;
 
 const steps = ['General Info', 'Transcript', 'Submit Registration','Course Preferences'];
 
-var selected: string;
+var selected: Seniority;
+const settings: Link[] = [
+  { name: 'Profile', href: '/dashboard/profile', icon: Dashboard },
+  { name: 'Log Out', href: '/', icon: Dashboard },
+];
 
 function PeerTutorForm(props: any) {
 
@@ -44,18 +50,18 @@ function PeerTutorForm(props: any) {
   };
 
   const seniorityOptions = [
-    { value: 'freshman', label: 'Freshman' },
-    { value: 'sophomore', label: 'Sophomore' },
-    { value: 'junior', label: 'Junior' },
-    { value: 'senior', label: 'Senior' },
-    { value: 'graduate', label: 'Graduate Student' }
+    { value: 'Freshman', label: 'Freshman' },
+    { value: 'Sophomore', label: 'Sophomore' },
+    { value: 'Junior', label: 'Junior' },
+    { value: 'Senior', label: 'Senior' },
+    { value: 'Graduate', label: 'Graduate Student' }
   ];
   
   const [seniority, setSeniority] = React.useState('');
   
   const changeSeniority = (event: SelectChangeEvent) => {
     setSeniority(event.target.value as string);
-    selected = event.target.value;
+    selected = event.target.value as Seniority;
   };
 
 
@@ -471,17 +477,16 @@ export default function Registration() {
     pictureUrl: '',
     payRate: 0,
     averageRating: 5,
-    numberOfRatings: 0,
     listingTitle: '',
     bioText: '',
     phoneNumber: -1,
     email: '',
     majorAbbreviation: '',
-    seniorityName: '',
+    seniorityName: 'Senior',
     coursePreferences: [],
     eligibleCourses: [],
     locationPreferences: [],
-    activeStatusName: "Active"
+    activeStatusName: "active"
   });
 
   // Button and Update Functions -------------------------------------------------------------
@@ -535,7 +540,7 @@ export default function Registration() {
         ocrAPI();
   
         const newTutor: Tutor = {
-          activeStatusName: 'Active',
+          activeStatusName: 'active',
           firstName: peerTutorFormData.firstName,
           lastName: peerTutorFormData.lastName,
           bioText: peerTutorFormData.bioText,
@@ -545,12 +550,11 @@ export default function Registration() {
           phoneNumber: Number(peerTutorFormData.phoneNumber),
           email: session?.user?.email || '',
           majorAbbreviation: peerTutorFormData.major,
-          seniorityName: selected,
+          seniorityName: selected || "Senior",
           coursePreferences: [],
           eligibleCourses: [],
           locationPreferences: [],
-          averageRating: 5,
-          numberOfRatings: 0 
+          averageRating: 5
         };
   
         setTutor(newTutor);
