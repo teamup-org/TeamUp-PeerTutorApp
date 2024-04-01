@@ -27,7 +27,8 @@ public class TutorController {
                        @RequestParam(name = "pay_rate") Double payRate,
                        @RequestParam(name = "phone_number") Long phoneNumber,
                        @RequestParam(name = "picture_url") String pictureUrl,
-                       @RequestParam(name = "seniority_name") String seniorityName){
+                       @RequestParam(name = "seniority_name") String seniorityName,
+                       @RequestParam(name = "transcript") MultipartFile transcript){
         TutorModel tutorModel = TutorModel.builder()
                 .activeStatusName(activeStatusName)
                 .bioText(bioText)
@@ -41,7 +42,7 @@ public class TutorController {
                 .pictureUrl(pictureUrl)
                 .seniorityName(seniorityName)
                 .build();
-        this.tutorService.create(tutorModel);
+        this.tutorService.create(tutorModel, transcript);
     }
     @GetMapping(value = {"", "/"})
     public PaginationContainerModel read(@RequestParam(name = "active_status_name_equals", required = false) String activeStatusNameEquals,
@@ -142,7 +143,7 @@ public class TutorController {
                 numberEntriesPerPage);
     }
 //    @PutMapping(value = {"", "/"})
-    @PostMapping(value = {"/temp"})
+    @RequestMapping(value = {"/update"})
     public void update(@RequestParam(name = "email_old") String emailOld,
                        @RequestParam(name = "active_status_name_new", required = false) String activeStatusNameNew,
                        @RequestParam(name = "bio_text_new", required = false) String bioTextNew,
