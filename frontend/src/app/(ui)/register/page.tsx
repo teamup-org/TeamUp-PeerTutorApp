@@ -558,6 +558,11 @@ export default function Registration() {
       }
       else if (activeStep === 2) {
 
+        TutorCreation();
+
+      }
+      else if (activeStep === 3) {
+
         const newVariables = eligibleCourses?.filter((_: any, index: any) => checkedItems[index]);
         setCoursePreferences(newVariables);
 
