@@ -17,9 +17,6 @@ from '@/app/_lib/data';
 
 const tutorsPerPageOptions = [ 5, 10, 15 ];
 
-const tutorSkeleton: Tutor = { activeStatusName: "active", averageRating: 0, bioText: "", coursePreferences: [], email: "", firstName: "", lastName: "", 
-  listingTitle: "", locationPreferences: [], majorAbbreviation: "", numberOfRatings: 0, payRate: 0, phoneNumber: 0, pictureUrl: "", seniorityName: "Freshman" };
-
 
 export default function TutorPage() {
   const [search, setSearch] = React.useState<string>("");
@@ -93,8 +90,10 @@ export default function TutorPage() {
             />
           </Grid>
 
-          <TutorProfile tutorState={[selectedTutor, setSelectedTutor]} />
-
+          { selectedTutor &&
+            <TutorProfile tutorState={[selectedTutor, setSelectedTutor]} />
+          }
+            
           <Grid item xs={12} md={8}>
             <Stack direction="column" spacing={2}>
               { printTutors() }
