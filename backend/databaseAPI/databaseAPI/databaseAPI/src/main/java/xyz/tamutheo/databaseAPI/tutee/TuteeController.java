@@ -18,6 +18,7 @@ public class TuteeController {
                        @RequestParam(name = "first_name") String firstName,
                        @RequestParam(name = "last_name") String lastName,
                        @RequestParam(name = "major_abbreviation") String majorAbbreviation,
+                       @RequestParam(name = "picture_url") String pictureUrl,
                        @RequestParam(name = "phone_number") Long phoneNumber,
                        @RequestParam(name = "seniority_name") String seniorityName){
         TuteeModel tuteeModel = TuteeModel.builder()
@@ -26,6 +27,7 @@ public class TuteeController {
                 .firstName(firstName)
                 .lastName(lastName)
                 .majorAbbreviation(majorAbbreviation)
+                .pictureUrl(pictureUrl)
                 .phoneNumber(phoneNumber)
                 .seniorityName(seniorityName)
                 .build();
@@ -67,6 +69,7 @@ public class TuteeController {
                        @RequestParam(name = "first_name_new", required = false) String firstNameNew,
                        @RequestParam(name = "last_name_new", required = false) String lastNameNew,
                        @RequestParam(name = "major_abbreviation_new", required = false) String majorAbbreviationNew,
+                       @RequestParam(name = "picture_url_new", required = false) String pictureUrlNew,
                        @RequestParam(name = "phone_number_new", required = false) Long phoneNumberNew,
                        @RequestParam(name = "seniority_name_new", required = false) String seniorityNameNew) {
         TuteeModel tuteeModelOld = TuteeModel.builder()
@@ -78,6 +81,7 @@ public class TuteeController {
                 .firstName(firstNameNew)
                 .lastName(lastNameNew)
                 .majorAbbreviation(majorAbbreviationNew)
+                .pictureUrl(pictureUrlNew)
                 .phoneNumber(phoneNumberNew)
                 .seniorityName(seniorityNameNew)
                 .build();
