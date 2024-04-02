@@ -6,7 +6,6 @@ import { Container, Box, Grid, Stack, Typography, Rating, LinearProgress, FormCo
 
 import Review from './review';
 import { TableFetch } from '@/app/_lib/data';
-import { tutors } from '@/app/_lib/placeholder-data';
 
 
 const sortOptions = [
@@ -42,7 +41,6 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
   React.useEffect(() => {
     setStarWeights(calculateRatingDistribution(tutor));
   }, [tutor]);
-  const [rating, setRating] = React.useState(0.0);
 
 
   const mapOptions = (options: {label: string, query: string}[]) => {
@@ -52,8 +50,6 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
   };
 
   const mapStars = () => {
-    console.log(starWeights);
-
     return starWeights.toReversed().map((weight: number, index) => (
         <Stack key={index} direction="row" spacing={1} alignItems="center">
           <Typography variant="body1" width={50} align="right"> {5 - index} star </Typography>

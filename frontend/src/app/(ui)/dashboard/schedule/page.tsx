@@ -123,7 +123,7 @@ export default function SchedulePage() {
   document.addEventListener("mousedown", handleClickOutside);
   
   const handleCancel = () => {
-    const {data, isError} = TableUpdate("appointment_listing", "appointmentStatusName", "cancelled");
+    // const {data, isError} = TableUpdate("appointment_listing", "appointmentStatusName", "cancelled");
   };
 
   const handleDateSelect = (arg: DateClickArg) => {
