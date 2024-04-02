@@ -36,7 +36,8 @@ public class TutorTimePreferenceController {
 
     }
 
-    @PutMapping(value = {"", "/"})
+    //    @PutMapping(value = {"", "/"})
+    @RequestMapping(value = {"/update"})
     // expects time input as a comma separated String
     // template: <start_time> <end_time>
     // example: 05:00:00 06:00:00, 09:00:00 11:00:00, 15:00:00 16:00:00

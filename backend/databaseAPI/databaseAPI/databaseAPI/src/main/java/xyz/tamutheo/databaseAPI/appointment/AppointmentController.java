@@ -67,7 +67,8 @@ public class AppointmentController {
                 numberEntriesPerPage);
     }
 
-    @PutMapping(value = {"", "/"})
+    //    @PutMapping(value = {"", "/"})
+    @RequestMapping(value = {"/update"})
     public void update(@RequestParam(name = "end_date_time_old") String endDateTimeStringOld,
                        @RequestParam(name = "tutee_email_old") String tuteeEmailOld,
                        @RequestParam(name = "tutor_email_old") String tutorEmailOld,
