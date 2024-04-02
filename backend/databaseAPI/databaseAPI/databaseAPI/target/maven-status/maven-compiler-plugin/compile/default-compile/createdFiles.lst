@@ -1,10 +1,15 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+xyz\tamutheo\databaseAPI\tutorReview\TutorPendingReviewModel.class
+>>>>>>> b7b24f9 (Brandon: Added fields to tutor pending reviews)
 xyz\tamutheo\databaseAPI\rating\RatingModel.class
 xyz\tamutheo\databaseAPI\tutor\TutorModel.class
 xyz\tamutheo\databaseAPI\util\tamuMajorAndCourse\tamuMajor\TamuMajorModel.class
 xyz\tamutheo\databaseAPI\course\CourseController.class
 xyz\tamutheo\databaseAPI\tutee\TuteeController.class
+xyz\tamutheo\databaseAPI\tutorReview\TutorPendingReviewModel$TutorPendingReviewModelBuilder.class
 xyz\tamutheo\databaseAPI\tutorTimePreference\TutorTimePreferenceService.class
 xyz\tamutheo\databaseAPI\tutorReview\TutorReviewController.class
 xyz\tamutheo\databaseAPI\tutorReview\TutorReviewModel$TutorReviewModelBuilder.class

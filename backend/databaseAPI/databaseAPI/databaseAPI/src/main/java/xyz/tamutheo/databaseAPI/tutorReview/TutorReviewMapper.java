@@ -27,7 +27,7 @@ public interface TutorReviewMapper {
                                   @Param("reviewTextContains") String reviewTextContains,
                                   @Param("tuteeEmailContains") String tuteeEmailContains,
                                   @Param("tutorEmailContains") String tutorEmailContains);
-    List<AppointmentModel> getPendingReviews(@Param("appointmentIdEquals") Integer appointmentIdEquals,
+    List<TutorPendingReviewModel> getPendingReviews(@Param("appointmentIdEquals") Integer appointmentIdEquals,
                                 @Param("appointmentSizeNameContains") String appointmentSizeNameContains,
                                 @Param("cancellationReasonContains") String cancellationReasonContains,
                                 @Param("endDateTimeLessThanOrEquals") String endDateTimeLessThanOrEquals,

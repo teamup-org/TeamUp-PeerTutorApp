@@ -57,7 +57,7 @@ public class TutorReviewService {
     }
     public void create(TutorReviewModel tutorReviewModel) {
         // check that session is confirmed, is not cancelled, and current time is past session end time
-        List<AppointmentModel> appointmentModelList = this.tutorReviewMapper.getPendingReviews(tutorReviewModel.getAppointmentId(),
+        List<TutorPendingReviewModel> tutorPendingReviewModelList = this.tutorReviewMapper.getPendingReviews(tutorReviewModel.getAppointmentId(),
                 null,
                 null,
                 null,
@@ -67,7 +67,7 @@ public class TutorReviewService {
                 tutorReviewModel.getTuteeEmail(),
                 tutorReviewModel.getTutorEmail(),
                 null);
-        if (appointmentModelList.size() != 1) {
+        if (tutorPendingReviewModelList.size() != 1) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Cannot review this appointment.");
         }
@@ -79,9 +79,9 @@ public class TutorReviewService {
     public void delete(TutorReviewModel tutorReviewModel) {
         this.tutorReviewMapper.delete(tutorReviewModel);
     }
-    public List<AppointmentModel> getPendingReviews(String tuteeEmail) {
+    public List<TutorPendingReviewModel> getPendingReviews(String tuteeEmail) {
         // check that session is confirmed, is not cancelled, and current time is past session end time
-        List<AppointmentModel> appointmentModelList = this.tutorReviewMapper.getPendingReviews(null,
+        List<TutorPendingReviewModel> tutorPendingReviewModelList = this.tutorReviewMapper.getPendingReviews(null,
                 null,
                 null,
                 null,
@@ -91,6 +91,10 @@ public class TutorReviewService {
                 tuteeEmail,
                 null,
                 null);
-        return appointmentModelList;
+        for (TutorPendingReviewModel tutorPendingReviewModel : tutorPendingReviewModelList) {
+            tutorPendingReviewModel.setStartDateTimeString(tutorPendingReviewModel.getStartDateTimeValue().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            tutorPendingReviewModel.setEndDateTimeString(tutorPendingReviewModel.getEndDateTimeValue().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        }
+        return tutorPendingReviewModelList;
     }
 }
