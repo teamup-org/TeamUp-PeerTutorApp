@@ -20,8 +20,8 @@ const temp: Review =
 
 
 export default function Review(
-  { review = temp, editable = false, }: 
-  { review?: Review , editable?: boolean }
+  { review = temp, pendingReview, editable = false, }: 
+  { review?: Review , pendingReview?: PendingReview, editable?: boolean }
 ){
   const [rating, setRating] = React.useState<number | null>(0);
   const [userReview, setUserReview] = React.useState("");
@@ -33,27 +33,17 @@ export default function Review(
 
 
   const mutation = TablePush("/tutor_review");
-  const testUpdate = TableUpdate("/tutor_review");
 
   const handleUserReviewSubmission = () => {
+    pendingReview &&
     mutation.mutate(
       {
-        appointment_id: 17,
+        appointment_id: pendingReview.appointmentId,
         number_stars: rating,
         review_text: userReview,
 
         tutee_email: email,
-        tutor_email: "chloe@gmail.com",
-      }
-    );
-  };
-
-  const test = () => {
-    testUpdate.mutate(
-      {
-        appointment_id:17,
-        number_stars: 5,
-        review_text: "HACKED",
+        tutor_email: pendingReview.tutorEmail,
       }
     );
   };
@@ -98,7 +88,6 @@ export default function Review(
           (
             <Stack direction="row">
               <Button variant="contained" disabled={!userReview.length} onClick={handleUserReviewSubmission}> Submit Review </Button>
-              <Button variant="contained" onClick={test}> Test </Button>  
             </Stack>
           )
         }

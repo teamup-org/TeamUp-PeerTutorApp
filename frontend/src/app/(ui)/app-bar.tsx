@@ -92,7 +92,7 @@ export default function ResponsiveAppBar(props : AppBarProps) {
           <Stack direction="row" my={0} spacing={2} alignItems="center" display={{ xs: "none", md: "flex" }}>
             <Tabs value={tab} onChange={(event, newValue) => setTab(newValue)} 
               aria-label="app-bar-navigation" role="navigation"
-              sx={{ '& .MuiTab-root:not(.Mui-selected)': { color: 'secondary.main' } }}
+              sx={{ '& .MuiTab-root:not(.Mui-selected)': { color: 'background.default' } }}
             >
               {
                 (props.links).map((link: Link, index) => {

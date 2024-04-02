@@ -146,12 +146,25 @@ declare global {
     tuteeMajorAbbreviation: string,
 
     tutorEmail: string,
-
   };
 
   // REST API: /tutor_review
   type ReviewQuery = {
     data: Review[],
     metaData: Metadata,
+  };
+
+  // REST API: /tutor_review/pending_reviews
+  type PendingReview = {
+    appointmentId: number,
+    startDateTimeString: string,
+    endDateTimeString, string,
+
+    tutorEmail: string,
+    tutorPictureUrl: string,
+    tutorFirstName: string,
+    tutorLastName: string,
+    tutorMajorAbbreviation: string,
+    tutorSeniority: Seniority,
   };
 }
