@@ -6,32 +6,46 @@ import Link from 'next/link';
 import { usePathname } 
 from 'next/navigation';
 
-import { AppBar, Box, Toolbar, IconButton, Menu, Container, Button, MenuItem, Stack, Typography } 
+import { AppBar, Box, Toolbar, IconButton, Menu, Container, Button, MenuItem, Stack, Typography, Tabs, Tab } 
 from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 
 import TheoLogo from '@/app/(ui)/theo-logo';
 import UserMenu from '@/app/(ui)/user-menu';
 
+
+function LinkTab(
+  props: { label: string, href: string, Icon: Link["icon"]}
+){
+  return (
+    <Tab
+      component={Link}
+      href={props.href} label={props.label} 
+      icon={ <props.Icon /> } iconPosition="start"
+    />
+  );
+}
+
+
 type AppBarProps = { links: Link[], settings: Link[] };
 export default function ResponsiveAppBar(props : AppBarProps) {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
+  const pathname = usePathname();
+  const pathToTabIndex: { [key: string]: number } = {};
+  props.links.forEach((link, index) => {pathToTabIndex[link.href] = index});
+
+  const [tab, setTab] = React.useState(pathToTabIndex[pathname]);
+  
+  
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
 
   return (
     <AppBar position="static" color="tertiary">
@@ -75,20 +89,25 @@ export default function ResponsiveAppBar(props : AppBarProps) {
             </Menu>
           </Box>
           
-          <Stack direction="row" my={0} spacing={2} display={{ xs: "none", md: "flex" }}>
-            {
-              (props.links).map((link: Link) => {
-                let LinkIcon = link.icon;
-                return (
-                  <Button key={link.name} onClick={handleCloseNavMenu} component={Link} href={link.href}>
-                    <Stack direction="row" alignItems="center" spacing={0.5}>
-                      <LinkIcon fontSize="medium" />
-                      <Typography variant="body1"> {link.name} </Typography>
-                    </Stack>
-                  </Button>
-                );
-              })
-            }
+          <Stack direction="row" my={0} spacing={2} alignItems="center" display={{ xs: "none", md: "flex" }}>
+            <Tabs value={tab} onChange={(event, newValue) => setTab(newValue)} 
+              aria-label="app-bar-navigation" role="navigation"
+              sx={{ '& .MuiTab-root:not(.Mui-selected)': { color: 'secondary.main' } }}
+            >
+              {
+                (props.links).map((link: Link, index) => {
+                  let LinkIcon = link.icon;
+                  return (
+                    <Tab
+                      key={index}
+                      component={Link}
+                      href={link.href} label={link.name} 
+                      icon={ <LinkIcon /> } iconPosition="start"
+                    />
+                  );
+                })
+              }
+            </Tabs>
 
             { (usePathname().startsWith("/dashboard")) && <UserMenu /> }
           </Stack>

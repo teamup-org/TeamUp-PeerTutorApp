@@ -105,7 +105,7 @@ export default function Review(
       </Stack>
       
       {/* Review text OR Review input */}
-      <Box>
+      
         { !editable ? 
           (
             <Typography paragraph variant="body1" whiteSpace="pre-wrap" noWrap>  
@@ -120,7 +120,7 @@ export default function Review(
             />
           )
         }
-      </Box>
+      
 
     </Stack>
   );

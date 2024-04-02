@@ -5,8 +5,7 @@ import * as React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { TransitionProps }
   from '@mui/material/transitions';
-import { Dialog, DialogTitle, DialogContent, Divider, Container, IconButton, Box, Slide, Typography, 
-  LinearProgress, Stack, Rating, Select, FormControl, InputLabel, MenuItem, Grid }
+import { Dialog, DialogTitle, DialogContent, Divider, Container, IconButton, Box, Slide }
   from '@mui/material';
 
 import FullCalendar from '@fullcalendar/react';
