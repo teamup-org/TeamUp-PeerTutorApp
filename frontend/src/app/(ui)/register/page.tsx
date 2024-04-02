@@ -14,8 +14,14 @@ const tabLabels = ["Register as Peer Tutor", "Register as Tutee"];
 
 import { 
   Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Paper, InputLabel, MenuItem, Select, SelectChangeEvent,
-  OutlinedInput, InputAdornment, Tabs, Tab, Step, Stepper, StepLabel, FormGroup, Checkbox, FormControlLabel, Alert, Skeleton
+  OutlinedInput, InputAdornment, Tabs, Tab, Step, Stepper, StepLabel, FormGroup, Checkbox, FormControlLabel, Alert, Skeleton,
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Divider
 } from '@mui/material';
+
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { TimeField } from '@mui/x-date-pickers/TimeField';
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
@@ -24,6 +30,7 @@ import { Dashboard, School, CalendarMonth }
 from '@mui/icons-material';
 
 import { useSession } from 'next-auth/react';
+import dayjs from 'dayjs';
 
 
 import axios from 'axios';
@@ -32,9 +39,8 @@ const development = "http://localhost:8080";
 const deployment = "https://tamutheo.xyz/database_api";
 axios.defaults.baseURL = development;
 
-const steps = ['General Info', 'Transcript', 'Submit Registration','Course Preferences'];
+const steps = ['General Info', 'Transcript', 'Submit Registration','Tutor Preferences'];
 
-var selected: Seniority;
 const settings: Link[] = [
   { name: 'Profile', href: '/dashboard/profile', icon: Dashboard },
   { name: 'Log Out', href: '/', icon: Dashboard },
@@ -57,11 +63,8 @@ function PeerTutorForm(props: any) {
     { value: 'Graduate', label: 'Graduate Student' }
   ];
   
-  const [seniority, setSeniority] = React.useState('');
-  
   const changeSeniority = (event: SelectChangeEvent) => {
-    setSeniority(event.target.value as string);
-    selected = event.target.value as Seniority;
+    setFormData((prevData: any) => ({ ...prevData, ['seniority']: event.target.value as Seniority}));
   };
 
 
@@ -125,7 +128,7 @@ function PeerTutorForm(props: any) {
         <Select
           labelId="seniorityLabel"
           id="seniority"
-          value={seniority}
+          value={formData.seniority}
           label="seniority"
           onChange={changeSeniority}
           defaultValue=''
@@ -360,7 +363,17 @@ function CoursePreferences(props: any) {
 
   const { eligibleCourses } = props;
   const { checkedItems, setCheckedItems} = props;
+  const { locationPreferences, setLocationPreferences } = props;
+  const { timePreferences, setTimePreferences } = props;
+  const { tutorTimePreferences, setTutorTimePreferences } = props;
 
+  const { data: session, status } = useSession();
+
+  const locationOptions: LocationType[] = [
+    "in-person on-campus",
+    "in-person off-campus",
+    "online"
+  ];
 
   const handleCheckboxChange = (index: number) => {
     setCheckedItems({
@@ -369,72 +382,147 @@ function CoursePreferences(props: any) {
     });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      // Access the first file in the files array
-      const file = files[0];
-      setTranscript(file);
+  const locationChange = (location: LocationType) => {
+    if (locationPreferences.includes(location)) {
+      setLocationPreferences(locationPreferences.filter((l: LocationType) => l !== location));
     } else {
-      console.log("No file selected");
+      setLocationPreferences([...locationPreferences, location]);
     }
   };
 
-  return (
-    <div>
-      <Typography> Select the courses you want to Peer Tutor For! </Typography>
-      <FormGroup>
-        {eligibleCourses.map((item: Course, index: any) => (
-          <FormControlLabel
-            key={index}
-            control={
-              <Checkbox
-                checked={checkedItems[index] || false}
-                onChange={() => handleCheckboxChange(index)}
-              />
-            }
-            label={`${item.majorAbbreviation} ${item.courseNumber} - ${item.courseGrade}`}
+  const handleTimeChange = (index: number, field: string, value: string) => {
+    const updatedTimes = [...timePreferences];
+    updatedTimes[index][field] = value;
+    setTimePreferences(updatedTimes);
+  };
 
-          />
-        ))}
-      </FormGroup>
-    </div>
-  )
-
-}
-
-function CoursePreferences(props: any) {
-
-  const { eligibleCourses } = props;
-  const { checkedItems, setCheckedItems} = props;
-
-
-  const handleCheckboxChange = (index: number) => {
-    setCheckedItems({
-      ...checkedItems,
-      [index]: !checkedItems[index]
-    });
+  const addRow = () => {
+    setTimePreferences([...timePreferences, { day: '', startTime: dayjs(), endTime: dayjs() }]);
   };
 
   return (
-    <div style={{ maxHeight: '75vh', overflowY: 'scroll' }}>
-      <Typography> Select the courses you want to Peer Tutor For! </Typography>
-      <FormGroup>
-        {eligibleCourses.map((item: Course, index: any) => (
-          <FormControlLabel
-            key={index}
-            control={
-              <Checkbox
-                checked={checkedItems[index] || false}
-                onChange={() => handleCheckboxChange(index)}
-              />
-            }
-            label={`${item.majorAbbreviation} ${item.courseNumber} - ${item.courseGrade}`}
-          />
-        ))}
-      </FormGroup>
+    <div style={{ width: '80%', margin: 'auto' }}>
+      <div style={{ marginBottom: '15vh' }}>
+        <Typography variant="h6">Select the courses you want to Peer Tutor For!</Typography>
+        <Divider />
+        <TableContainer sx={{ maxHeight: '75vh' }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Course</TableCell>
+                <TableCell>Grade</TableCell>
+                <TableCell>Select</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {eligibleCourses.map((item: any, index: number) => (
+                <TableRow key={index}>
+                  <TableCell>{`${item.majorAbbreviation} ${item.courseNumber}`}</TableCell>
+                  <TableCell>{item.courseGrade}</TableCell>
+                  <TableCell>
+                    <Checkbox
+                      checked={checkedItems[index] || false}
+                      onChange={() => handleCheckboxChange(index)}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+  
+      <div style={{ marginBottom: '15vh' }}>
+        <Typography variant="h6">Select your location preferences</Typography>
+        <Divider />
+        <TableContainer>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Location</TableCell>
+                <TableCell>Select</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {locationOptions.map((location, index) => (
+                <TableRow key={index}>
+                  <TableCell>{location}</TableCell>
+                  <TableCell>
+                    <Checkbox
+                      checked={locationPreferences.includes(location)}
+                      onChange={() => locationChange(location)}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+  
+      <div style={{ marginBottom: '16px' }}>
+        <Typography variant="h6">Add your preferred times</Typography>
+        <Divider />
+        <TableContainer sx={{ maxHeight: '75vh' }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Day</TableCell>
+                <TableCell>Start Time</TableCell>
+                <TableCell>End Time</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {timePreferences.map((time: any, index: any) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    <Select
+                      value={time.day}
+                      onChange={(e) => handleTimeChange(index, 'day', e.target.value as string)}
+                    >
+                      <MenuItem value="Monday">Monday</MenuItem>
+                      <MenuItem value="Tuesday">Tuesday</MenuItem>
+                      <MenuItem value="Wednesday">Wednesday</MenuItem>
+                      <MenuItem value="Thursday">Thursday</MenuItem>
+                      <MenuItem value="Friday">Friday</MenuItem>
+                      <MenuItem value="Saturday">Saturday</MenuItem>
+                      <MenuItem value="Sunday">Sunday</MenuItem>
+                    </Select>
+                  </TableCell>
+                  <TableCell>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={['TimeField']}>
+                        <TimeField
+                          value={time.startTime}
+                          onChange={(newValue) => handleTimeChange(index, 'startTime', newValue || '')}
+                          fullWidth
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </TableCell>
+                  <TableCell>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={['TimeField']}>
+                        <TimeField
+                          value={time.endTime}
+                          onChange={(newValue) => handleTimeChange(index, 'endTime', newValue || '')}
+                          fullWidth
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Button variant="outlined" onClick={addRow} style={{ marginTop: '8px' }}>
+          Add Time
+        </Button>
+      </div>
     </div>
-  )
+  );
+  
 
 }
 
@@ -446,10 +534,14 @@ export default function Registration() {
   const [tuteeRegistered, setTuteeRegistered] = useState(false);   // This will be set to true when registration is submitted
   const [preferencesSet, setPreferencesSet] = useState(false);
   const [tutorRefetched, setTutorRefetched] = useState(false);
+  const [tutorTimesSet, setTutorTimesSet] = useState(false);
   const [transcript, setTranscript] = useState(null);
   const [coursePreferences, setCoursePreferences] = useState<Course[]>();
   const [eligibleCourses, setEligibleCourses] = useState<Course[]  | undefined>(undefined);
   const [checkedItems, setCheckedItems] = useState<{ [index: number]: boolean }>({});
+  const [locationPreferences, setLocationPreferences] = useState<LocationType[]>([]);
+  const [timePreferences, setTimePreferences] = useState<TimePreference[]>([]);
+  const [tutorTimePreferences, setTutorTimePreferences] = useState<TutorTime[]>([]);
 
   const { data: session, status } = useSession();
 
@@ -468,6 +560,7 @@ export default function Registration() {
     payRate: '',
     major: '',
     bioText: '',
+    seniority: '' as Seniority
   });
 
   const [tutor, setTutor] = React.useState<Tutor>({
@@ -501,23 +594,23 @@ export default function Registration() {
     setTab(newValue);
   };
 
-  // const ocrAPI = async () => {
-  //   formData.append("email_old", 'wells.t.2024@tamu.edu');
+  const convertTimeToString = (time: dayjs.Dayjs) => {
+    const hour = time.hour().toString().padStart(2, '0');
+    const minute = time.minute().toString().padStart(2, '0');
+    
+    // Always set seconds to '00'
+    const second = '00';
+    
+    // Return the formatted time string
+    return `${hour}:${minute}:${second}`;
+  };
 
-  //   axios({
-  //     method: "put",
-  //     url: "/tutor?email_old=wells.t.2024@tamu.edu&first_name_new=Trey"
-  //   })
-  //   .then(function (response) {
-  //     //handle success
-  //     console.log(response);
-  //   })
-  //   .catch(function (response) {
-  //     //handle error
-  //     console.log(response);
-  //   });
+  const convertPreferenceToString = (time: TimePreference) => {
+    const start = time['startTime'];
+    const end = time['endTime'];
 
-  // }
+    return `${convertTimeToString(start)} ${convertTimeToString(end)}`
+  };
 
   const handleNext = () => {
   
@@ -526,7 +619,7 @@ export default function Registration() {
       if (activeStep === 0) {
   
         for (const key in peerTutorFormData) {
-          if (!(peerTutorFormData as any)[key] || !selected) {
+          if (!(peerTutorFormData as any)[key] || (peerTutorFormData['seniority'] === "All")) {
             alert("Fill out all fields first before continuing");
             return;
           }
@@ -552,7 +645,7 @@ export default function Registration() {
           phoneNumber: Number(peerTutorFormData.phoneNumber),
           email: session?.user?.email || '',
           majorAbbreviation: peerTutorFormData.major,
-          seniorityName: selected,
+          seniorityName: peerTutorFormData.seniority,
           coursePreferences: [],
           eligibleCourses: [],
           locationPreferences: [],
@@ -588,6 +681,7 @@ export default function Registration() {
 
   const tutorMutation = TablePush("/tutor");
   const tutorMutationUpdate = TablePush("/tutor/update");
+  const tutorTimeMutationUpdate = TablePush("/tutor_time_preference/update");
 
   useEffect(() => {
 
@@ -648,25 +742,42 @@ export default function Registration() {
       phone_number: tutor.phoneNumber,
       picture_url: tutor.pictureUrl,
       seniority_name: tutor.seniorityName,
-      transcript: transcript
+      transcript: transcript,
+
     }
 
     tutorMutation.mutate(tutorCreateData);
 
   }
 
+  useEffect(() => {
+
+    if (tutorTimesSet) {
+      tutorTimePreferences.map((time: TutorTime) => (
+        tutorTimeMutationUpdate.mutate(time)
+      ))
+    }
+
+  }, [tutorTimePreferences]);
+
   async function UpdateTutorPreferences() {
 
     const generateCourseString = (courses: Course[]): string => courses.map(course => `${course.majorAbbreviation} ${course.courseNumber} ${course.courseGrade}`).join(", ");
+    const generateLocationString = (locations: LocationType[]): string => locations.join(", ");
 
-    if (coursePreferences) {
+    timePreferences.map((time: TimePreference) => (
+      setTutorTimePreferences([...tutorTimePreferences, { weekday_name: time['day'], time_intervals: convertPreferenceToString(time), tutor_email: session?.user?.email || ''}])
+    ))
+
+    if (coursePreferences && locationPreferences && timePreferences) {
       const tutorPreferences = { 
         email_old: session?.user?.email,
-        course_preferences_new: generateCourseString(coursePreferences)
-
+        course_preferences_new: generateCourseString(coursePreferences),
+        location_preferences_new: generateLocationString(locationPreferences)
       }
 
       tutorMutationUpdate.mutate(tutorPreferences);
+      setTutorTimesSet(true);
     }
 
 
@@ -809,7 +920,7 @@ export default function Registration() {
                               </Step>
                             ))}
                           </Stepper>
-                          <CoursePreferences  eligibleCourses={eligibleCourses} checkedItems={checkedItems} setCheckedItems={setCheckedItems}/>
+                          <CoursePreferences tutorTimePreferences={tutorTimePreferences} setTutorTimePreferences={setTutorTimePreferences} timePreferences={timePreferences} setTimePreferences={setTimePreferences} locationPreferences={locationPreferences} setLocationPreferences={setLocationPreferences} eligibleCourses={eligibleCourses} checkedItems={checkedItems} setCheckedItems={setCheckedItems}/>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
                             <Button disabled={true} onClick={handleBack}>
                               Back
