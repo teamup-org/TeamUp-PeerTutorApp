@@ -62,7 +62,8 @@ public class TuteeController {
                 offset);
     }
 
-    @PutMapping(value = {"", "/"})
+    //    @PutMapping(value = {"", "/"})
+    @RequestMapping(value = {"/update"})
     public void update(@RequestParam(name = "email_old") String emailOld,
                        @RequestParam(name = "active_status_name_new", required = false) String activeStatusNameNew,
                        @RequestParam(name = "email_new", required = false) String emailNew,

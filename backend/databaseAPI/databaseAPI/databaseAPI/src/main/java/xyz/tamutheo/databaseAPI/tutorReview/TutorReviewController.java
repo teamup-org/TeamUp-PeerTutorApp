@@ -49,7 +49,8 @@ public class TutorReviewController {
     public List<AppointmentModel> getPendingReviews(@RequestParam(name = "tutee_email") String tuteeEmail) {
         return this.tutorReviewService.getPendingReviews(tuteeEmail);
     }
-    @PutMapping(value = {"", "/"})
+    //    @PutMapping(value = {"", "/"})
+    @RequestMapping(value = {"/update"})
     public void update(@RequestParam(name = "appointment_id_old") Integer appointmentIdOld,
                        @RequestParam(name = "tutee_email_old") String tuteeEmailOld,
                        @RequestParam(name = "tutor_email_old") String tutorEmailOld,

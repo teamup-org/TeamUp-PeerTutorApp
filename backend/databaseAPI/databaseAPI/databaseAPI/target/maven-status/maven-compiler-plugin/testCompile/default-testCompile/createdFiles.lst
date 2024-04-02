@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 xyz/tamutheo/databaseAPI/DatabaseApiApplicationTests.class
 AppointmentTests.class
 MiscellaneousTests.class
 TuteeTests.class
 TutorTests.class
+=======
+xyz\tamutheo\databaseAPI\DatabaseApiApplicationTests.class
+>>>>>>> 95e9a20 (Brandon: changed all PUT request endpoints to generic REQUEST endpoints)
