@@ -6,6 +6,7 @@
 
 import type { SvgIconComponent } 
 from "@mui/icons-material";
+import dayjs, { Dayjs } from 'dayjs';
 
 
 // Must declare global to access types without import, IF importing. Imports flag file as React module and prevent global scoping by default.
@@ -27,6 +28,19 @@ declare global {
 
   // REST API: /seniority
   type Seniority = "All" | "Freshman" | "Sophomore" | "Junior" | "Senior" | "Graduate";
+  type LocationType = "in-person on-campus" | "in-person off-campus" | "online";
+
+  type TimePreference = {
+    day: string,
+    startTime: dayjs.Dayjs,
+    endTime: dayjs.Dayjs
+  }
+
+  type TutorTime = {
+    weekday_name: string,
+    time_intervals: string,
+    tutor_email: string
+  }
 
   // 
   type Tutor = {
@@ -53,7 +67,7 @@ declare global {
     lastName: string,
     listingTitle: string,
     locationPreferences: { 
-      locationName: string, 
+      locationName: Location, 
       tutorEmail: string 
     }[],
     majorAbbreviation: string,
