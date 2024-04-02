@@ -46,7 +46,7 @@ public class TutorReviewController {
                 numberEntriesPerPage);
     }
     @GetMapping(value = {"/pending_reviews"})
-    public List<AppointmentModel> getPendingReviews(@RequestParam(name = "tutee_email") String tuteeEmail) {
+    public List<TutorPendingReviewModel> getPendingReviews(@RequestParam(name = "tutee_email") String tuteeEmail) {
         return this.tutorReviewService.getPendingReviews(tuteeEmail);
     }
     //    @PutMapping(value = {"", "/"})

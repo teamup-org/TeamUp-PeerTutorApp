@@ -15,7 +15,7 @@
         <result property="tuteePictureUrl" column="tutee_picture_url" />
     </resultMap>
 
-    <resultMap id="AppointmentResultMap" type="xyz.tamutheo.databaseAPI.appointment.AppointmentModel">
+    <resultMap id="TutorPendingReviewResultMap" type="xyz.tamutheo.databaseAPI.tutorReview.TutorPendingReviewModel">
         <result property="appointmentId" column="appointment_id" />
         <result property="startDateTimeValue" column="start_date_time_value" />
         <result property="endDateTimeValue" column="end_date_time_value" />
@@ -32,6 +32,9 @@
         <result property="tutorFirstName" column="tutor_first_name" />
         <result property="tutorLastName" column="tutor_last_name" />
         <result property="tutorPhoneNumber" column="tutor_phone_number" />
+        <result property="tutorMajorAbbreviation" column="tutor_major_abbreviation" />
+        <result property="tutorSeniority" column="tutor_seniority" />
+        <result property="tutorPictureUrl" column="tutor_picture_url" />
     </resultMap>
 
     <insert id="create" parameterType="xyz.tamutheo.databaseAPI.tutorReview.TutorReviewModel">
@@ -150,23 +153,27 @@
         </where>
     </select>
 
-    <select id="getPendingReviews" resultMap="AppointmentResultMap">
-        SELECT a.appointment_id,
-        a.appointment_size_name,
-        a.cancellation_reason,
-        a.end_date_time AS end_date_time_value,
-        a.is_cancelled,
-        a.is_confirmed,
-        a.location_name,
-        a.start_date_time AS start_date_time_value,
-        a.tutee_email AS tutee_email,
-        tutee.first_name AS tutee_first_name,
-        tutee.last_name AS tutee_last_name,
-        tutee.phone_number AS tutee_phone_number,
-        tutor.first_name AS tutor_first_name,
-        tutor.last_name AS tutor_last_name,
-        tutor.phone_number AS tutor_phone_number,
-        a.tutor_email AS tutor_email
+    <select id="getPendingReviews" resultMap="TutorPendingReviewResultMap">
+        SELECT
+            a.appointment_id,
+            a.appointment_size_name,
+            a.cancellation_reason,
+            a.end_date_time AS end_date_time_value,
+            a.is_cancelled,
+            a.is_confirmed,
+            a.location_name,
+            a.start_date_time AS start_date_time_value,
+            a.tutee_email AS tutee_email,
+            tutee.first_name AS tutee_first_name,
+            tutee.last_name AS tutee_last_name,
+            tutee.phone_number AS tutee_phone_number,
+            tutor.first_name AS tutor_first_name,
+            tutor.last_name AS tutor_last_name,
+            tutor.phone_number AS tutor_phone_number,
+            tutor.major_abbreviation AS tutor_major_abbreviation,
+            tutor.seniority_name AS tutor_seniority,
+            tutor.picture_url AS tutor_picture_url,
+            a.tutor_email AS tutor_email
         FROM appointment AS a
         INNER JOIN tutor ON a.tutor_email = tutor.email
         INNER JOIN tutee ON a.tutee_email = tutee.email
