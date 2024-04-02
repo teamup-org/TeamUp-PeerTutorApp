@@ -1,46 +1,53 @@
 
-import { Stack, Typography, Avatar, Box, Button, Divider }
+
+
+import * as React from 'react';
+
+import { ExpandLess, ExpandMore } 
+  from '@mui/icons-material';
+import { Stack, Typography, Avatar, Button, Box, ListItemButton, ListItemAvatar, ListItemText, Collapse }
   from '@mui/material';
 
 import { toTitleCase, toDate }
   from '@/app/_lib/utils';
 
 
-export default function PendingReview( { pendingReview, setPendingReview } : { pendingReview: Appointment, setPendingReview: Function } ) {
+export default function PendingReview( { pendingReview, setPendingReview } : { pendingReview: PendingReview, setPendingReview: Function } ) {
+  const [open, setOpen] = React.useState(false);
+  
+  const tutorName = toTitleCase(`${pendingReview.tutorFirstName} ${pendingReview.tutorLastName}`);
+  const tutorInfo = `${pendingReview.tutorMajorAbbreviation.toUpperCase()} | ${toTitleCase(pendingReview.tutorSeniority)}`;
+
   const handleRatingBox = () => {
     setPendingReview(pendingReview);
   };
 
 
   return (
-    <Stack direction="row" alignItems="center" spacing={1} borderBottom={1} borderColor="divider" pb={1}>
-      <Avatar src="" sx={{ width: 90, height: 90 }} />
+    <>
+      <ListItemButton onClick={() => setOpen(!open)}>
 
-          {/* Name OVER Date */}
-          <Stack direction="column" justifyItems="center">
+        <ListItemAvatar>
+          <Avatar src={pendingReview.tutorPictureUrl} sx={{ width: 70, height: 70 }} />
+        </ListItemAvatar>
 
-            {/* Tutor Info */}
-            <Stack direction="row" alignItems="center" spacing={1} divider={ <Divider orientation="vertical" sx={{ height: 20 }} /> }>
-              <Typography variant="h6" fontWeight="bold"> { toTitleCase(`${pendingReview.tutorFirstName} ${pendingReview.tutorLastName}`) } </Typography>
-              
-              <Typography variant="body1" color="text.secondary">CSCE{ /*pendingReview.tutorMajorAbbreviation.toUpperCase()*/ } </Typography>
-              <Typography variant="body1" color="text.secondary">Freshman{ /*toTitleCase(pendingReview.tuteeSeniority)*/ } </Typography>
-            </Stack>
+        <ListItemText
+          primary={<Typography variant="h5" fontWeight="bold"> {tutorName} </Typography>} 
+          secondary={<Typography variant="body1" color="text.secondary"> {tutorInfo} </Typography>}
+          sx={{ ml: 2 }}
+        />
 
-            {/* Date */}
-            <Stack direction="row" alignItems="center" spacing={2}>
-              <Typography variant="body1" color="text.secondary"> 
-                {`From Appointment: `}
-                { toDate(new Date(pendingReview.endDateTimeString)) }
-              </Typography>
-            </Stack>
+        { open ? <ExpandLess /> : <ExpandMore /> }
+      </ListItemButton>
 
-            <Stack direction="row">
-              <Button variant="contained" onClick={handleRatingBox}> Open Review </Button>
-            </Stack>
-          </Stack>
+      <Collapse in={open} timeout="auto" unmountOnExit>
+        <Typography> Appointment: {toDate(new Date(pendingReview.endDateTimeString))} </Typography>
 
-
-    </Stack>
+        <Stack direction="row" spacing={1} alignContent="center" justifyContent="end" pr={2}>
+          <Button variant="contained" size="small" color="error"> Delete </Button>
+          <Button variant="contained" size="small" onClick={handleRatingBox}> Open Review </Button>
+        </Stack>
+      </Collapse>
+    </>
   );
 }

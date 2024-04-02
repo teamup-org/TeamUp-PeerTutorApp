@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Container, Box, Grid, Stack, Typography, Rating, LinearProgress, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Button }
   from '@mui/material';
 
-import Review from './review';
+import Review from '../review';
 import { TableFetch } from '@/app/_lib/data';
 
 
@@ -131,13 +131,6 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
               </Stack>
 
             </Stack>
-
-            {/* Review section */}
-            <Stack direction="column" spacing={1}>
-              <Typography variant="h6" fontWeight="bold"> Leave a Review! </Typography>
-              <Review editable />
-            </Stack>
-
           </Stack>
         </Grid>
         
