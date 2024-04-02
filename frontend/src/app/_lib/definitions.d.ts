@@ -73,7 +73,8 @@ declare global {
     lastName: string,
     majorAbbreviation: string,
     phoneNumber: number,
-    seniorityName: string
+    seniorityName: string,
+    pictureUrl: string
   }
 
   type TuteeQuery = Tutee[];

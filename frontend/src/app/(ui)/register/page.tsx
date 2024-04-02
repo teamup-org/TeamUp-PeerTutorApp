@@ -218,7 +218,8 @@ function TuteeForm(props: any) {
       phone_number: formData.get('phoneNumber') as string,
       seniority_name: seniority,
       email: session?.user?.email as string,
-      major_abbreviation: formData.get('major') as string
+      major_abbreviation: formData.get('major') as string,
+      picture_url: session?.user?.image as string
     };
     
     mutate(registrationData);
