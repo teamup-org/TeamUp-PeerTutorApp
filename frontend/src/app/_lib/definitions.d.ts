@@ -167,4 +167,13 @@ declare global {
     tutorMajorAbbreviation: string,
     tutorSeniority: Seniority,
   };
+
+  // REST API: /tutor_time_preference
+  type TutorTimePreference = {
+    startTimeString: string,
+    endTimeString: string,
+
+    tutorEmail: string,
+    weekdayName: string,
+  };
 }

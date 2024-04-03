@@ -8,16 +8,8 @@ import { TransitionProps }
 import { Dialog, DialogTitle, DialogContent, Divider, Container, IconButton, Stack, Slide }
   from '@mui/material';
 
-import FullCalendar from '@fullcalendar/react';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-
 import TutorProfileReviews from './tutor-profile-reviews';
-import { TableFetch }
-  from '@/app/_lib/data';
-import { toTitleCase }
-  from '@/app/_lib/utils';
+import TutorProfileSchedule from './tutor-profile-schedule';
 import { TutorCard } 
   from '@/app/(ui)/tutor-card';
 
@@ -35,22 +27,6 @@ const Transition = React.forwardRef(function Transition(
 export default function TutorProfile(
   { tutorState: [selectedTutor, setSelectedTutor] } : { tutorState: [Tutor | null, Function] }
 ){
-  const calendar = React.createRef<FullCalendar>();
-
-  const { data: appointmentData } = TableFetch<AppointmentQuery>("appointment", [selectedTutor], `tutor_email_contains=${selectedTutor?.email}`);
-
-  const getEvents = () => {
-    return appointmentData?.data?.map((appointment: Appointment) => (
-      { 
-        title: toTitleCase(`${appointment.tuteeFirstName} ${appointment.tuteeLastName}`),
-        start: appointment.startDateTimeString,
-        end: appointment.endDateTimeString,
-        data: appointment,
-      }
-    ));
-  };
-
-
   return (
     <Dialog 
       open={selectedTutor ? true : false} onClose={() => setSelectedTutor(null)}
@@ -71,35 +47,7 @@ export default function TutorProfile(
             <TutorCard elevation={0} tutor={selectedTutor} /> 
             }
 
-            <Container maxWidth="lg">
-              <FullCalendar 
-                ref={calendar}
-                plugins={[ interactionPlugin, dayGridPlugin, timeGridPlugin ]}
-                initialView="timeGridWeek"
-                allDaySlot={false}
-                selectable={true}
-                /*selectAllow={(selectInfo) => {
-                  // Allow selection only on dates, not time slots
-                  return selectInfo.start.getTime() === selectInfo.end.getTime();
-                }}*/
-                // dateClick={handleDateSelect}
-                headerToolbar={{
-                  left: 'prev,next today',
-                  center: 'title',
-                  right: 'dayGridMonth,timeGridWeek,timeGridDay',
-                }}
-                buttonText={{
-                  today: 'Today',
-                  month: 'Month',
-                  week: 'Week',
-                  day: 'Day',
-                }}
-                events={getEvents()}
-                nowIndicator //scrollTime={currentTime.toLocaleTimeString('it-IT')} scrollTimeReset={false}
-                height="60vh"
-              />
-            </Container>
-
+            <TutorProfileSchedule selectedTutor={selectedTutor} />
             
             { selectedTutor &&
               <TutorProfileReviews tutor={selectedTutor} />

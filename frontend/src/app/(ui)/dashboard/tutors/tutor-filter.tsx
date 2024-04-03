@@ -4,10 +4,7 @@
 
 import * as React from 'react';
 
-import ClearIcon from '@mui/icons-material/Clear';
-import SearchIcon from '@mui/icons-material/Search';
-import { Paper, Stack, Typography, FormControl, InputLabel, Select, Autocomplete, MenuItem, TextField, Box, Slider, SelectChangeEvent, 
-  Tooltip, IconButton }
+import { Paper, Stack, Typography, FormControl, InputLabel, Select, Autocomplete, MenuItem, TextField, Box, Slider, SelectChangeEvent }
 from '@mui/material';
 
 import { TableFetch } 
@@ -87,10 +84,6 @@ export default function TutorFilter(
     setSeniority(event.target.value);
   };
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
-  };
-
 
   // Database Fetching
   const { data: majorData, isLoading: majorIsLoading, isFetching: majorIsFetching, isPlaceholderData: majorIsPlaceholderData, refetch: majorRefetch } = 
@@ -115,42 +108,10 @@ export default function TutorFilter(
   };
 
 
-  const [test, setTest] = React.useState(true);
-  React.useEffect(() => {
-    tutorRefetch();
-  }, [test]);
-
-  const searchAdornments: React.JSX.Element = (
-    <Stack direction="row" height="100%"> 
-      { 
-        search && ( 
-          <Tooltip title="Clear">
-            <IconButton aria-label="Clear" onClick={ () => {
-                setSearch("");
-                setTest(!test);
-                } }> 
-              <ClearIcon />
-            </IconButton> 
-          </Tooltip>
-        ) 
-      } 
-      <IconButton onClick={ () => tutorRefetch() }> 
-        <SearchIcon /> 
-      </IconButton> 
-    </Stack>
-  );
-
-
   return (
     <Paper elevation={4} sx={{ p: 2, minWidth: '0%', position: 'sticky', top: 10 }}>
       <Stack direction="column" spacing={3}>
         <Typography variant="h4" textAlign="center"> Filters </Typography>
-
-        <TextField 
-          id="outlined-tutor-search" label="Search" variant="outlined"
-          value={search} onChange={handleSearchChange} onKeyUp={ (event) => {if (event.key === "Enter") tutorRefetch();} }
-          fullWidth InputProps={{ endAdornment: searchAdornments }} sx={{ bgcolor: 'white' }}
-        />
 
         <FormControl fullWidth>
           <InputLabel id="select-sort-label"> Sort By </InputLabel>
