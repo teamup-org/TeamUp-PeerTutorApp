@@ -9,12 +9,7 @@ import java.util.List;
 
 @Mapper
 public interface TutorTimePreferenceMapper {
-    List<TutorTimePreferenceModel> read(@Param("endTimeLessThanOrEquals") LocalTime endTimeLessThanOrEquals,
-                                        @Param("startTimeGreaterThanOrEquals") LocalTime startTimeGreaterThanOrEquals,
-                                        @Param("tutorEmailEquals") String tutorEmailEquals,
-                                        @Param("weekdayNameInList") List<String> weekdayNameInList,
-                                        @Param("limit") Integer limit,
-                                        @Param("offset") Integer offset);
+    List<TutorTimePreferenceModel> read(@Param("tutorEmailEquals") String tutorEmailEquals);
     void create(TutorTimePreferenceModel tutorTimePreferenceModel);
     void deleteAll(@Param("tutorEmail") String tutorEmail,
                    @Param("weekdayName") String weekdayName);
