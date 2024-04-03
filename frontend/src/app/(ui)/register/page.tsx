@@ -480,13 +480,13 @@ function CoursePreferences(props: any) {
                       value={time.day}
                       onChange={(e) => handleTimeChange(index, 'day', e.target.value as string)}
                     >
-                      <MenuItem value="Monday">Monday</MenuItem>
-                      <MenuItem value="Tuesday">Tuesday</MenuItem>
-                      <MenuItem value="Wednesday">Wednesday</MenuItem>
-                      <MenuItem value="Thursday">Thursday</MenuItem>
-                      <MenuItem value="Friday">Friday</MenuItem>
-                      <MenuItem value="Saturday">Saturday</MenuItem>
-                      <MenuItem value="Sunday">Sunday</MenuItem>
+                      <MenuItem value="monday">monday</MenuItem>
+                      <MenuItem value="tuesday">tuesday</MenuItem>
+                      <MenuItem value="wednesday">wednesday</MenuItem>
+                      <MenuItem value="thursday">thursday</MenuItem>
+                      <MenuItem value="friday">friday</MenuItem>
+                      <MenuItem value="saturday">saturday</MenuItem>
+                      <MenuItem value="sunday">sunday</MenuItem>
                     </Select>
                   </TableCell>
                   <TableCell>
@@ -746,12 +746,32 @@ export default function Registration() {
   useEffect(() => {
 
     if (tutorTimesSet) {
-      tutorTimePreferences.map((time: TutorTime) => (
-        tutorTimeMutationUpdate.mutate(time)
-      ))
+      tutorTimeMutationUpdate.mutate(convertTutorSchedule(timePreferences));
     }
 
-  }, [tutorTimePreferences]);
+  }, [tutorTimesSet]);
+
+  const convertTutorSchedule = (tutorTimes: TimePreference[]) => {
+    const formattedSchedule: BackendTimes = {};
+
+    const weekdays = ['monday_time_intervals', 'tuesday_time_intervals', 'wednesday_time_intervals', 'thursday_time_intervals', 'friday_time_intervals', 'saturday_time_intervals', 'sunday_time_intervals'];
+    weekdays.forEach(weekday => {
+        formattedSchedule[weekday] = '';
+    });
+
+    // Iterate through each TutorTime object
+    for (let i = 0; i < tutorTimes.length; i++) {
+        const tutorTime = tutorTimes[i];
+
+        const { day } = tutorTime;
+
+        formattedSchedule[`${day}_time_intervals`] += `${convertPreferenceToString(tutorTime)}, `;
+      }
+
+    // Return the formatted schedule
+    formattedSchedule['tutor_email'] = session?.user?.email || '';
+    return formattedSchedule;
+};
 
   async function UpdateTutorPreferences() {
 

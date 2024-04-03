@@ -42,6 +42,10 @@ declare global {
     tutor_email: string
   }
 
+  type BackendTimes = {
+    [key: string]: string
+};
+
   // 
   type Tutor = {
     activeStatusName: "active" | "inactive" | "banned",
