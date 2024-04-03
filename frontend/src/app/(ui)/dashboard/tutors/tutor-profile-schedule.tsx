@@ -50,6 +50,7 @@ export default function TutorProfileSchedule({ selectedTutor } : { selectedTutor
         daysOfWeek: [ Day[timePreference.weekdayName] ],
 
         display: 'background',
+        //color: '#ccc'
       }
     ));
   };
@@ -70,7 +71,7 @@ export default function TutorProfileSchedule({ selectedTutor } : { selectedTutor
         eventData: function(eventEl) {
           return {
             title: eventEl.innerText,
-            constraint: "timePreference",
+            
           };
         }
       });
@@ -86,14 +87,7 @@ export default function TutorProfileSchedule({ selectedTutor } : { selectedTutor
         <Stack direction="column" spacing={2} width="10%">
           <Paper elevation={4} sx={{ p: 2 }}>
 
-            <div id="external-events">
-              <div className="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event" style={{ cursor: 'move' }}>
-                <div className="fc-event-main" style={{ textAlign: 'center' }}>
-                  Test
-                </div>
-              </div>
-            </div>
-
+            
           </Paper>
         </Stack>
 
@@ -103,7 +97,7 @@ export default function TutorProfileSchedule({ selectedTutor } : { selectedTutor
             plugins={[ interactionPlugin, dayGridPlugin, timeGridPlugin ]}
             initialView="timeGridWeek"
 
-            height="60vh"
+            height="80vh"
             /*selectAllow={(selectInfo) => {
               // Allow selection only on dates, not time slots
               return selectInfo.start.getTime() === selectInfo.end.getTime();
@@ -122,7 +116,8 @@ export default function TutorProfileSchedule({ selectedTutor } : { selectedTutor
             }}
             allDaySlot={false}
 
-            selectable editable droppable eventOverlap={false}
+            selectable selectMirror // selectConstraint="businessHours" //selectOverlap={(event) => event.display === 'background'}
+            editable droppable eventOverlap={false}
             events={getEvents()} // eventColor={theme.palette.primary.main}
             eventClick={handleEventClick} eventReceive={handleEventReceive}
             nowIndicator scrollTime={currentTime.toLocaleTimeString('it-IT')} scrollTimeReset={false}
