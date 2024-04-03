@@ -23,12 +23,14 @@ const filterOptions = [
 ];
 
 const calculateRatingDistribution = (tutor: Tutor) => {
+  const totalRatings = Math.max(tutor.numberOfRatings, 1);
+
   var dist = [
-    (tutor.numberOneStarRatings   / tutor.numberOfRatings) * 100,
-    (tutor.numberTwoStarRatings   / tutor.numberOfRatings) * 100,
-    (tutor.numberThreeStarRatings / tutor.numberOfRatings) * 100,
-    (tutor.numberFourStarRatings  / tutor.numberOfRatings) * 100,
-    (tutor.numberFiveStarRatings  / tutor.numberOfRatings) * 100,
+    (tutor.numberOneStarRatings   / totalRatings) * 100,
+    (tutor.numberTwoStarRatings   / totalRatings) * 100,
+    (tutor.numberThreeStarRatings / totalRatings) * 100,
+    (tutor.numberFourStarRatings  / totalRatings) * 100,
+    (tutor.numberFiveStarRatings  / totalRatings) * 100,
   ];
   
   return dist;
@@ -52,10 +54,10 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
   const mapStars = () => {
     return starWeights.toReversed().map((weight: number, index) => (
         <Stack key={index} direction="row" spacing={1} alignItems="center">
-          <Typography variant="body1" width={50} align="right"> {5 - index} star </Typography>
+          <Typography variant="body1" width={50} align="right" whiteSpace="noWrap"> {5 - index} star </Typography>
 
-          <LinearProgress variant="determinate" value={weight} sx={{ width: '90%', height: 12, borderRadius: 8 }} />
-
+          <LinearProgress variant="determinate" value={weight} sx={{ width: '100%', height: 12, borderRadius: 8 }} />
+          
           <Typography variant="body1" width={25} align="right"> {weight}% </Typography>
         </Stack>
       )
@@ -85,6 +87,10 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
         <Review key={index} review={review} />
       ));
     }
+    
+    return (
+      <Typography variant="h4" align="center"> No Reviews </Typography>
+    );
   };
 
 
@@ -99,7 +105,7 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
             <Stack direction="column" spacing={2} borderBottom={1} borderColor="divider" pb={2}>
 
               {/* Average rating + review distribution row */}
-              <Stack direction="row" spacing={4} justifyItems="center">
+              <Stack direction="row" spacing={2} justifyItems="center">
                 {/* Average rating column */}
                 <Stack direction="column" alignItems="center" justifyItems="center">
                   <Typography variant="h2"> {tutor?.averageRating ? tutor.averageRating.toFixed(1) : Number(0.0).toFixed(1)} </Typography>
@@ -108,7 +114,7 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
                 </Stack>
 
                 {/* Print review distribution from 1 to 5 stars */}
-                <Stack direction="column" width={500}>
+                <Stack direction="column" width="100%">
                   { mapStars() }
                 </Stack>
               </Stack>
