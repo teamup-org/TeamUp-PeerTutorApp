@@ -3,8 +3,10 @@
 
 import * as React from 'react';
 
-import { Box, Container, Grid, Stack, Skeleton, Pagination, Typography, ToggleButtonGroup, ToggleButton, ButtonBase 
-, Avatar}
+import ClearIcon from '@mui/icons-material/Clear';
+import SearchIcon from '@mui/icons-material/Search';
+import { Box, Container, Grid, Stack, TextField, Pagination, Typography, ToggleButtonGroup, ToggleButton, ButtonBase 
+, Tooltip, IconButton }
 from '@mui/material';
 
 import { TutorCard, TutorSkeleton }
@@ -35,6 +37,10 @@ export default function TutorPage() {
   const [page, setPage] = React.useState(1);
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
+  };
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
   };
 
 
@@ -74,6 +80,31 @@ export default function TutorPage() {
     )
   };
 
+  const [test, setTest] = React.useState(true);
+  React.useEffect(() => {
+    tutorRefetch();
+  }, [test]);
+
+  const searchAdornments: React.JSX.Element = (
+    <Stack direction="row" height="100%"> 
+      { 
+        search && ( 
+          <Tooltip title="Clear">
+            <IconButton aria-label="Clear" onClick={ () => {
+                setSearch("");
+                setTest(!test);
+                } }> 
+              <ClearIcon />
+            </IconButton> 
+          </Tooltip>
+        ) 
+      } 
+      <IconButton onClick={ () => tutorRefetch() }> 
+        <SearchIcon /> 
+      </IconButton> 
+    </Stack>
+  );
+
 
   return (
     <Box position="static" mb="40px">
@@ -96,6 +127,12 @@ export default function TutorPage() {
             
           <Grid item xs={12} md={8}>
             <Stack direction="column" spacing={2}>
+              <TextField 
+                id="outlined-tutor-search" label="Search" variant="outlined"
+                value={search} onChange={handleSearchChange} onKeyUp={ (event) => {if (event.key === "Enter") tutorRefetch();} }
+                fullWidth InputProps={{ endAdornment: searchAdornments }} sx={{ bgcolor: 'white' }}
+              />
+
               { printTutors() }
 
               <Stack direction="row" width="100%" alignItems="center">

@@ -41,3 +41,12 @@ export function toDate(day: Date) {
 
   return `${month}/${date}/${year}`;
 }
+
+export function toTime(time: string) {
+  const dateTime = new Date(time);
+
+  const hours = dateTime.getHours().toString().padStart(2, '0');
+  const minutes = dateTime.getMinutes().toString().padStart(2, '0');
+  console.log(hours, minutes);
+  return `${hours}:${minutes}`;
+}
