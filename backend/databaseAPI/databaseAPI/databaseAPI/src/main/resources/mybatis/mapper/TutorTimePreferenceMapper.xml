@@ -18,30 +18,12 @@
         *
         FROM tutor_time_preference
         <where>
-            <if test="endTimeLessThanOrEquals != null">
-                AND end_time &lt;= #{endTimeLessThanOrEquals}
-            </if>
-            <if test="startTimeGreaterThanOrEquals != null">
-                AND start_time &gt;= #{startTimeGreaterThanOrEquals}
-            </if>
             <if test="tutorEmailEquals != null">
                 AND tutor_email = #{tutorEmailEquals}
             </if>
-            <if test="weekdayNameInList != null">
-                AND weekday_name in
-                <foreach item="item" index="index" collection="weekdayNameInList" open="(" separator="," close=")">
-                    #{item}
-                </foreach>
-            </if>
         </where>
-        <if test="limit != null">
-            LIMIT #{limit}
-        </if>
-        <if test="limit != null and offset != null">
-            OFFSET #{offset}
-        </if>
     </select>
-    <delete id="deleteAll" parameterType="xyz.tamutheo.databaseAPI.tutorTimePreference.TutorTimePreferenceModel">
+    <delete id="deleteAll" parameterType="map">
         DELETE FROM tutor_time_preference
         <where>
             <if test="tutorEmail != null">
