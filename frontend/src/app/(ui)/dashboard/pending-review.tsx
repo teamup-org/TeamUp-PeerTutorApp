@@ -32,7 +32,7 @@ export default function PendingReview( { pendingReview, setPendingReview } : { p
         </ListItemAvatar>
 
         <ListItemText
-          primary={<Typography variant="h5" fontWeight="bold"> {tutorName} </Typography>} 
+          primary={<Typography variant="h6" fontWeight="bold"> {tutorName} </Typography>} 
           secondary={<Typography variant="body1" color="text.secondary"> {tutorInfo} </Typography>}
           sx={{ ml: 2 }}
         />

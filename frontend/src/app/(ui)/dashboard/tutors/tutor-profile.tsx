@@ -5,7 +5,7 @@ import * as React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { TransitionProps }
   from '@mui/material/transitions';
-import { Dialog, DialogTitle, DialogContent, Divider, Container, IconButton, Box, Slide }
+import { Dialog, DialogTitle, DialogContent, Divider, Container, IconButton, Stack, Slide }
   from '@mui/material';
 
 import FullCalendar from '@fullcalendar/react';
@@ -65,45 +65,46 @@ export default function TutorProfile(
       </DialogTitle>
       
       <DialogContent dividers sx={{ p: 0, pb: 8 }}>
-        <Container maxWidth="xl">
-          { selectedTutor &&
-          <TutorCard elevation={0} tutor={selectedTutor} /> 
-          }
+        <Container maxWidth="xl" sx={{ minWidth: 800 }}>
+          <Stack direction="column" spacing={4} alignItems="center" divider={ <Divider orientation="horizontal" flexItem /> }>
+            { selectedTutor &&
+            <TutorCard elevation={0} tutor={selectedTutor} /> 
+            }
 
-          <Box>
-            <FullCalendar 
-              ref={calendar}
-              plugins={[ interactionPlugin, dayGridPlugin, timeGridPlugin ]}
-              initialView="timeGridWeek"
-              allDaySlot={false}
-              selectable={true}
-              /*selectAllow={(selectInfo) => {
-                // Allow selection only on dates, not time slots
-                return selectInfo.start.getTime() === selectInfo.end.getTime();
-              }}*/
-              // dateClick={handleDateSelect}
-              headerToolbar={{
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay',
-              }}
-              buttonText={{
-                today: 'Today',
-                month: 'Month',
-                week: 'Week',
-                day: 'Day',
-              }}
-              events={getEvents()}
-              nowIndicator //scrollTime={currentTime.toLocaleTimeString('it-IT')} scrollTimeReset={false}
-              height="700px"
-            />
-          </Box>
+            <Container maxWidth="lg">
+              <FullCalendar 
+                ref={calendar}
+                plugins={[ interactionPlugin, dayGridPlugin, timeGridPlugin ]}
+                initialView="timeGridWeek"
+                allDaySlot={false}
+                selectable={true}
+                /*selectAllow={(selectInfo) => {
+                  // Allow selection only on dates, not time slots
+                  return selectInfo.start.getTime() === selectInfo.end.getTime();
+                }}*/
+                // dateClick={handleDateSelect}
+                headerToolbar={{
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'dayGridMonth,timeGridWeek,timeGridDay',
+                }}
+                buttonText={{
+                  today: 'Today',
+                  month: 'Month',
+                  week: 'Week',
+                  day: 'Day',
+                }}
+                events={getEvents()}
+                nowIndicator //scrollTime={currentTime.toLocaleTimeString('it-IT')} scrollTimeReset={false}
+                height="60vh"
+              />
+            </Container>
 
-          <Divider sx={{ my: 8 }} />
-          
-          { selectedTutor &&
-            <TutorProfileReviews tutor={selectedTutor} />
-          }
+            
+            { selectedTutor &&
+              <TutorProfileReviews tutor={selectedTutor} />
+            }
+          </Stack>
         </Container>
       </DialogContent>
 
