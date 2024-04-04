@@ -35,7 +35,8 @@ public class TutorReviewController {
                                          @RequestParam(name = "tutee_email_contains", required = false) String tuteeEmailContains,
                                          @RequestParam(name = "tutor_email_contains", required = false) String tutorEmailContains,
                                          @RequestParam(name = "page_number", required = false, defaultValue = "1") Integer pageNumber,
-                                         @RequestParam(name = "number_entries_per_page", required = false) Integer numberEntriesPerPage) {
+                                         @RequestParam(name = "number_entries_per_page", required = false) Integer numberEntriesPerPage,
+                                         @RequestParam(name = "sort_by", required = false) String sortBy) {
         return this.tutorReviewService.read(appointmentIdEquals,
                 numberStarsGreaterThanOrEquals,
                 numberStarsLessThanOrEquals,
@@ -43,7 +44,8 @@ public class TutorReviewController {
                 tuteeEmailContains,
                 tutorEmailContains,
                 pageNumber,
-                numberEntriesPerPage);
+                numberEntriesPerPage,
+                sortBy);
     }
     @GetMapping(value = {"/pending_reviews"})
     public List<TutorPendingReviewModel> getPendingReviews(@RequestParam(name = "tutee_email") String tuteeEmail) {

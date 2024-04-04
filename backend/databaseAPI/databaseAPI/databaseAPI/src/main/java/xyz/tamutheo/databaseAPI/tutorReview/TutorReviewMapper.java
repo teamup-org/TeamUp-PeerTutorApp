@@ -16,7 +16,8 @@ public interface TutorReviewMapper {
                                 @Param("tuteeEmailContains") String tuteeEmailContains,
                                 @Param("tutorEmailContains") String tutorEmailContains,
                                 @Param("limit") Integer limit,
-                                @Param("offset") Integer offset);
+                                @Param("offset") Integer offset,
+                                @Param("sortBy") String sortBy);
     void create(TutorReviewModel tutorReviewModel);
     void update (@Param("tutorReviewModelOld") TutorReviewModel tutorReviewModelOld,
                  @Param("tutorReviewModelNew") TutorReviewModel tutorReviewModelNew);

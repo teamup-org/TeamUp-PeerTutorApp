@@ -87,6 +87,20 @@
         <if test="limit != null and offset != null">
             OFFSET #{offset}
         </if>
+        <if test="sortBy != null">
+            <if test='"number_stars_ascending".equals(sortBy)'>
+                ORDER BY number_stars ASC, review_date DESC
+            </if>
+            <if test='"number_stars_descending".equals(sortBy)'>
+                ORDER BY number_stars DESC, review_date DESC
+            </if>
+            <if test='"review_date_ascending".equals(sortBy)'>
+                ORDER BY review_date ASC, number_stars DESC
+            </if>
+            <if test='"review_date_descending".equals(sortBy)'>
+                ORDER BY review_date DESC, number_stars DESC
+            </if>
+        </if>
     </select>
     <update id="update" parameterType="map">
         UPDATE tutor_review

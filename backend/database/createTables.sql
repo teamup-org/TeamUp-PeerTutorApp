@@ -56,7 +56,8 @@ CREATE TABLE tutor (
 	FOREIGN KEY (seniority_name) REFERENCES seniority(seniority_name) ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY (active_status_name) REFERENCES user_active_status(user_active_status_name) ON UPDATE CASCADE ON DELETE CASCADE,
 	CHECK (phone_number BETWEEN 1000000000 AND 9999999999),
-	CHECK (email LIKE '_%@_%._%')
+	CHECK (email LIKE '_%@_%._%'),
+    FULLTEXT(first_name, last_name)
 );
 
 CREATE TABLE weekday (
@@ -139,6 +140,7 @@ CREATE TABLE appointment (
     is_confirmed Boolean NOT NULL DEFAULT FALSE,
     is_cancelled BOOLEAN NOT NULL DEFAULT FALSE,
     cancellation_reason VARCHAR(1000),
+	tutee_request_comment VARCHAR(1000),
 	PRIMARY KEY (appointment_id),
 	FOREIGN KEY (tutor_email) REFERENCES tutor(email) ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY (tutee_email) REFERENCES tutee(email) ON UPDATE CASCADE ON DELETE CASCADE,

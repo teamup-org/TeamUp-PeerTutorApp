@@ -43,7 +43,6 @@ public class TutorTimePreferenceController {
         hashMap.put("sunday", sundayTimeIntervals);
 
         for (String weekdayName : hashMap.keySet()) {
-            System.out.println(weekdayName);
             List<TutorTimePreferenceModel> tutorTimePreferenceModelList = null;
             if ((hashMap.get(weekdayName) != null) && !(hashMap.get(weekdayName).equals("empty"))) {
                 // parse time intervals into time pairs
