@@ -22,12 +22,14 @@ public class AppointmentController {
                        @RequestParam(name = "location_name") String locationName,
                        @RequestParam(name = "tutee_email") String tuteeEmail,
                        @RequestParam(name = "tutor_email") String tutorEmail,
+                       @RequestParam(name = "tutee_request_comment", required = false) String tuteeRequestComment,
                        @RequestParam(name = "start_date_time") String startDateTimeString) {
         AppointmentModel appointmentModel = AppointmentModel.builder()
                 .appointmentSizeName(appointmentSizeName)
                 .endDateTimeString(endDateTimeString)
                 .locationName(locationName)
                 .tuteeEmail(tuteeEmail)
+                .tuteeRequestComment(tuteeRequestComment)
                 .tutorEmail(tutorEmail)
                 .startDateTimeString(startDateTimeString)
                 .build();
@@ -75,7 +77,8 @@ public class AppointmentController {
                        @RequestParam(name = "start_date_time_old") String startDateTimeStringOld,
                        @RequestParam(name = "cancellation_reason_new", required = false) String cancellationReasonNew,
                        @RequestParam(name = "is_cancelled_new", required = false) Boolean isCancelledNew,
-                       @RequestParam(name = "is_confirmed_new", required = false) Boolean isConfirmedNew) {
+                       @RequestParam(name = "is_confirmed_new", required = false) Boolean isConfirmedNew,
+                       @RequestParam(name = "tutee_request_comment_new", required = false) String tuteeRequestCommentNew) {
         AppointmentModel appointmentModelOld = AppointmentModel.builder()
                 .endDateTimeString(endDateTimeStringOld)
                 .tuteeEmail(tuteeEmailOld)
@@ -86,6 +89,7 @@ public class AppointmentController {
                 .cancellationReason(cancellationReasonNew)
                 .isCancelled(isCancelledNew)
                 .isConfirmed(isConfirmedNew)
+                .tuteeRequestComment(tuteeRequestCommentNew)
                 .build();
         this.appointmentService.update(appointmentModelOld, appointmentModelNew);
     }

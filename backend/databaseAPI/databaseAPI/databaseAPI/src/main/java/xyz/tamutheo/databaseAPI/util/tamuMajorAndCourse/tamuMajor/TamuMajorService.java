@@ -30,9 +30,6 @@ public class TamuMajorService {
                         .build();
                 tamuMajorModelList.add(tamuMajorModel);
             }
-            for (TamuMajorModel tamuMajorModel : tamuMajorModelList) {
-                System.out.println(tamuMajorModel);
-            }
             return tamuMajorModelList;
         } catch (Exception e) {
             System.err.println(e);

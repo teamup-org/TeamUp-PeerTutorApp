@@ -23,7 +23,8 @@ public class TutorReviewService {
                                          String tuteeEmailContains,
                                          String tutorEmailContains,
                                          Integer pageNumber,
-                                         Integer numberEntriesPerPage)  {
+                                         Integer numberEntriesPerPage,
+                                         String sortBy)  {
         Integer limit = numberEntriesPerPage != null ? numberEntriesPerPage : null;
         Integer offset = (numberEntriesPerPage != null) && (pageNumber != null) ? (pageNumber - 1) * numberEntriesPerPage : null;
         List<TutorReviewModel> tutorReviewModelList = this.tutorReviewMapper.read(appointmentIdEquals,
@@ -33,7 +34,8 @@ public class TutorReviewService {
                 tuteeEmailContains,
                 tutorEmailContains,
                 limit,
-                offset);
+                offset,
+                sortBy);
         for (TutorReviewModel tutorReviewModel : tutorReviewModelList) {
             tutorReviewModel.setReviewDateString(tutorReviewModel.getReviewDateValue().format(DateTimeFormatter.ISO_LOCAL_DATE));
         }

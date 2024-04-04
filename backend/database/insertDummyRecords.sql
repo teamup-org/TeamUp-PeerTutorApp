@@ -286,7 +286,7 @@ VALUES
     ('james', 'nguyen', 'ecen', 'junior', 2109876543, 'james@gmail.com', 'active', "https://upload.wikimedia.org/wikipedia/commons/c/ce/Headshot_AAlikhan.jpg"),
     ('emma', 'kim', 'aero', 'senior', 1098765432, 'emma@gmail.com', 'inactive', "https://upload.wikimedia.org/wikipedia/commons/7/71/Zachariah_Fincher_Headshot.jpg"),
     ('benjamin', 'patel', 'cven', 'freshman', 8901234567, 'benjamin@gmail.com', 'banned', "https://upload.wikimedia.org/wikipedia/commons/1/14/Best_Headshot_2024.jpg"),
-    ('kyle', 'lang', 'csce', 'senior', 3256276760, 'lang.kyl24@tamu.edu', 'active', "https://upload.wikimedia.org/wikipedia/commons/7/79/Headshot_Renaud_Laplanche.jpg");
+    ('kyle', 'lang', 'csce', 'senior', 3256276760, 'lang.kyl24@tamu.edu', 'active', "https://lh3.googleusercontent.com/a/ACg8ocI6st_Ph9hGFsRfNNpX9aenZ5OzUkiORUCLJ8uVZMbiVQ=s96-c");
 
 INSERT INTO appointment_size
     (appointment_size_name)
@@ -303,7 +303,20 @@ VALUES
     ('single', 'denise@gmail.com', 'david@gmail.com', '2024-03-04 13:00:00', '2024-03-04 14:00:00', 'in-person off-campus', true),
     ('single', 'edgar@gmail.com', 'mary@gmail.com', '2024-03-05 08:00:00', '2024-03-05 09:00:00', 'in-person on-campus', true),
     ('single', 'sophia@gmail.com', 'sophie@gmail.com', '2024-03-02 22:00:00', '2024-03-02 23:00:00', 'online', true),
+    
     ('single', 'liam@gmail.com', 'lucas@gmail.com', '2024-03-03 13:00:00', '2024-03-03 14:00:00', 'in-person off-campus', true),
+    ('single', 'amber@gmail.com', 'lucas@gmail.com', '2024-03-03 13:00:00', '2024-03-03 14:00:00', 'in-person off-campus', true),
+    ('single', 'bobby@gmail.com', 'lucas@gmail.com', '2024-03-03 13:00:00', '2024-03-03 14:00:00', 'in-person off-campus', true),
+    ('single', 'calvin@gmail.com', 'lucas@gmail.com', '2024-03-03 13:00:00', '2024-03-03 14:00:00', 'in-person off-campus', true),
+    ('single', 'denise@gmail.com', 'lucas@gmail.com', '2024-03-03 13:00:00', '2024-03-03 14:00:00', 'in-person off-campus', true),
+    ('single', 'edgar@gmail.com', 'lucas@gmail.com', '2024-03-03 13:00:00', '2024-03-03 14:00:00', 'in-person off-campus', true),
+    ('single', 'sophia@gmail.com', 'lucas@gmail.com', '2024-03-03 13:00:00', '2024-03-03 14:00:00', 'in-person off-campus', true),
+    ('single', 'olivia@gmail.com', 'lucas@gmail.com', '2024-03-03 13:00:00', '2024-03-03 14:00:00', 'in-person off-campus', true),
+    ('single', 'noah@gmail.com', 'lucas@gmail.com', '2024-03-03 13:00:00', '2024-03-03 14:00:00', 'in-person off-campus', true),
+    ('single', 'ava@gmail.com', 'lucas@gmail.com', '2024-03-03 13:00:00', '2024-03-03 14:00:00', 'in-person off-campus', true),
+    ('single', 'william@gmail.com', 'lucas@gmail.com', '2024-03-03 13:00:00', '2024-03-03 14:00:00', 'in-person off-campus', true),
+    ('single', 'isabella@gmail.com', 'lucas@gmail.com', '2024-03-03 13:00:00', '2024-03-03 14:00:00', 'in-person off-campus', true),
+    
     ('single', 'olivia@gmail.com', 'emma@gmail.com', '2024-03-04 08:00:00', '2024-03-04 09:00:00', 'in-person on-campus', true),
     ('single', 'noah@gmail.com', 'nathan@gmail.com', '2024-03-05 22:00:00', '2024-03-05 23:00:00', 'online', true),
     ('single', 'ava@gmail.com', 'chloe@gmail.com', '2024-03-06 13:00:00', '2024-03-06 14:00:00', 'in-person off-campus', true),
@@ -313,7 +326,11 @@ VALUES
     ('single', 'emma@gmail.com', 'manon@gmail.com', '2024-03-10 08:00:00', '2024-03-10 09:00:00', 'in-person on-campus', true),
     ('single', 'emma@gmail.com', 'gabriel@gmail.com', '2024-03-11 22:00:00', '2024-03-11 23:00:00', 'online', true),
     ('single', 'benjamin@gmail.com', 'gabriel@gmail.com', '2024-03-12 22:00:00', '2024-03-12 23:00:00', 'online', true),
-    ('single', 'lang.kyl24@tamu.edu', 'chloe@gmail.com', '2024-03-12 22:00:00', '2024-03-12 23:00:00', 'online', true);
+    ('single', 'lang.kyl24@tamu.edu', 'chloe@gmail.com', '2023-03-10 22:00:00', '2023-03-10 23:00:00', 'online', true),
+    ('single', 'lang.kyl24@tamu.edu', 'john@gmail.com', '2023-03-11 22:00:00', '2023-03-11 23:00:00', 'online', true),
+    ('single', 'lang.kyl24@tamu.edu', 'maria@gmail.com', '2023-03-12 22:00:00', '2023-03-12 23:00:00', 'online', true),
+    ('single', 'lang.kyl24@tamu.edu', 'james@gmail.com', '2023-03-13 22:00:00', '2023-03-13 23:00:00', 'online', true),
+    ('single', 'lang.kyl24@tamu.edu', 'david@gmail.com', '2023-03-14 22:00:00', '2023-03-14 23:00:00', 'online', true);
 
 
 INSERT INTO tutor_review
@@ -325,16 +342,32 @@ VALUES
     (4, 'denise@gmail.com', 'david@gmail.com', 4, "somewhat okay", "2024-03-04"),
     (5, 'edgar@gmail.com', 'mary@gmail.com', 5, "very good", "2024-03-05"),
     (6, 'sophia@gmail.com', 'sophie@gmail.com', 4, "Great tutor, highly recommend!", "2024-03-02"),
-    (7, 'liam@gmail.com', 'lucas@gmail.com', 5, "Excellent session, very informative.", "2024-03-03"),
-    (8, 'olivia@gmail.com', 'emma@gmail.com', 3, "Good tutor, helpful explanations.", "2024-03-04"),
-    (9, 'noah@gmail.com', 'nathan@gmail.com', 2, "Average tutoring, could improve.", "2024-03-05"),
-    (10, 'ava@gmail.com', 'chloe@gmail.com', 5, "Fantastic tutor, exceeded expectations.", "2024-03-06"),
-    (11, 'william@gmail.com', 'louis@gmail.com', 4, "Really helpful, clarified difficult concepts.", "2024-03-07"),
-    (12, 'isabella@gmail.com', 'lea@gmail.com', 1, "Poor tutoring, not recommended.", "2024-03-08"),
-    (13, 'james@gmail.com', 'hugo@gmail.com', 3, "Decent tutor, could be more engaging.", "2024-03-09"),
-    (14, 'emma@gmail.com', 'manon@gmail.com', 5, "Outstanding tutor, best experience!", "2024-03-10"),
-    (15, 'emma@gmail.com', 'gabriel@gmail.com', 1, "Horrible!", "2024-03-11"),
-    (16, 'benjamin@gmail.com', 'gabriel@gmail.com', 4, "Very satisfied, would book again.", "2024-03-12");
+    
+    (7, 'liam@gmail.com', 'lucas@gmail.com', 1, "Excellent session, very informative.", "2024-03-03"),
+    (8, 'amber@gmail.com', 'lucas@gmail.com', 2, "Excellent session, very informative.", "2024-03-03"),
+    (9, 'bobby@gmail.com', 'lucas@gmail.com', 3, "Excellent session, very informative.", "2024-03-03"),
+    (10, 'calvin@gmail.com', 'lucas@gmail.com', 4, "Excellent session, very informative.", "2024-03-03"),
+    (11, 'denise@gmail.com', 'lucas@gmail.com', 5, "Excellent session, very informative.", "2024-03-03"),
+    (12, 'edgar@gmail.com', 'lucas@gmail.com', 1, "Excellent session, very informative.", "2024-03-03"),
+    (13, 'sophia@gmail.com', 'lucas@gmail.com', 2, "Excellent session, very informative.", "2024-03-03"),
+    (14, 'olivia@gmail.com', 'lucas@gmail.com', 3, "Excellent session, very informative.", "2024-03-03"),
+    (15, 'noah@gmail.com', 'lucas@gmail.com', 4, "Excellent session, very informative.", "2024-03-03"),
+    (16, 'ava@gmail.com', 'lucas@gmail.com', 5, "Excellent session, very informative.", "2024-03-03"),
+    (17, 'william@gmail.com', 'lucas@gmail.com', 1, "Excellent session, very informative.", "2024-03-03"),
+    (18, 'isabella@gmail.com', 'lucas@gmail.com', 2, "Excellent session, very informative.", "2024-03-03"),
+
+
+
+
+    (19, 'olivia@gmail.com', 'emma@gmail.com', 3, "Good tutor, helpful explanations.", "2024-03-04"),
+    (20, 'noah@gmail.com', 'nathan@gmail.com', 2, "Average tutoring, could improve.", "2024-03-05"),
+    (21, 'ava@gmail.com', 'chloe@gmail.com', 5, "Fantastic tutor, exceeded expectations.", "2024-03-06"),
+    (22, 'william@gmail.com', 'louis@gmail.com', 4, "Really helpful, clarified difficult concepts.", "2024-03-07"),
+    (23, 'isabella@gmail.com', 'lea@gmail.com', 1, "Poor tutoring, not recommended.", "2024-03-08"),
+    (24, 'james@gmail.com', 'hugo@gmail.com', 3, "Decent tutor, could be more engaging.", "2024-03-09"),
+    (25, 'emma@gmail.com', 'manon@gmail.com', 5, "Outstanding tutor, best experience!", "2024-03-10"),
+    (26, 'emma@gmail.com', 'gabriel@gmail.com', 1, "Horrible!", "2024-03-11"),
+    (27, 'benjamin@gmail.com', 'gabriel@gmail.com', 4, "Very satisfied, would book again.", "2024-03-12");
 
 
     

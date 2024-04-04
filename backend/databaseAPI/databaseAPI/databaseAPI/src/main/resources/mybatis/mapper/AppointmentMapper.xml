@@ -15,6 +15,7 @@
         <result property="tuteeFirstName" column="tutee_first_name" />
         <result property="tuteeLastName" column="tutee_last_name" />
         <result property="tuteePhoneNumber" column="tutee_phone_number" />
+        <result property="tuteeRequestComment" column="tutee_request_comment" />
         <result property="tutorEmail" column="tutor_email" />
         <result property="tutorFirstName" column="tutor_first_name" />
         <result property="tutorLastName" column="tutor_last_name" />
@@ -24,9 +25,9 @@
     <insert id="create" parameterType="xyz.tamutheo.databaseAPI.appointment.AppointmentModel">
         <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
         INSERT INTO appointment
-            (appointment_size_name, end_date_time, location_name, start_date_time, tutee_email , tutor_email)
+            (appointment_size_name, end_date_time, location_name, start_date_time, tutee_email , tutor_email, tutee_request_comment)
         VALUES
-            (#{appointmentSizeName}, STR_TO_DATE(#{endDateTimeString}, #{formatPattern}), #{locationName}, STR_TO_DATE(#{startDateTimeString}, #{formatPattern}), #{tuteeEmail}, #{tutorEmail})
+            (#{appointmentSizeName}, STR_TO_DATE(#{endDateTimeString}, #{formatPattern}), #{locationName}, STR_TO_DATE(#{startDateTimeString}, #{formatPattern}), #{tuteeEmail}, #{tutorEmail}, #{tuteeRequestComment})
     </insert>
 
     <select id="read" resultMap="AppointmentResultMap">
@@ -42,6 +43,7 @@
             tutee.first_name AS tutee_first_name,
             tutee.last_name AS tutee_last_name,
             tutee.phone_number AS tutee_phone_number,
+            a.tutee_request_comment,
             tutor.first_name AS tutor_first_name,
             tutor.last_name AS tutor_last_name,
             tutor.phone_number AS tutor_phone_number,
@@ -111,6 +113,9 @@
             <if test="appointmentModelNew.isConfirmed != null">
                 is_confirmed = #{appointmentModelNew.isConfirmed},
             </if>
+            <if test="appointmentModelNew.tuteeRequestComment != null">
+                tutee_request_comment = #{appointmentModelNew.tuteeRequestComment},
+            </if>
         </set>
         <where>
             <if test="appointmentModelOld.endDateTimeString != null">
@@ -141,6 +146,7 @@
             tutee.first_name AS tutee_first_name,
             tutee.last_name AS tutee_last_name,
             tutee.phone_number AS tutee_phone_number,
+            a.tutee_request_comment,
             tutor.first_name AS tutor_first_name,
             tutor.last_name AS tutor_last_name,
             tutor.phone_number AS tutor_phone_number,

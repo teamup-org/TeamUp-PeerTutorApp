@@ -17,7 +17,6 @@ public class UserActiveStatusController {
     public List<UserActiveStatusModel> read(@RequestParam(name = "user_active_status_name", required = false) String userActiveStatusName,
                                             @RequestParam(name = "limit", required = false) Integer limit,
                                             @RequestParam(name = "offset", required = false) Integer offset) {
-        System.out.println(userActiveStatusService.read(limit, offset, userActiveStatusName));
         return this.userActiveStatusService.read(limit, offset, userActiveStatusName);
     }
 }
