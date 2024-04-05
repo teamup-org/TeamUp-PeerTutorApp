@@ -9,6 +9,8 @@ import xyz.tamutheo.databaseAPI.tutorEligibleCourse.TutorEligibleCourseMapper;
 import xyz.tamutheo.databaseAPI.tutorEligibleCourse.TutorEligibleCourseService;
 import xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceMapper;
 import xyz.tamutheo.databaseAPI.tutorLocationPreference.TutorLocationPreferenceModel;
+import xyz.tamutheo.databaseAPI.tutorTimePreference.TutorTimePreferenceMapper;
+import xyz.tamutheo.databaseAPI.tutorTimePreference.TutorTimePreferenceService;
 import xyz.tamutheo.databaseAPI.util.paginationContainer.PaginationContainerModel;
 
 import java.util.HashMap;
@@ -27,6 +29,8 @@ public class TutorService {
     private TutorLocationPreferenceMapper tutorLocationPreferenceMapper;
     @Autowired
     private TutorEligibleCourseService tutorEligibleCourseService;
+    @Autowired
+    private TutorTimePreferenceService tutorTimePreferenceService;
 
     public PaginationContainerModel read(String activeStatusNameEquals,
                                  Double averageRatingGreaterThanOrEquals,
@@ -117,6 +121,7 @@ public class TutorService {
                     null,
                     null));
             tutorModel.setLocationPreferences(tutorLocationPreferenceMapper.read(locationNameInList, currTutorEmail, null, null));
+            tutorModel.setTimePreferences(tutorTimePreferenceService.read(currTutorEmail));
         }
         Integer totalNumberEntries = this.tutorMapper.getTotalNumberEntries(activeStatusNameEquals,
                 averageRatingGreaterThanOrEquals,
