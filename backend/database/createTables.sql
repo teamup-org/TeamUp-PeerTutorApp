@@ -41,14 +41,14 @@ CREATE TABLE user_active_status (
 
 CREATE TABLE tutor (
 	bio_text VARCHAR(1000),
-	email VARCHAR(30) NOT NULL,
+	email VARCHAR(50) NOT NULL,
 	first_name VARCHAR(20) NOT NULL,
 	last_name VARCHAR(20) NOT NULL,
 	pay_rate DECIMAL (6, 2) NOT NULL,
 	phone_number BIGINT NOT NULL,
 	picture_url VARCHAR(2000),
 	seniority_name VARCHAR(25) NOT NULL,
-    active_status_name VARCHAR(20) NOT NULL,
+    active_status_name VARCHAR(20) NOT NULL DEFAULT "active",
     listing_title VARCHAR(100),
     major_abbreviation CHAR(4) NOT NULL,
 	PRIMARY KEY (email),
@@ -68,7 +68,7 @@ CREATE TABLE weekday (
 CREATE TABLE tutor_time_preference (
 	end_time TIME NOT NULL,
 	start_time TIME NOT NULL,
-	tutor_email VARCHAR(30) NOT NULL,
+	tutor_email VARCHAR(50) NOT NULL,
 	weekday_name VARCHAR(15) NOT NULL,
 	PRIMARY KEY (tutor_email, weekday_name, start_time, end_time),
 	FOREIGN KEY (tutor_email) REFERENCES tutor(email) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -81,7 +81,7 @@ CREATE TABLE tutor_time_preference (
 CREATE TABLE tutor_eligible_course (
 	course_grade CHAR(1) NOT NULL,
 	course_number INTEGER NOT NULL,
-	tutor_email VARCHAR(30) NOT NULL,
+	tutor_email VARCHAR(50) NOT NULL,
     major_abbreviation CHAR(4) NOT NUll,
 	PRIMARY KEY (tutor_email, major_abbreviation, course_number),
 	FOREIGN KEY (tutor_email) REFERENCES tutor(email) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -93,7 +93,7 @@ CREATE TABLE tutor_eligible_course (
 CREATE TABLE tutor_course_preference (
 	course_grade CHAR(1) NOT NULL,
 	course_number INTEGER NOT NULL,
-	tutor_email VARCHAR(30) NOT NULL,
+	tutor_email VARCHAR(50) NOT NULL,
     major_abbreviation CHAR(4) NOT NUll,
 	PRIMARY KEY (tutor_email, major_abbreviation, course_number),
 	FOREIGN KEY (tutor_email, major_abbreviation, course_number, course_grade) REFERENCES tutor_eligible_course(tutor_email, major_abbreviation, course_number, course_grade) ON UPDATE CASCADE ON DELETE CASCADE
@@ -101,17 +101,17 @@ CREATE TABLE tutor_course_preference (
 
 CREATE TABLE tutor_location_preference (
 	location_name VARCHAR(100) NOT NULL,
-	tutor_email VARCHAR(30) NOT NULL,
+	tutor_email VARCHAR(50) NOT NULL,
 	PRIMARY KEY (tutor_email, location_name),
 	FOREIGN KEY (tutor_email) REFERENCES tutor(email) ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY (location_name) REFERENCES location(location_name) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE tutee (
-	email VARCHAR(30) NOT NULL,
+	email VARCHAR(50) NOT NULL,
 	first_name VARCHAR(20) NOT NULL,
 	last_name VARCHAR(20) NOT NULL,
-    active_status_name VARCHAR(20) NOT NULL,
+    active_status_name VARCHAR(20) NOT NULL DEFAULT "active",
     major_abbreviation CHAR(4) NOT NULL,
     picture_url VARCHAR(2000),
     phone_number BIGINT NOT NULL,
@@ -133,9 +133,9 @@ CREATE TABLE appointment (
 	appointment_id INTEGER NOT NULL AUTO_INCREMENT,
 	end_date_time DATETIME NOT NULL,
 	start_date_time DATETIME NOT NULL,
-	tutee_email VARCHAR(30) NOT NULL,
-	tutor_email VARCHAR(30) NOT NULL,
-	appointment_size_name VARCHAR(50) NOT NULL,
+	tutee_email VARCHAR(50) NOT NULL,
+	tutor_email VARCHAR(50) NOT NULL,
+	appointment_size_name VARCHAR(50) NOT NULL DEFAULT "single",
     location_name VARCHAR(100) NOT NULL,
     is_confirmed Boolean NOT NULL DEFAULT FALSE,
     is_cancelled BOOLEAN NOT NULL DEFAULT FALSE,
@@ -156,9 +156,9 @@ CREATE TABLE tutor_review (
 	appointment_id INTEGER NOT NULL,
 	review_text VARCHAR(1000),
     review_date DATE DEFAULT (CURDATE()),
-	tutor_email VARCHAR(30) NOT NULL,
+	tutor_email VARCHAR(50) NOT NULL,
     number_stars INTEGER NOT NULL,
-    tutee_email VARCHAR(30) NOT NULL,
+    tutee_email VARCHAR(50) NOT NULL,
 	PRIMARY KEY (appointment_id),
 	FOREIGN KEY (appointment_id, tutor_email, tutee_email) REFERENCES appointment(appointment_id, tutor_email, tutee_email) ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY (number_stars) REFERENCES rating(number_stars) ON UPDATE CASCADE ON DELETE CASCADE

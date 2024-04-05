@@ -1,0 +1,9 @@
+INSERT INTO tutor_course_preference
+    (tutor_email, major_abbreviation, course_number, course_grade)
+SELECT 
+    tutor_email, 
+    major_abbreviation, 
+    course_number, 
+    course_grade
+FROM
+    tutor_eligible_course;
