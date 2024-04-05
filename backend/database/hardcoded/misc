@@ -1,0 +1,48 @@
+INSERT INTO location
+    (location_name)
+VALUES
+    ('in-person off-campus'),
+    ('in-person on-campus'),
+    ('online');
+
+INSERT INTO rating
+    (number_stars)
+VALUES
+    (1),
+    (2),
+    (3),
+    (4),
+    (5);
+
+INSERT INTO seniority
+    (seniority_name)
+VALUES
+    ('freshman'),
+    ('sophomore'),
+    ('junior'),
+    ('senior'),
+    ('graduate');
+
+INSERT INTO user_active_status
+    (user_active_status_name)
+VALUES
+    ("active"),
+    ("inactive"),
+    ("banned");
+
+INSERT INTO weekday
+    (weekday_name)
+VALUES
+    ('monday'),
+    ('tuesday'),
+    ('wednesday'),
+    ('thursday'),
+    ('friday'),
+    ('saturday'),
+    ('sunday');
+
+INSERT INTO appointment_size
+    (appointment_size_name)
+VALUES
+    ('single'),
+    ('group');
