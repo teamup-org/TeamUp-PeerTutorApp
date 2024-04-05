@@ -109,7 +109,7 @@ export default function TutorFilter(
 
 
   return (
-    <Paper elevation={4} sx={{ p: 2, minWidth: '0%', position: 'sticky', top: 10 }}>
+    <Paper variant="outlined" sx={{ p: 2, minWidth: '0%', position: 'sticky', top: 10 }}>
       <Stack direction="column" spacing={3}>
         <Typography variant="h4" textAlign="center"> Filters </Typography>
 

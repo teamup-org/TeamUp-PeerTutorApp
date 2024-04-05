@@ -114,7 +114,7 @@ export default function TutorProfileSchedule({ selectedTutor } : { selectedTutor
               week: 'Week',
               day: 'Day',
             }}
-            allDaySlot={false}
+            allDaySlot={false} slotDuration="00:15:00" slotLabelInterval="01:00"
 
             selectable selectMirror // selectConstraint="businessHours" //selectOverlap={(event) => event.display === 'background'}
             editable droppable eventOverlap={false}

@@ -1,7 +1,8 @@
 
 import * as React from 'react';
 
-import { Container, Box, Grid, Stack, Typography, Rating, LinearProgress, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Button }
+import { Container, Box, Grid, Stack, Typography, Rating, LinearProgress, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent,
+  Pagination }
   from '@mui/material';
 
 import Review from '../review';
@@ -26,12 +27,14 @@ const calculateRatingDistribution = (tutor: Tutor) => {
   const totalRatings = Math.max(tutor.numberOfRatings, 1);
 
   var dist = [
-    (tutor.numberOneStarRatings   / totalRatings) * 100,
-    (tutor.numberTwoStarRatings   / totalRatings) * 100,
-    (tutor.numberThreeStarRatings / totalRatings) * 100,
-    (tutor.numberFourStarRatings  / totalRatings) * 100,
-    (tutor.numberFiveStarRatings  / totalRatings) * 100,
+    ((tutor.numberOneStarRatings   / totalRatings) * 100),
+    ((tutor.numberTwoStarRatings   / totalRatings) * 100),
+    ((tutor.numberThreeStarRatings / totalRatings) * 100),
+    ((tutor.numberFourStarRatings  / totalRatings) * 100),
+    ((tutor.numberFiveStarRatings  / totalRatings) * 100),
   ];
+
+  dist.forEach((value, index) => { dist[index] = Number.isInteger(value) ? Number(value.toFixed(0)) : Number(value.toFixed(1)) });
   
   return dist;
 };
@@ -44,6 +47,7 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
     setStarWeights(calculateRatingDistribution(tutor));
   }, [tutor]);
 
+  const [page, setPage] = React.useState(1);
 
   const mapOptions = (options: {label: string, query: string}[]) => {
     return options.map((option, index) => (
@@ -56,7 +60,7 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
         <Stack key={index} direction="row" spacing={1} alignItems="center">
           <Typography variant="body1" width={50} align="right" whiteSpace="noWrap"> {5 - index} star </Typography>
 
-          <LinearProgress variant="determinate" value={weight} sx={{ width: '100%', height: 12, borderRadius: 8 }} />
+          <LinearProgress variant="determinate" value={Number(weight)} sx={{ width: '100%', height: 12, borderRadius: 8 }} />
           
           <Typography variant="body1" width={25} align="right"> {weight}% </Typography>
         </Stack>
@@ -73,13 +77,17 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
   };
 
   const { data: reviewData, isLoading: reviewIsLoading, isFetching: reviewIsFetching, refetch: reviewRefetch } = 
-    TableFetch<ReviewQuery>("tutor_review", [sort, filter, tutor], 
+    TableFetch<ReviewQuery>("tutor_review", [sort, filter, tutor, page], 
       `tutor_email_contains=${tutor?.email}`,
-      `page_number=${1}`,
+      `page_number=${page}`,
       `number_entries_per_page=${5}`,
       `number_stars_greater_than_or_equals=${filter[0]}`,
       `number_stars_less_than_or_equals=${filter[1]}`
     );
+  
+  React.useEffect(() => {
+    setPage(Math.max(Math.min(page, (reviewData ? reviewData?.metaData?.totalNumberPages : page)), 1));
+  }, [page, reviewData]);
 
   const printReviews = () => {
     if (reviewData && reviewData?.data?.length > 0) { 
@@ -96,7 +104,7 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
 
   return (
     <Container maxWidth="xl">
-      <Grid container direction="row" spacing={4}>
+      <Grid container direction="row" spacing={8}>
 
         {/* Left side of grid */}
         <Grid item xs={12} md={5}>
@@ -137,14 +145,30 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
               </Stack>
 
             </Stack>
+
+            <Pagination 
+              color="primary" size="large"
+              count={reviewData ? reviewData?.metaData?.totalNumberPages : 0} page={page} onChange={(event, value) => setPage(value)}
+              disabled={reviewIsLoading || reviewIsFetching} 
+              sx={{ alignSelf: 'center', display: {xs: 'none', md: 'flex'} }}
+            />
           </Stack>
         </Grid>
         
         
         {/* Right side of grid */}
-        <Grid item md={7}>
-          <Stack direction="column" spacing={4}>
+        <Grid item xs={12} md={7}>
+          <Stack direction="column" spacing={4} alignContent="center" justifyContent="center">
+            <Typography variant="h4" borderBottom={1} borderColor="divider"> Tutee Reviews </Typography>
+
             { printReviews() }
+
+            <Pagination 
+              color="primary" size="large"
+              count={reviewData ? reviewData?.metaData?.totalNumberPages : 0} page={page} onChange={(event, value) => setPage(value)}
+              disabled={reviewIsLoading || reviewIsFetching} 
+              sx={{ alignSelf: 'center', display: {xs: 'flex', md: 'none'} }}
+            />
           </Stack>
         </Grid>
 
