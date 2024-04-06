@@ -81,12 +81,6 @@
                 AND LOWER(r.tutor_email) LIKE LOWER(#{tutorEmailContainsPattern})
             </if>
         </where>
-        <if test="limit != null">
-            LIMIT #{limit}
-        </if>
-        <if test="limit != null and offset != null">
-            OFFSET #{offset}
-        </if>
         <if test="sortBy != null">
             <if test='"number_stars_ascending".equals(sortBy)'>
                 ORDER BY number_stars ASC, review_date DESC
@@ -100,6 +94,12 @@
             <if test='"review_date_descending".equals(sortBy)'>
                 ORDER BY review_date DESC, number_stars DESC
             </if>
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="limit != null and offset != null">
+            OFFSET #{offset}
         </if>
     </select>
     <update id="update" parameterType="map">

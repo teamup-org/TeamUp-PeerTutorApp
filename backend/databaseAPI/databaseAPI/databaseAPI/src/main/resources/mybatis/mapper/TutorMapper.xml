@@ -78,7 +78,8 @@
                 OR LOWER(t.last_name) LIKE LOWER(#{containsPattern})
                 OR LOWER(t.listing_title) LIKE LOWER(#{containsPattern})
                 OR LOWER(l.location_name) LIKE LOWER(#{containsPattern})
-                OR LOWER(CONCAT_WS(&quot; &quot;, t.first_name, t.last_name)) LIKE LOWER(#{containsPattern}))
+                OR LOWER(CONCAT_WS(&quot; &quot;, t.first_name, t.last_name)) LIKE LOWER(#{containsPattern})
+                OR LOWER(CONCAT_WS(&quot; &quot;, c.major_abbreviation, c.course_number)) LIKE LOWER(#{containsPattern}))
             </if>
             <if test="emailContains != null">
                 <bind name="emailContainsPattern" value = "'%' + emailContains + '%'" />
@@ -280,7 +281,8 @@
                 OR LOWER(t.last_name) LIKE LOWER(#{containsPattern})
                 OR LOWER(t.listing_title) LIKE LOWER(#{containsPattern})
                 OR LOWER(l.location_name) LIKE LOWER(#{containsPattern})
-                OR LOWER(CONCAT_WS(&quot; &quot;, t.first_name, t.last_name)) LIKE LOWER(#{containsPattern}))
+                OR LOWER(CONCAT_WS(&quot; &quot;, t.first_name, t.last_name)) LIKE LOWER(#{containsPattern})
+                OR LOWER(CONCAT_WS(&quot; &quot;, c.major_abbreviation, c.course_number)) LIKE LOWER(#{containsPattern}))
             </if>
             <if test="emailContains != null">
                 <bind name="emailContainsPattern" value = "'%' + emailContains + '%'" />
