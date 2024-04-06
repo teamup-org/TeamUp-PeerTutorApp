@@ -69,7 +69,7 @@ declare global {
     lastName: string,
     listingTitle: string,
     locationPreferences: { 
-      locationName: Location, 
+      locationName: LocationType, 
       tutorEmail: string 
     }[],
     majorAbbreviation: string,
