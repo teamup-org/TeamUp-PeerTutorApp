@@ -27,6 +27,7 @@ declare global {
 
   // REST API: /seniority
   type Seniority = "All" | "Freshman" | "Sophomore" | "Junior" | "Senior" | "Graduate";
+  type LocationType = "in-person on-campus" | "in-person off-campus" | "online";
 
   // 
   type Tutor = {
@@ -53,7 +54,7 @@ declare global {
     lastName: string,
     listingTitle: string,
     locationPreferences: { 
-      locationName: string, 
+      locationName: LocationType, 
       tutorEmail: string 
     }[],
     majorAbbreviation: string,

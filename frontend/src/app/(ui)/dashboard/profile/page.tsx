@@ -117,20 +117,34 @@ function TuteeUpdatePage(props: any) {
 }
 
 function EligibleCoursesTable(props: any) {
-
-  const {eligibleCourses, coursePreferences} = props
-
-  const coursePreferencesSet = new Set(coursePreferences.map((course: any) => `${course.majorAbbreviation} ${course.courseNumber}`));
+  const {tutorProfileData, setTutorProfileData, setTranscript} = props
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
+
     if (files && files.length > 0) {
-      // Access the first file in the files array
       const file = files[0];
-      console.log(file);
+      setTranscript(file);
     } else {
       console.log("No file selected");
     }
+  };
+
+  const handleCheckboxChange = (index: number, isChecked: boolean) => {
+    const course = tutorProfileData?.eligibleCourses[index];
+    const courseIdentifier = `${course.majorAbbreviation} ${course.courseNumber}`;
+    const updatedTutorProfileData = { ...tutorProfileData };
+
+    if (isChecked) {
+      updatedTutorProfileData.coursePreferences.push(course);
+    } else {
+      const courseIndex = updatedTutorProfileData.coursePreferences.findIndex((c: any) => `${c.majorAbbreviation} ${c.courseNumber}` === courseIdentifier);
+      if (courseIndex !== -1) {
+        updatedTutorProfileData.coursePreferences.splice(courseIndex, 1);
+      }
+    }
+
+    setTutorProfileData(updatedTutorProfileData);
   };
 
   return (
@@ -145,14 +159,14 @@ function EligibleCoursesTable(props: any) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {eligibleCourses.map((item: any, index: number) => (
+              {tutorProfileData?.eligibleCourses.map((item: any, index: number) => (
                 <TableRow key={index}>
                   <TableCell>{`${item.majorAbbreviation} ${item.courseNumber}`}</TableCell>
                   <TableCell>{item.courseGrade}</TableCell>
                   <TableCell>
                   <Checkbox
-                    checked={coursePreferences.some((c: any) => `${c.majorAbbreviation} ${c.courseNumber}` === `${item.majorAbbreviation} ${item.courseNumber}`)}
-                    onChange={(event) => console.log('hi')}
+                    checked={tutorProfileData?.coursePreferences.some((c: any) => `${c.majorAbbreviation} ${c.courseNumber}` === `${item.majorAbbreviation} ${item.courseNumber}`)}
+                    onChange={(event) => handleCheckboxChange(index, event.target.checked)}
                   />
                 </TableCell>
                 </TableRow>
@@ -168,17 +182,63 @@ function EligibleCoursesTable(props: any) {
             </div>
           </form>
         </div>
-
-        <Button variant="contained" color="primary">
-            Update My Eligible Courses!
-          </Button>
         </div>
   );
 
 }
 
+function LocationPreferences(props: any) {
+
+  const { tutorProfileData, setTutorProfileData } = props;
+  
+  const locationOptions: LocationType[] = [
+    "in-person on-campus",
+    "in-person off-campus",
+    "online"
+  ];
+
+  const locationChange = (location: LocationType) => {
+    if (tutorProfileData.locationPreferences.includes(location)) {
+      const updatedLocationPreferences = tutorProfileData.locationPreferences.filter((l: LocationType) => l !== location);
+      setTutorProfileData({ ...tutorProfileData, locationPreferences: updatedLocationPreferences });
+    } else {
+      const updatedLocationPreferences = [...tutorProfileData.locationPreferences, location];
+      setTutorProfileData({ ...tutorProfileData, locationPreferences: updatedLocationPreferences });
+    }
+  };
+
+  return (
+    <div style={{ marginBottom: '2vh' }}>
+        <TableContainer>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Location</TableCell>
+                <TableCell>Preferred</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {locationOptions.map((location, index) => (
+                <TableRow key={index}>
+                  <TableCell>{location}</TableCell>
+                  <TableCell>
+                  <Checkbox
+                    checked={tutorProfileData.locationPreferences.some((loc: { locationName: LocationType; email: string; }) => loc.locationName === location)}
+                    onChange={() => locationChange(location)}
+                  />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+  );
+
+}
+
 function TutorUpdatePage(props: any) {
-  const { tutorProfileData, setTutorProfileData, setTutorUpdate } = props;
+  const { setLocationUpdate, setTranscript, tutorProfileData, setTutorProfileData, setTutorUpdate, setEligibleUpdate, setPreferencesUpdate } = props;
 
   const handleInputChange = (field: keyof typeof tutorProfileData) => (newValue: string | number) => {
     setTutorProfileData({ ...tutorProfileData, [field]: newValue });
@@ -187,6 +247,18 @@ function TutorUpdatePage(props: any) {
   const handleGeneralUpdate = () => {
     setTutorUpdate(true);
   };
+
+  const handleEligibleCoursesUpdate = () => {
+    setEligibleUpdate(true);
+  };
+
+  const handleCoursePreferencesUpdate = () => {
+    setPreferencesUpdate(true);
+  };
+
+  const handleLocationPreferencesUpdate = () => {
+    setLocationUpdate(true);
+  }
 
   return (
     <div>
@@ -255,10 +327,27 @@ function TutorUpdatePage(props: any) {
 
         <CardContent style={{ padding: '20px', flexGrow: 1 }}>
           <Typography variant="h6" gutterBottom>
-            Here are your current eligible courses!
+            Here is Your Current Course Information!! You can update your transcript or course preferences here!
           </Typography>
           <Divider style={{ marginBottom: '20px' }} />
-          <EligibleCoursesTable eligibleCourses={tutorProfileData?.eligibleCourses} coursePreferences={tutorProfileData?.coursePreferences} />
+          <EligibleCoursesTable setTranscript={setTranscript} tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData} />
+          <Button variant="contained" color="primary" onClick={handleEligibleCoursesUpdate}>
+            Update My Eligible Courses!
+          </Button>
+          <Button variant="contained" color="primary" onClick={handleCoursePreferencesUpdate}>
+            Update My Course Preferences!
+          </Button>
+        </CardContent>
+
+        <CardContent>
+          <Typography variant="h6" gutterBottom>
+            Update your Location Preferences Here!!
+          </Typography>
+          <Divider style={{ marginBottom: '20px' }} />
+          <LocationPreferences tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData}  />
+          <Button variant="contained" color="primary" onClick={handleLocationPreferencesUpdate}>
+            Update My Location Preferences!
+          </Button>
         </CardContent>
 
       </Card>
@@ -274,7 +363,12 @@ function ProfilePage() {
   const { data: session, status } = useSession();
   const [tab, setTab] = React.useState(0);
   const [tutorUpdate, setTutorUpdate] = useState(false);
+  const [eligibleUpdate, setEligibleUpdate] = useState(false);
+  const [preferencesUpdate, setPreferencesUpdate] = useState(false);
+  const [locationUpdate, setLocationUpdate] = useState(false);
   const [tuteeUpdate, setTuteeUpdate] = useState(false);
+  const [updateOcurring, setUpdateOccuring] = useState(false);
+  const [transcript, setTranscript] = useState<File>();
 
   const [tutorProfileData, setTutorProfileData] = useState<Tutor>({
     activeStatusName: "active",
@@ -329,19 +423,37 @@ function ProfilePage() {
 
   useEffect(() => {
 
+    if (eligibleUpdate) {
+      updateTutorEligbleCourses();
+    }
+
+  },[eligibleUpdate]);
+
+  useEffect(() => {
+
+    if (locationUpdate) {
+      updateTutorLocationPreferences();
+    }
+
+  },[locationUpdate]);
+
+  useEffect(() => {
+
+    if (preferencesUpdate) {
+      updateTutorCoursePreferences();
+    }
+
+  },[preferencesUpdate]);
+
+  useEffect(() => {
+
     if (tuteeUpdate) {
       updateTuteeInformation();
     }
 
   },[tuteeUpdate]);
-
-  const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
-  };
-
-
+  
   useEffect(() => {
-    console.log(tutorData?.data?.at(0)?.eligibleCourses);
     if (tutorData?.data && (tutorData.data.length > 0)) {
       setTutorProfileData(tutorData?.data[0]);
 
@@ -354,6 +466,52 @@ function ProfilePage() {
 
     }
   }, [tuteeData]);
+
+  const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
+    setTab(newValue);
+  };
+
+  const generateLocationString = (locations: { locationName: LocationType; tutorEmail: string; }[]): string => {
+    return locations.join(", ");
+  };
+
+  const updateTutorLocationPreferences = () => {
+
+    const newLocation = {
+      email_old: tutorProfileData.email,
+      location_preferences_new: generateLocationString(tutorProfileData.locationPreferences)
+    }
+    
+    tutorMutationUpdate.mutate(newLocation);
+    setLocationUpdate(false);
+
+  };
+
+  const updateTutorEligbleCourses = () => {
+
+    const newEligible = {
+      email_old: tutorProfileData.email,
+      transcript: transcript
+    }
+
+    tutorMutationUpdate.mutate(newEligible);
+    setEligibleUpdate(false);
+
+  };
+
+  const generateCourseString = (courses: Course[]): string => courses.map(course => `${course.majorAbbreviation} ${course.courseNumber} ${course.courseGrade}`).join(", ");
+
+  const updateTutorCoursePreferences = () => {
+
+    const newPreferences = {
+      email_old: tutorProfileData.email,
+      course_preferences_new: generateCourseString(tutorProfileData?.coursePreferences)
+    }
+
+    tutorMutationUpdate.mutate(newPreferences);
+    setPreferencesUpdate(false);
+
+  };
 
   const updateTutorInformation = () => {
 
@@ -404,6 +562,14 @@ function ProfilePage() {
 
       {(() => {
 
+        if (updateOcurring) {
+          return (
+            <>
+            <Skeleton animation="wave" variant="rounded" width="100%"> </Skeleton>
+            </>
+          );
+        }
+
         // Tutor Update Page
         if (tab === 0) {
 
@@ -414,7 +580,7 @@ function ProfilePage() {
             if (tutorData?.data?.length > 0) {
               return (
                 <>
-                <TutorUpdatePage setTutorUpdate={setTutorUpdate} tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData} />
+                <TutorUpdatePage setTranscript={setTranscript} setLocationUpdate={setLocationUpdate} setEligibleUpdate={setEligibleUpdate} setPreferencesUpdate={setPreferencesUpdate} setTutorUpdate={setTutorUpdate} tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData} />
                 </>
               );
             }
