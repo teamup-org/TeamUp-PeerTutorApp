@@ -1,0 +1,66 @@
+INSERT INTO tutee
+    (first_name, last_name, major_abbreviation, seniority_name, phone_number, email, active_status_name, picture_url)
+VALUES
+    ('kyle', 'lang', 'csce', 'senior', 3256276760, 'lang.kyl24@tamu.edu', 'active', "https://lh3.googleusercontent.com/a/ACg8ocI6st_Ph9hGFsRfNNpX9aenZ5OzUkiORUCLJ8uVZMbiVQ=s96-c"),
+    ('cap', 'stone', 'csce', 'senior', 3256276760, 'capstoneteamup@gmail.com', 'active', "https://brandguide.tamu.edu/assets/img/logos/tam-box-logo.png"),
+    ('trey', 'wells', 'csce', 'senior', 2146017139, 'wells.t.2024@tamu.edu', 'active', 'https://lh3.googleusercontent.com/a/ACg8ocKmhFfHatGRwnSEiD1tdnLmiX4Aea61ZsoBl49Dd9k-fxMDuJQ=s96-c');
+
+INSERT INTO tutor
+	(first_name, last_name, major_abbreviation, seniority_name, pay_rate, bio_text, picture_url, phone_number, email, listing_title)
+VALUES
+    ('kyle', 'lang', 'csce', 'senior', 10, "Howdy! I'm Kyle Lang!", "https://lh3.googleusercontent.com/a/ACg8ocI6st_Ph9hGFsRfNNpX9aenZ5OzUkiORUCLJ8uVZMbiVQ=s96-c", 3256276760, 'lang.kyl24@tamu.edu', "CSCE tutor"),
+    ('cap', 'stone', 'csce', 'senior', 10, "Howdy! I'm Cap Stone!", "https://brandguide.tamu.edu/assets/img/logos/tam-box-logo.png", 3256276760, 'capstoneteamup@gmail.com', "CSCE tutor"),
+    ('trey', 'wells', 'csce', 'senior', 34, "Hello", 'https://lh3.googleusercontent.com/a/ACg8ocKmhFfHatGRwnSEiD1tdnLmiX4Aea61ZsoBl49Dd9k-fxMDuJQ=s96-c', 2146017139, 'wells.t.2024@tamu.edu', 'CSCE tutor');
+
+INSERT INTO appointment
+    (appointment_size_name, tutee_email, tutor_email, start_date_time, end_date_time, location_name, is_confirmed, is_cancelled)
+VALUES
+    ('single', 'lang.kyl24@tamu.edu', 'Aaron_Barrera@gmail.com', '2023-03-10 22:00:00', '2023-03-10 23:00:00', 'online', true, false),
+    ('single', 'lang.kyl24@tamu.edu', 'George_Woodward@gmail.com', '2023-03-11 22:00:00', '2023-03-11 23:00:00', 'online', true, false),
+    ('single', 'lang.kyl24@tamu.edu', 'Heather_Gomez@gmail.com', '2023-03-12 22:00:00', '2023-03-12 23:00:00', 'online', true, false),
+    ('single', 'lang.kyl24@tamu.edu', 'Gabriel_Waller@gmail.com', '2023-03-13 22:00:00', '2023-03-13 23:00:00', 'online', true, false),
+    ('single', 'lang.kyl24@tamu.edu', 'Ethan_Bauer@gmail.com', '2023-03-14 22:00:00', '2023-03-14 23:00:00', 'online', true, false),
+
+    ('single', 'lang.kyl24@tamu.edu', 'Aaron_Barrera@gmail.com', '2024-04-06 13:00:00', '2024-04-06 14:00:00', 'online', false, false),
+    ('single', 'lang.kyl24@tamu.edu', 'George_Woodward@gmail.com', '2024-04-06 15:00:00', '2024-04-06 16:00:00', 'online', false, true),
+    ('single', 'lang.kyl24@tamu.edu', 'Heather_Gomez@gmail.com', '2024-04-06 17:00:00', '2024-04-06 18:00:00', 'online', true, false),
+    ('single', 'lang.kyl24@tamu.edu', 'Gabriel_Waller@gmail.com', '2024-04-06 19:00:00', '2024-04-06 20:00:00', 'online', true, true),
+
+    ('single', 'Aaron_Cabrera@gmail.com', 'lang.kyl24@tamu.edu', '2024-04-07 13:00:00', '2024-04-07 14:00:00', 'online', false, false),
+    ('single', 'Bradley_Little@gmail.com', 'lang.kyl24@tamu.edu', '2024-04-07 15:00:00', '2024-04-07 16:00:00', 'online', false, true),
+    ('single', 'Diana_Sanders@gmail.com', 'lang.kyl24@tamu.edu', '2024-04-07 17:00:00', '2024-04-07 18:00:00', 'online', true, false),
+    ('single', 'Hannah_Watson@gmail.com', 'lang.kyl24@tamu.edu', '2024-04-07 19:00:00', '2024-04-07 20:00:00', 'online', true, true),
+
+    ('single', 'lang.kyl24@tamu.edu', 'Aaron_Barrera@gmail.com', '2024-04-08 13:00:00', '2024-04-08 14:00:00', 'online', false, false),
+    ('single', 'lang.kyl24@tamu.edu', 'George_Woodward@gmail.com', '2024-04-08 14:00:00', '2024-04-08 15:00:00', 'online', false, true),
+    ('single', 'lang.kyl24@tamu.edu', 'Heather_Gomez@gmail.com', '2024-04-08 15:00:00', '2024-04-08 16:00:00', 'online', true, false),
+    ('single', 'lang.kyl24@tamu.edu', 'Gabriel_Waller@gmail.com', '2024-04-08 16:00:00', '2024-04-08 17:00:00', 'online', true, true),
+    ('single', 'Aaron_Cabrera@gmail.com',  'lang.kyl24@tamu.edu','2024-04-08 17:00:00', '2024-04-08 18:00:00', 'online', false, false),
+    ('single', 'Bradley_Little@gmail.com',  'lang.kyl24@tamu.edu','2024-04-08 18:00:00', '2024-04-08 19:00:00', 'online', false, true),
+    ('single', 'Diana_Sanders@gmail.com',  'lang.kyl24@tamu.edu','2024-04-08 19:00:00', '2024-04-08 20:00:00', 'online', true, false),
+    ('single', 'Hannah_Watson@gmail.com',  'lang.kyl24@tamu.edu','2024-04-08 20:00:00', '2024-04-08 21:00:00', 'online', true, true),
+
+    ('single', 'capstoneteamup@gmail.com', 'Aaron_Barrera@gmail.com', '2023-03-10 22:00:00', '2023-03-10 23:00:00', 'online', true, false),
+    ('single', 'capstoneteamup@gmail.com', 'George_Woodward@gmail.com', '2023-03-11 22:00:00', '2023-03-11 23:00:00', 'online', true, false),
+    ('single', 'capstoneteamup@gmail.com', 'Heather_Gomez@gmail.com', '2023-03-12 22:00:00', '2023-03-12 23:00:00', 'online', true, false),
+    ('single', 'capstoneteamup@gmail.com', 'Gabriel_Waller@gmail.com', '2023-03-13 22:00:00', '2023-03-13 23:00:00', 'online', true, false),
+    ('single', 'capstoneteamup@gmail.com', 'Ethan_Bauer@gmail.com', '2023-03-14 22:00:00', '2023-03-14 23:00:00', 'online', true, false),
+
+    ('single', 'capstoneteamup@gmail.com', 'Aaron_Barrera@gmail.com', '2024-04-06 13:00:00', '2024-04-06 14:00:00', 'online', false, false),
+    ('single', 'capstoneteamup@gmail.com', 'George_Woodward@gmail.com', '2024-04-06 15:00:00', '2024-04-06 16:00:00', 'online', false, true),
+    ('single', 'capstoneteamup@gmail.com', 'Heather_Gomez@gmail.com', '2024-04-06 17:00:00', '2024-04-06 18:00:00', 'online', true, false),
+    ('single', 'capstoneteamup@gmail.com', 'Gabriel_Waller@gmail.com', '2024-04-06 19:00:00', '2024-04-06 20:00:00', 'online', true, true),
+
+    ('single', 'Aaron_Cabrera@gmail.com',  'capstoneteamup@gmail.com','2024-04-07 13:00:00', '2024-04-07 14:00:00', 'online', false, false),
+    ('single', 'Bradley_Little@gmail.com',  'capstoneteamup@gmail.com','2024-04-07 15:00:00', '2024-04-07 16:00:00', 'online', false, true),
+    ('single', 'Diana_Sanders@gmail.com',  'capstoneteamup@gmail.com','2024-04-07 17:00:00', '2024-04-07 18:00:00', 'online', true, false),
+    ('single', 'Hannah_Watson@gmail.com',  'capstoneteamup@gmail.com','2024-04-07 19:00:00', '2024-04-07 20:00:00', 'online', true, true),
+
+    ('single', 'capstoneteamup@gmail.com', 'Aaron_Barrera@gmail.com', '2024-04-08 13:00:00', '2024-04-08 14:00:00', 'online', false, false),
+    ('single', 'capstoneteamup@gmail.com', 'George_Woodward@gmail.com', '2024-04-08 14:00:00', '2024-04-08 15:00:00', 'online', false, true),
+    ('single', 'capstoneteamup@gmail.com', 'Heather_Gomez@gmail.com', '2024-04-08 15:00:00', '2024-04-08 16:00:00', 'online', true, false),
+    ('single', 'capstoneteamup@gmail.com', 'Gabriel_Waller@gmail.com', '2024-04-08 16:00:00', '2024-04-08 17:00:00', 'online', true, true),
+    ('single', 'Aaron_Cabrera@gmail.com',  'capstoneteamup@gmail.com','2024-04-08 17:00:00', '2024-04-08 18:00:00', 'online', false, false),
+    ('single', 'Bradley_Little@gmail.com',  'capstoneteamup@gmail.com','2024-04-08 18:00:00', '2024-04-08 19:00:00', 'online', false, true),
+    ('single', 'Diana_Sanders@gmail.com',  'capstoneteamup@gmail.com','2024-04-08 19:00:00', '2024-04-08 20:00:00', 'online', true, false),
+    ('single', 'Hannah_Watson@gmail.com',  'capstoneteamup@gmail.com','2024-04-08 20:00:00', '2024-04-08 21:00:00', 'online', true, true);
