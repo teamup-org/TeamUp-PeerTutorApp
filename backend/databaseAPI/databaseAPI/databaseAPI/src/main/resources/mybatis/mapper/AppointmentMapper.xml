@@ -91,6 +91,7 @@
                 <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
                 AND a.start_date_time &gt;= STR_TO_DATE(#{startDateTimeGreaterThanOrEquals}, #{formatPattern})
             </if>
+            AND !(is_cancelled = true AND is_confirmed = false)
         </where>
         <if test="limit != null">
             LIMIT #{limit}
@@ -174,6 +175,7 @@
                 <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
                 AND STR_TO_DATE(#{startDateTimeString}, #{formatPattern}) &lt; a.end_date_time
             </if>
+            AND !(is_cancelled = true AND is_confirmed = false)
         </where>
     </select>
 
@@ -222,6 +224,7 @@
                 <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
                 AND a.start_date_time &gt;= STR_TO_DATE(#{startDateTimeGreaterThanOrEquals}, #{formatPattern})
             </if>
+            AND !(is_cancelled = true AND is_confirmed = false)
         </where>
     </select>
 

@@ -400,5 +400,7 @@ with open("generatedData.sql", "w") as file:
     for review in reviews[:-1]:
         file.write(f"\t('{review.appointmentId}', '{review.tuteeEmail}', '{review.tutorEmail}', {review.numberStars}, '{review.reviewText}', '{review.reviewDate}')," + "\n")
     file.write(f"\t('{reviews[-1].appointmentId}', '{reviews[-1].tuteeEmail}', '{reviews[-1].tutorEmail}', {reviews[-1].numberStars}, '{reviews[-1].reviewText}', '{reviews[-1].reviewDate}');" + "\n")
-
+    
+    with open("hardcoded/demo") as hardcodedDemo:
+        file.write(hardcodedDemo.read() + "\n\n")
     
