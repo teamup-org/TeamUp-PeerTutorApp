@@ -168,12 +168,6 @@
                 <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
                 AND STR_TO_DATE(#{endDateTimeString}, #{formatPattern}) &gt; a.start_date_time
             </if>
-            <if test="isCancelled != null">
-                AND a.is_cancelled = #{isCancelled}
-            </if>
-            <if test="isConfirmed != null">
-                AND a.is_confirmed = #{isConfirmed}
-            </if>
             <if test="tutorEmail != null">
                 AND LOWER(tutor.email) = LOWER(#{tutorEmail})
             </if>
@@ -181,7 +175,6 @@
                 <bind name="formatPattern" value = "'%Y-%m-%dT%T'" />
                 AND STR_TO_DATE(#{startDateTimeString}, #{formatPattern}) &lt; a.end_date_time
             </if>
-            AND !(is_cancelled = true AND is_confirmed = false)
         </where>
     </select>
 
