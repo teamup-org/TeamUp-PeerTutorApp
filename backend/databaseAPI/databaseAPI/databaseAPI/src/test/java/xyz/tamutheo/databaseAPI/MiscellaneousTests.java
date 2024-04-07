@@ -469,10 +469,13 @@ public class MiscellaneousTests {
     // Test to deny direct URL access except for the login page
     @Test
     public void testDenyDirectURLAccess() throws Exception {
+        mockMvc.perform(get("/register")
+                .contentType("application/json"))
+                .andExpect(status().is(HttpStatus.FORBIDDEN.value()));
         mockMvc.perform(get("/dashboard")
                 .contentType("application/json"))
                 .andExpect(status().is(HttpStatus.FORBIDDEN.value()));
-        mockMvc.perform(get("/dashboar/tutors")
+        mockMvc.perform(get("/dashboard/tutors")
                 .contentType("application/json"))
                 .andExpect(status().is(HttpStatus.FORBIDDEN.value()));
         mockMvc.perform(get("/dashboard/schedule")
