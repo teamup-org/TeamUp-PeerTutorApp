@@ -4,20 +4,44 @@ import * as React from 'react';
 
 import Link from 'next/link';
 import { useRouter } 
-from "next/navigation"
+  from "next/navigation"
 
 import { useSession } 
-from "next-auth/react"
-
-import { GoogleSignInButton } 
-from '@/app/(ui)/login/authButtons';
+  from "next-auth/react"
 
 import { Container, Box, Avatar, Typography, TextField, FormControlLabel, Checkbox, Button, Paper} 
-from '@mui/material';
+  from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
-export default function SignIn() {
+import { GoogleSignInButton } 
+  from '@/app/(ui)/login/authButtons';
+import { TableFetch }
+  from '@/app/_lib/data';
 
+
+
+
+
+export default function SignIn() {
+  ////////////////
+  const session = useSession();
+  const email = session.data?.user?.email;
+
+  const { data: tutorData, isFetching: tutorIsFetching } = TableFetch<TutorQuery>("tutor", [email], `email_contains=${email}`);
+  const { data: tuteeData, isFetching: tuteeIsFetching } = TableFetch<TuteeQuery>("tutee", [email], `email_contains=${email}`);
+
+  if (session.status === "authenticated") {
+    const route = useRouter();
+
+    // If registered as tutor/tutee, redirect to /dashboard
+    if (tutorData?.data.length || tuteeData?.length) {
+      route.push("/dashboard");
+    }
+    
+    // Else if not registered, redirect to /register
+    if (!tutorIsFetching && !tuteeIsFetching) route.push("/register");
+  }
+  ////////////////
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
