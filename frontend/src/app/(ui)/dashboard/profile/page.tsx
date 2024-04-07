@@ -25,8 +25,7 @@ import { TimeField }
 import { TableFetch, TablePush }
   from '@/app/_lib/data';
 
-import dayjs 
-  from 'dayjs';
+import dayjs from 'dayjs';
 
 
 const tabLabels = ["Peer Tutor Profile Information", "Tutee Profile Information"];
@@ -262,18 +261,25 @@ function TimePreferences(props: any) {
 
   const handleTimeChange = (index: number, field: string, value: string) => {
     const updatedTimes = [...tutorProfileData.timePreferences];
-    updatedTimes[index][field] = value;
+    updatedTimes[index] = {
+      ...updatedTimes[index],
+      [field]: value
+    };
     setTutorProfileData({ ...tutorProfileData, timePreferences: updatedTimes});
   };
 
   const addRow = () => {
-    setTutorProfileData({...tutorProfileData, timePreferences: { day: '', startTime: dayjs(), endTime: dayjs() }});
+    setTutorProfileData({
+      ...tutorProfileData,
+      timePreferences: [
+        ...tutorProfileData.timePreferences,
+        { weekdayName: '', startTimeString: '', endTimeString: '', tutorEmail: '' }
+      ]
+    });
   };
 
   return (
     <div style={{ marginBottom: '16px' }}>
-        <Typography variant="h6">Add your preferred times</Typography>
-        <Divider />
         <TableContainer sx={{ maxHeight: '75vh' }}>
           <Table stickyHeader>
             <TableHead>
@@ -284,12 +290,12 @@ function TimePreferences(props: any) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tutorProfileData.timePreferences.map((time: any, index: any) => (
+              {tutorProfileData.timePreferences.map((timePreference: any, index: any) => (
                 <TableRow key={index}>
                   <TableCell>
                     <Select
-                      value={time.day}
-                      onChange={(e) => handleTimeChange(index, 'day', e.target.value as string)}
+                      value={timePreference.weekdayName}
+                      onChange={(e) => handleTimeChange(index, 'weekdayName', e.target.value as string)}
                     >
                       <MenuItem value="monday">monday</MenuItem>
                       <MenuItem value="tuesday">tuesday</MenuItem>
@@ -303,11 +309,11 @@ function TimePreferences(props: any) {
                   <TableCell>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={['TimeField']}>
-                        <TimeField
-                          value={time.startTime}
-                          onChange={(newValue) => handleTimeChange(index, 'startTime', newValue || '')}
-                          fullWidth
-                        />
+                      <TimeField
+                        value={dayjs(timePreference.startTimeString, 'HH:mm')} // Convert string to dayjs object
+                        onChange={(newValue) => handleTimeChange(index, 'startTimeString', newValue ? newValue.format('HH:mm') : '')}
+                        fullWidth
+                      />
                       </DemoContainer>
                     </LocalizationProvider>
                   </TableCell>
@@ -315,8 +321,8 @@ function TimePreferences(props: any) {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={['TimeField']}>
                         <TimeField
-                          value={time.endTime}
-                          onChange={(newValue) => handleTimeChange(index, 'endTime', newValue || '')}
+                          value={dayjs(timePreference.endTimeString, 'HH:mm')} // Convert string to dayjs object
+                          onChange={(newValue) => handleTimeChange(index, 'endTimeString', newValue ? newValue.format('HH:mm') : '')}
                           fullWidth
                         />
                       </DemoContainer>
@@ -336,7 +342,7 @@ function TimePreferences(props: any) {
 }
 
 function TutorUpdatePage(props: any) {
-  const { setLocationUpdate, setTranscript, tutorProfileData, setTutorProfileData, setTutorUpdate, setEligibleUpdate, setPreferencesUpdate } = props;
+  const { setTimeUpdate, setLocationUpdate, setTranscript, tutorProfileData, setTutorProfileData, setTutorUpdate, setEligibleUpdate, setPreferencesUpdate } = props;
 
   const handleInputChange = (field: keyof typeof tutorProfileData) => (newValue: string | number) => {
     setTutorProfileData({ ...tutorProfileData, [field]: newValue });
@@ -356,6 +362,10 @@ function TutorUpdatePage(props: any) {
 
   const handleLocationPreferencesUpdate = () => {
     setLocationUpdate(true);
+  }
+
+  const handleTimePreferencesUpdate = () => {
+    setTimeUpdate(true);
   }
 
   return (
@@ -452,9 +462,9 @@ function TutorUpdatePage(props: any) {
           Update your Time Preferences Here!!
         </Typography>
         <Divider style={{ marginBottom: '20px' }} />
-        <LocationPreferences tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData}  />
-        <Button variant="contained" color="primary" onClick={handleLocationPreferencesUpdate}>
-          Update My Location Preferences!
+        <TimePreferences tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData}  />
+        <Button variant="contained" color="primary" onClick={handleTimePreferencesUpdate}>
+          Update My Time Preferences!
         </Button>
       </Stack>
 
@@ -472,7 +482,7 @@ function ProfilePage() {
   const [preferencesUpdate, setPreferencesUpdate] = React.useState(false);
   const [locationUpdate, setLocationUpdate] = React.useState(false);
   const [tuteeUpdate, setTuteeUpdate] = React.useState(false);
-  const [updateOcurring, setUpdateOccuring] = React.useState(false);
+  const [timeUpdate, setTimeUpdate] = React.useState(false);
   const [transcript, setTranscript] = React.useState<File>();
 
   const [tutorProfileData, setTutorProfileData] = React.useState<Tutor>({
@@ -548,6 +558,14 @@ function ProfilePage() {
 
   React.useEffect(() => {
 
+    if (timeUpdate) {
+      updateTutorTimePreferences();
+    }
+
+  },[timeUpdate]);
+
+  React.useEffect(() => {
+
     if (tuteeUpdate) {
       updateTuteeInformation();
     }
@@ -575,6 +593,12 @@ function ProfilePage() {
   const generateLocationString = (locations: { locationName: LocationType; tutorEmail: string; }[]): string => {
     const locationNames = locations.map(location => location.locationName);
     return locationNames.join(", ");
+  };
+
+  const updateTutorTimePreferences = () => {
+
+    setTimeUpdate(false);
+
   };
 
   const updateTutorLocationPreferences = () => {
@@ -695,14 +719,6 @@ function ProfilePage() {
 
 
       {(() => {
-
-        if (updateOcurring) {
-          return (
-            <>
-            <Skeleton animation="wave" variant="rounded" width="100%"> </Skeleton>
-            </>
-          );
-        }
 
         // Tutor Update Page
         if (tab === 0) {

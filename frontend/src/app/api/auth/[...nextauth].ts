@@ -4,12 +4,6 @@
 import GoogleProvider from 'next-auth/providers/google';
 import type { NextAuthOptions }
   from 'next-auth';
-import { getSession, useSession }
-  from 'next-auth/react';
-
-import { TableFetch }
-  from '@/app/_lib/data';
-
 
 export const authConfig: NextAuthOptions = {
   providers: [
