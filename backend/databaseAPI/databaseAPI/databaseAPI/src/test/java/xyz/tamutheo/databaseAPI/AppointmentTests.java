@@ -169,5 +169,17 @@ public class AppointmentTests {
                 .andExpect(status().isOk());
 
         verify(tutorReviewService).create(any(TutorReviewModel.class));
-}
+    }
+
+    // Test for tutor setting valid course preferences
+    @Test
+    public void testTutorSetsValidCoursePreferences() throws Exception {
+        mockMvc.perform(put("/tutor/update")
+                .param("email_old", "sol@r.eclipse")
+                .param("course_preferences_new", "CS101 A, MATH202 B")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk());
+
+        verify(tutorService).update(any(), any(), any());
+    }
 }
