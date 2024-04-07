@@ -8,7 +8,7 @@ from '@mui/material';
 import { useSession } from 'next-auth/react';
 
 import { toDate, toTitleCase } from '@/app/_lib/utils';
-import { TableFetch, TablePush, TableUpdate } from '@/app/_lib/data';
+import { TablePush } from '@/app/_lib/data';
 
 
 const temp: Review = 
@@ -20,8 +20,8 @@ const temp: Review =
 
 
 export default function Review(
-  { review = temp, pendingReview, editable = false, }: 
-  { review?: Review , pendingReview?: PendingReview, editable?: boolean }
+  { review = temp, editable = false, pendingReview: [pendingReview, setPendingReview] = [null, null], refetch }: 
+  { review?: Review, editable?: boolean, pendingReview?: [PendingReview | null, Function | null], refetch?: Function }
 ){
   const [rating, setRating] = React.useState<number | null>(0);
   const [userReview, setUserReview] = React.useState("");
@@ -44,6 +44,12 @@ export default function Review(
 
         tutee_email: email,
         tutor_email: pendingReview.tutorEmail,
+      },
+      {
+        onSuccess: () => {
+          setPendingReview && setPendingReview(null);
+          refetch && refetch();
+        }
       }
     );
   };

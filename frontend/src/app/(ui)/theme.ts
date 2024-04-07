@@ -71,19 +71,17 @@ const theme = responsiveFontSizes(createTheme({
       main: '#62615C',
     },
 
-    error: red,
-
-    warning: {
-      main: '#000000',
-    },
+    
 
     info: {
       main: '#000000',
     },
 
-    success: {
+    warning: {
       main: '#000000',
     },
+
+    error: red,
   },
   
   typography: {

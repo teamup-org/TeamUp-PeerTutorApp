@@ -1,27 +1,19 @@
 'use client';
 
 
-// import { useRef } from 'react';
-
-import Image from 'next/image';
-
-import type { SkeletonProps } from '@mui/material';
-import { Grid, Stack, Paper, Typography, Divider, Avatar, Rating, Chip, Skeleton } 
-from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-import { toTitleCase }
-from '@/app/_lib/utils'
 import React from 'react';
-import { WidthFull } from '@mui/icons-material';
 
-type TutorCardProps = { tutor: Tutor, elevation: number };
+// import Image from 'next/image';
+
+import { Box, Stack, Paper, Typography, Divider, Avatar, Rating, Chip, Skeleton, SkeletonProps } 
+  from '@mui/material';
+
+import { toTitleCase, toPhoneNumber }
+  from '@/app/_lib/utils'
+
+
+type TutorCardProps = { tutor: Tutor | null, disabled?: boolean };
 export function TutorCard(props: TutorCardProps) {
-  /*const stackRef = useRef<HTMLDivElement>(null);
-  const scrollRight = () => {
-    if(stackRef.current) stackRef.current.scrollLeft += 100;
-  };*/
-
   const printChips = () => {
     return props?.tutor?.coursePreferences?.map((course: { courseGrade: string, courseNumber: number, majorAbbreviation: string, tutorEmail: string }, index: number) => (
       <Chip label={course.majorAbbreviation.toUpperCase() + course.courseNumber} color="primary" sx={{ width: 100 }} key={index}/>
@@ -29,54 +21,63 @@ export function TutorCard(props: TutorCardProps) {
   };
 
   return (
-    <Paper elevation={props.elevation} sx={{ p: 2, width: '100%' }}>
+    <Paper variant="outlined" sx={{ p: 2, width: '100%', '&:hover, &.Mui-focusVisible': { borderColor: 'secondary.main' }, opacity: props.disabled ? 0.65 : 1 }}>
       <Stack direction="row" spacing={2} divider={ <Divider orientation="vertical" flexItem /> }>
-          <Stack direction="column" alignItems="center" spacing={1} width="20%">
-            <Typography fontSize="1.5em" textAlign="center"> {toTitleCase(props.tutor?.firstName + " " + props.tutor?.lastName)} </Typography>
+        <Stack direction="column" alignItems="center" spacing={1} width="20%">
+          <Typography fontSize="1.5em" textAlign="center"> {toTitleCase(`${props.tutor?.firstName} ${props.tutor?.lastName}`)} </Typography>
 
-            <Avatar src={props.tutor?.pictureUrl} alt="Tutor profile picture" sx={{ width: '5em', height: '5em' }} />
-
-            <Typography fontSize="1.5em" textAlign="center" borderBottom={1} borderColor="divider" sx={{ fontWeight: 'bold' }}>
-              ${props.tutor?.payRate} / hr
-            </Typography>
-
-            <Stack direction="column" alignItems="center">
-              <Rating name="read-only" value={props.tutor?.averageRating} precision={0.5} readOnly />
-              <Typography variant="body1" sx={{ fontSize: 10, fontWeight: 'bold' }}> ({props.tutor?.numberOfRatings}) </Typography>
-            </Stack>
+          <Stack direction="row" spacing={1} divider={ <Divider orientation="vertical" flexItem /> }>
+            <Typography fontSize="1em" color="text.secondary"> {props.tutor?.majorAbbreviation.toUpperCase()} </Typography>
+            <Typography fontSize="1em" color="text.secondary"> {toTitleCase(`${props.tutor?.seniorityName}`)} </Typography>
           </Stack>
-        
 
-        
-          <Stack direction="column" spacing={1} minWidth="0%" width="80%">
-            <Typography fontSize="1.5em" align="left"> {props.tutor?.listingTitle} </Typography>
+          <Avatar src={props.tutor?.pictureUrl} alt="Tutor profile picture" sx={{ width: '5em', height: '5em' }} />
 
-            <Stack direction="row" spacing={1}>
-              {/*<Button size="large" onClick={scrollRight} sx={{ width: '5px' }}> <KeyboardArrowLeftIcon/> </Button> */}
+          <Typography fontSize="1.5em" textAlign="center" borderBottom={1} borderColor="divider" sx={{ fontWeight: 'bold' }}>
+            ${props.tutor?.payRate} / hr
+          </Typography>
 
-              <Stack 
-                direction="row" 
-                spacing={1} 
-                whiteSpace="nowrap" 
-                sx={{ 
-                  overflowX: 'auto', 
-                  '&::-webkit-scrollbar': {display: 'none'}, 
-                  scrollbarWidth: 'none', 
-                  msOverflowStyle: 'none' 
-                }}
-                // ref={stackRef}
-              >
-                { printChips() }
-              </Stack>
-
-              {/*<Button size="large" onClick={scrollRight} sx={{ width: '5px' }}> <KeyboardArrowRightIcon/> </Button>*/}
-            </Stack>
-
-            <Typography align="left">
-              {props.tutor?.bioText}
-            </Typography>
+          <Stack direction="column" alignItems="center">
+            <Rating name="read-only" value={props.tutor ? props.tutor.averageRating : 0} precision={0.5} readOnly />
+            <Typography variant="body1" sx={{ fontSize: 10, fontWeight: 'bold' }}> ({props.tutor?.numberOfRatings}) </Typography>
           </Stack>
         </Stack>
+      
+
+      
+        <Stack direction="column" spacing={1} minWidth="0%" width="80%">
+          <Typography fontSize="1.5em" align="left"> {props.tutor?.listingTitle} </Typography>
+
+          <Stack direction="row" spacing={1}>
+            {/*<Button size="large" onClick={scrollRight} sx={{ width: '5px' }}> <KeyboardArrowLeftIcon/> </Button> */}
+
+            <Stack 
+              direction="row" 
+              spacing={1} 
+              whiteSpace="nowrap" 
+              sx={{ 
+                overflowX: 'auto', 
+                '&::-webkit-scrollbar': {display: 'none'}, 
+                scrollbarWidth: 'none', 
+                msOverflowStyle: 'none' 
+              }}
+              // ref={stackRef}
+            >
+              { printChips() }
+            </Stack>
+
+            {/*<Button size="large" onClick={scrollRight} sx={{ width: '5px' }}> <KeyboardArrowRightIcon/> </Button>*/}
+          </Stack>
+
+          <Typography align="left">
+            {props.tutor?.bioText}
+          </Typography>
+          
+          <Stack direction="column" height="100%" justifyContent="end">
+            <Typography align="left"> {`${props.tutor?.email} | ${toPhoneNumber(`${props.tutor?.phoneNumber}`)}`} </Typography>
+          </Stack>
+        </Stack>
+      </Stack>
     </Paper>
   );
 }
@@ -93,7 +94,7 @@ export function TutorSkeleton() {
 
 
   return (
-    <Paper elevation={4} sx={{ p: 2, width: '100%' }}>
+    <Paper variant="outlined" sx={{ p: 2, width: '100%' }}>
       <Stack direction="row">
         <Stack direction="column" alignItems="center" spacing={1} minWidth="0%" width="20%">
           <SkeletonWave>

@@ -30,6 +30,7 @@ export function TableFetch<T>(tableName: string, vars: any[], ...args: string[])
         return (await axios.get(req)).data;
       },
       placeholderData: keepPreviousData,
+      refetchOnWindowFocus: false,
     })
   };
 }
@@ -52,11 +53,7 @@ export function TableUpdate(tableName: string) {
     mutationKey: [tableName],
     mutationFn: async (data: any) => {
       const req = `${tableName}`;
-      return (await axios.put(req, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }));
+      return (await axios.post(req, data));
     },
   });
 }
