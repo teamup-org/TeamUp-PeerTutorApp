@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 xyz/tamutheo/databaseAPI/DatabaseApiApplicationTests.class
 AppointmentTests.class
 MiscellaneousTests.class
@@ -10,3 +11,6 @@ xyz\tamutheo\databaseAPI\DatabaseApiApplicationTests.class
 >>>>>>> 95e9a20 (Brandon: changed all PUT request endpoints to generic REQUEST endpoints)
 =======
 >>>>>>> dc09a04 (Brandon: remove return of appointments that are cancelled but not confirmed, updated random data generation script)
+=======
+xyz\tamutheo\databaseAPI\DatabaseApiApplicationTests.class
+>>>>>>> a747543 (Brandon: Added more dummy data; added picture urls to appointments)

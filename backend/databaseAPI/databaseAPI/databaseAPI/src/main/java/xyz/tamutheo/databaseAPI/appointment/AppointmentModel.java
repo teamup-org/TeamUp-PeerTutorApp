@@ -31,9 +31,11 @@ public class AppointmentModel {
     String tuteeFirstName;
     String tuteeLastName;
     Long tuteePhoneNumber;
+    String tuteePictureUrl;
     String tuteeRequestComment;
     String tutorEmail;
     String tutorFirstName;
     String tutorLastName;
     Long tutorPhoneNumber;
+    String tutorPictureUrl;
 }
