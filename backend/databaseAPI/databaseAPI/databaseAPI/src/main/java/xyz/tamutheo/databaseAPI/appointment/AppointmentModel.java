@@ -30,12 +30,16 @@ public class AppointmentModel {
     String tuteeEmail;
     String tuteeFirstName;
     String tuteeLastName;
+    String tuteeMajorAbbreviation;
     Long tuteePhoneNumber;
     String tuteePictureUrl;
     String tuteeRequestComment;
+    String tuteeSeniorityName;
     String tutorEmail;
     String tutorFirstName;
     String tutorLastName;
+    String tutorMajorAbbreviation;
     Long tutorPhoneNumber;
     String tutorPictureUrl;
+    String tutorSeniorityName;
 }

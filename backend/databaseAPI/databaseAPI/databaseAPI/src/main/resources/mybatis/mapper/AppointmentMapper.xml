@@ -14,14 +14,18 @@
         <result property="tuteeEmail" column="tutee_email" />
         <result property="tuteeFirstName" column="tutee_first_name" />
         <result property="tuteeLastName" column="tutee_last_name" />
+        <result property="tuteeMajorAbbreviation" column="tutee_major_abbreviation" />
         <result property="tuteePhoneNumber" column="tutee_phone_number" />
         <result property="tuteePictureUrl" column="tutee_picture_url" />
         <result property="tuteeRequestComment" column="tutee_request_comment" />
+        <result property="tuteeSeniorityName" column="tutee_seniority_name" />
         <result property="tutorEmail" column="tutor_email" />
         <result property="tutorFirstName" column="tutor_first_name" />
         <result property="tutorLastName" column="tutor_last_name" />
+        <result property="tutorMajorAbbreviation" column="tutor_major_abbreviation" />
         <result property="tutorPhoneNumber" column="tutor_phone_number" />
         <result property="tutorPictureUrl" column="tutor_picture_url" />
+        <result property="tutorSeniorityName" column="tutor_seniority_name" />
     </resultMap>
 
     <insert id="create" parameterType="xyz.tamutheo.databaseAPI.appointment.AppointmentModel">
@@ -44,14 +48,18 @@
             a.tutee_email AS tutee_email,
             tutee.first_name AS tutee_first_name,
             tutee.last_name AS tutee_last_name,
+            tutee.major_abbreviation AS tutee_major_abbreviation,
             tutee.phone_number AS tutee_phone_number,
             tutee.picture_url AS tutee_picture_url,
+            tutee.seniority_name AS tutee_seniority_name,
             a.tutee_request_comment,
             tutor.first_name AS tutor_first_name,
             tutor.last_name AS tutor_last_name,
             tutor.phone_number AS tutor_phone_number,
+            tutor.major_abbreviation AS tutor_major_abbreviation,
             a.tutor_email AS tutor_email,
-            tutor.picture_url AS tutor_picture_url
+            tutor.picture_url AS tutor_picture_url,
+            tutor.seniority_name AS tutor_seniority_name
         FROM appointment AS a
         INNER JOIN tutor ON a.tutor_email = tutor.email
         INNER JOIN tutee ON a.tutee_email = tutee.email
@@ -150,14 +158,18 @@
             a.tutee_email AS tutee_email,
             tutee.first_name AS tutee_first_name,
             tutee.last_name AS tutee_last_name,
+            tutee.major_abbreviation AS tutee_major_abbreviation,
             tutee.phone_number AS tutee_phone_number,
             tutee.picture_url AS tutee_picture_url,
+            tutee.seniority_name AS tutee_seniority_name,
             a.tutee_request_comment,
             tutor.first_name AS tutor_first_name,
             tutor.last_name AS tutor_last_name,
+            tutor.major_abbreviation AS tutor_major_abbreviation,
             tutor.phone_number AS tutor_phone_number,
             a.tutor_email AS tutor_email,
-            tutor.picture_url AS tutor_picture_url
+            tutor.picture_url AS tutor_picture_url,
+            tutor.seniority_name AS tutor_seniority_name
         FROM appointment AS a
         INNER JOIN tutor ON a.tutor_email = tutor.email
         INNER JOIN tutee ON a.tutee_email = tutee.email
