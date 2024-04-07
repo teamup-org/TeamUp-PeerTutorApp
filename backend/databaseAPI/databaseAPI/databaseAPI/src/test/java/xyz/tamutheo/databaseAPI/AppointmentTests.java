@@ -182,4 +182,17 @@ public class AppointmentTests {
 
         verify(tutorService).update(any(), any(), any());
     }
+
+    // Test for tutor setting time preferences
+    @Test
+    public void testTutorSetsTimePreferences() throws Exception {
+        mockMvc.perform(put("/tutor_time_preference")
+                .param("time_intervals", "00:00:00 23:59:59, 13:37:00 13:42:00")
+                .param("tutor_email", "sol@r.eclipse")
+                .param("weekday_name", "Monday")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk());
+
+    verify(tutorTimePreferenceService).update(anyList(), anyString(), anyString());
+}
 }
