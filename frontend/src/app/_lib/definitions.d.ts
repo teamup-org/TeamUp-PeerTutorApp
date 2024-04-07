@@ -79,12 +79,8 @@ declare global {
       locationName: LocationType, 
       tutorEmail: string 
     }[],
-    timePreferences: {
-      endTimeString: string,
-      startTimeString: string,
-      tutorEmail: string,
-      weekdayName: string
-    }[],
+    timePreferences: TutorTimePreference[],
+
     majorAbbreviation: string,
     payRate: number,
     seniorityName: Seniority,
@@ -131,6 +127,7 @@ declare global {
     // Appointment Information
     appointmentSizeName: "single" | "group",
     cancellationReason: string,
+    tuteeRequestComment: string,
     startDateTimeString: Date,
     endDateTimeString: Date,
     isCancelled: boolean,
@@ -139,15 +136,21 @@ declare global {
 
     // Tutee Information
     tuteeEmail: string,
+    tuteePictureUrl: string,
     tuteeFirstName: string,
     tuteeLastName: string,
     tuteePhoneNumber: number,
+    tuteeSeniorityName: Seniority,
+    tuteeMajorAbbreviation: string,
 
     // Tutor Information
     tutorEmail: string,
+    tutorPictureUrl: string,
     tutorFirstName: string,
     tutorLastName: string,
     tutorPhoneNumber: number,
+    tutorSeniorityName: Seniority,
+    tutorMajorAbbreviation: string,
   };
 
   // REST API: /appointment
@@ -191,14 +194,5 @@ declare global {
     tutorLastName: string,
     tutorMajorAbbreviation: string,
     tutorSeniority: Seniority,
-  };
-
-  // REST API: /tutor_time_preference
-  type TutorTimePreference = {
-    startTimeString: string,
-    endTimeString: string,
-
-    tutorEmail: string,
-    weekdayName: string,
   };
 }

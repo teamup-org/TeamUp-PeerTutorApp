@@ -36,7 +36,7 @@ export default function DashboardPage() {
 
   const userEmail = useSession().data?.user?.email;
 
-  const { data: pendingReviewData, isLoading: loading } = TableFetch<PendingReview[]>("tutor_review/pending_reviews", [userEmail], `tutee_email=${userEmail}`);
+  const { data: pendingReviewData, isLoading: loading, refetch } = TableFetch<PendingReview[]>("tutor_review/pending_reviews", [userEmail], `tutee_email=${userEmail}`);
 
 
   return (
@@ -73,7 +73,6 @@ export default function DashboardPage() {
         </Stack>
       </Container>
       
-      { selectedPendingReview && 
       <Dialog 
         open={selectedPendingReview ? true : false} onClose={() => setSelectedPendingReview(null)}
         TransitionComponent={Transition} keepMounted 
@@ -86,18 +85,18 @@ export default function DashboardPage() {
               <CloseIcon />
             </IconButton>
 
-            <Typography variant="h3"> Writing Review for {toTitleCase(`${selectedPendingReview.tutorFirstName} ${selectedPendingReview.tutorLastName}`)} </Typography>
+            <Typography variant="h3"> Writing Review for {toTitleCase(`${selectedPendingReview?.tutorFirstName} ${selectedPendingReview?.tutorLastName}`)} </Typography>
           </Stack>
         </DialogTitle>
         
         <DialogContent dividers sx={{ pt: 4, pb: 8 }}>
           <Container maxWidth="lg">
-            <Review editable pendingReview={selectedPendingReview} />
+            <Review editable pendingReview={[selectedPendingReview, setSelectedPendingReview]} refetch={refetch} key={new Date().getTime()}/>
           </Container>
         </DialogContent>
 
       </Dialog>
-      }
+      
     </Box>
   );
 }

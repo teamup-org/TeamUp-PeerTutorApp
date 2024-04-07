@@ -10,8 +10,8 @@ import { TableFetch } from '@/app/_lib/data';
 
 
 const sortOptions = [
-  { label: "Top Reviews", query: "top_reviews" }, 
-  { label: "Most Recent", query: "recent_reviews" },
+  { label: "Top Reviews", query: "number_stars_descending" }, 
+  { label: "Most Recent", query: "review_date_descending" },
 ];
 
 const filterOptions = [
@@ -27,25 +27,25 @@ const calculateRatingDistribution = (tutor: Tutor) => {
   const totalRatings = Math.max(tutor.numberOfRatings, 1);
 
   var dist = [
-    ((tutor.numberOneStarRatings   / totalRatings) * 100),
-    ((tutor.numberTwoStarRatings   / totalRatings) * 100),
-    ((tutor.numberThreeStarRatings / totalRatings) * 100),
-    ((tutor.numberFourStarRatings  / totalRatings) * 100),
-    ((tutor.numberFiveStarRatings  / totalRatings) * 100),
+    [tutor.numberOneStarRatings,   ((tutor.numberOneStarRatings   / totalRatings) * 100)],
+    [tutor.numberTwoStarRatings,   ((tutor.numberTwoStarRatings   / totalRatings) * 100)],
+    [tutor.numberThreeStarRatings, ((tutor.numberThreeStarRatings / totalRatings) * 100)],
+    [tutor.numberFourStarRatings,  ((tutor.numberFourStarRatings  / totalRatings) * 100)],
+    [tutor.numberFiveStarRatings,  ((tutor.numberFiveStarRatings  / totalRatings) * 100)],
   ];
 
-  dist.forEach((value, index) => { dist[index] = Number.isInteger(value) ? Number(value.toFixed(0)) : Number(value.toFixed(1)) });
+  dist.forEach((value, index) => { dist[index][1] = Number.isInteger(value) ? Number(value[1].toFixed(0)) : Number(value[1].toFixed(1)) });
   
   return dist;
 };
 
-export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
+export default function TutorProfileReviews({ tutor }: { tutor: Tutor | null }) {
   const [sort, setSort] = React.useState(sortOptions[0].query);
   const [filter, setFilter] = React.useState(filterOptions[0].query);
-  const [starWeights, setStarWeights] = React.useState<number[]>([]);
-  React.useEffect(() => {
-    setStarWeights(calculateRatingDistribution(tutor));
-  }, [tutor]);
+  const [starWeights, setStarWeights] = React.useState<number[][]>([[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]);
+    React.useEffect(() => {
+      if (tutor) setStarWeights(calculateRatingDistribution(tutor));
+    }, [tutor]);
 
   const [page, setPage] = React.useState(1);
 
@@ -56,16 +56,15 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
   };
 
   const mapStars = () => {
-    return starWeights.toReversed().map((weight: number, index) => (
-        <Stack key={index} direction="row" spacing={1} alignItems="center">
-          <Typography variant="body1" width={50} align="right" whiteSpace="noWrap"> {5 - index} star </Typography>
+    return starWeights.toReversed().map((weight: number[], index) => (
+      <Stack key={index} direction="row" spacing={1} alignItems="center">
+        <Typography variant="body1" width={50} align="right" whiteSpace="noWrap"> {5 - index} star </Typography>
 
-          <LinearProgress variant="determinate" value={Number(weight)} sx={{ width: '100%', height: 12, borderRadius: 8 }} />
-          
-          <Typography variant="body1" width={25} align="right"> {weight}% </Typography>
-        </Stack>
-      )
-    );
+        <LinearProgress variant="determinate" value={weight[1]} sx={{ width: '100%', height: 14, borderRadius: 10 }} />
+        
+        <Typography variant="body1" width={25} align="right"> ({weight[0]}) </Typography>
+      </Stack>
+    ));
   };
 
   const handleSortChange = (event: SelectChangeEvent) => {
@@ -82,7 +81,8 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
       `page_number=${page}`,
       `number_entries_per_page=${5}`,
       `number_stars_greater_than_or_equals=${filter[0]}`,
-      `number_stars_less_than_or_equals=${filter[1]}`
+      `number_stars_less_than_or_equals=${filter[1]}`,
+      `sort_by=${sort}`
     );
   
   React.useEffect(() => {
@@ -117,7 +117,7 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor }) {
                 {/* Average rating column */}
                 <Stack direction="column" alignItems="center" justifyItems="center">
                   <Typography variant="h2"> {tutor?.averageRating ? tutor.averageRating.toFixed(1) : Number(0.0).toFixed(1)} </Typography>
-                  <Rating value={tutor?.averageRating} precision={0.5} readOnly />
+                  <Rating value={tutor ? tutor.averageRating : 0} precision={0.5} readOnly />
                   <Typography variant="body1"> ({tutor?.numberOfRatings ? tutor.numberOfRatings : 0}) </Typography>
                 </Stack>
 

@@ -9,9 +9,14 @@
   color: #1e1810; /* Change button text color */
 }
 
+a.fc-event {
+  color: inherit;
+}
+
 /*
 .fc-header-toolbar .fc-button-active {
   background-color: #f8d06d !important; // Change button background color
   color: #1e1810 !important; // Change button text color 
 }
 */
+

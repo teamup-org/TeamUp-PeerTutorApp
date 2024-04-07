@@ -3,126 +3,71 @@
 
 import * as React from 'react';
 
-import { Container, Paper } from '@mui/material';
-
-/*import { ViewState, EditingState, ChangeSet } from '@devexpress/dx-react-scheduler';
-import {
-  Scheduler,
-  WeekView,
-  Appointments,
-  Toolbar,
-  ViewSwitcher,
-  MonthView,
-  DayView,
-  DateNavigator,
-  TodayButton,
-  AppointmentForm,
-  AppointmentTooltip,
-  ConfirmationDialog,
-
-  CurrentTimeIndicator,
-  EditRecurrenceMenu,
-} from '@devexpress/dx-react-scheduler-material-ui';
+import FullCalendar from '@fullcalendar/react';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin, { Draggable, DateClickArg } from '@fullcalendar/interaction';
+import { EventImpl } 
+  from '@fullcalendar/core/internal';
+import { EventResizeDoneArg } 
+  from '@fullcalendar/interaction';
+import type { DateSelectArg, EventClickArg, EventSourceInput, EventInput, EventDropArg } 
+  from '@fullcalendar/core/index.js';
 
 
-const eventData = [
-  { startDate: '2024-03-27T09:45', endDate: '2024-03-27T10:45', title: 'Test', test: 'test' },
-  { startDate: '2024-03-27T12:00', endDate: '2024-03-27T13:00', title: 'Test 2' }
-];
+export default function Page() {
+  const scheduleRef = React.useRef<FullCalendar>(null);
+  const [selectedEvent, setSelectedEvent] = React.useState<EventClickArg>();
 
-
-export default function Test() {
-  const [view, setView] = React.useState("week");
-  const currentViewNameChange = (currentViewName: string) => {
-      setView(currentViewName);
+  const handleCustomButton = () => {
+    selectedEvent?.event.remove();
   };
 
-  const [date, setDate] = React.useState<Date>(new Date());
-  const handleDateChange = (newDate: Date) => {
-    setDate(newDate);
+  // Callback function after releasing click on date selection
+  const handleDateSelect = (event: DateSelectArg) => {
+    event.view.calendar.unselect();
+    event.view.calendar.addEvent(event);
   };
 
-  const [addAppointment, setAddAppointment] = React.useState({});
-  const handleAddAppointmentChange = (newAppointment: object) => {
-    setAddAppointment({ newAppointment });
+  const handleEventDrop = (event: EventDropArg) => {
+    if (selectedEvent) selectedEvent.el.style.outline = "";
+    event.el.style.outline = "2px solid black";
+    setSelectedEvent(event);
   };
 
-  const [appointmentChanges, setAppointmentChanges] = React.useState({});
-  const handleAppointmentChangesChange = (newChanges: object) => {
-    setAppointmentChanges({ newChanges });
-  };
-
-  const [editingAppointment, setEditingAppointment] = React.useState({});
-  const handleEditingAppointmentChange = (newEdits: object) => {
-    setEditingAppointment({ newEdits });
-  };
-
-  const commitChanges = ({ added, changed, deleted }: ChangeSet) => {
-    
-
-    if (added) {
-
-    }
-
-    if (changed) {
-
-    }
-
-    if (deleted !== undefined) {
-
-    }
-
-    // return { data };
+  // Callback function after clicking event
+  const handleEventClick = (info: EventClickArg) => {
+    if (selectedEvent) selectedEvent.el.style.outline = "";
+    info.el.style.outline = "2px solid black";
+    setSelectedEvent(info);
   };
 
   return (
-    <Container maxWidth="xl">
-      <Paper elevation={4} sx={{ mt: 4, p: 4 }}>
-        <Scheduler data={eventData} height={660}>
-          <ViewState
-            currentViewName={view} onCurrentViewNameChange={currentViewNameChange}
-            currentDate={date} onCurrentDateChange={handleDateChange}
-          />
-          <EditingState
-            onCommitChanges={commitChanges}
-            addedAppointment={addAppointment} onAddedAppointmentChange={handleAddAppointmentChange}
-            appointmentChanges={appointmentChanges} onAppointmentChangesChange={setAppointmentChanges}
-            editingAppointment={editingAppointment} onEditingAppointmentChange={setEditingAppointment}
-          />
-
-          <DayView />
-          <WeekView
-            name="week" displayName='Week'
-            startDayHour={6}
-            endDayHour={23}
-          />
-          <MonthView />
-
-          <Toolbar />
-          <DateNavigator />
-          <TodayButton />
-          <ViewSwitcher />
-          
-          <Appointments />
-          <AppointmentTooltip
-            showOpenButton
-            showDeleteButton
-          />
-          <AppointmentForm />
-
-          <CurrentTimeIndicator
-            shadePreviousCells
-            shadePreviousAppointments
-            updateInterval={60000}
-          />
-        </Scheduler>
-      </Paper>
-    </Container>
-  );
-} */
-
-export default function Test() {
-  return (
-    <iframe src="https://calendar.google.com/calendar/embed?src=kylel35775%40gmail.com&ctz=America%2FChicago"  width="800" height="600"  scrolling="no"></iframe>
+    <FullCalendar
+      ref={scheduleRef}
+      plugins={[ interactionPlugin, dayGridPlugin, timeGridPlugin ]}
+      
+      initialView="timeGridWeek"
+      height="70vh"
+      headerToolbar={{
+        left: 'deleteTime',
+        right: 'submitTimes',
+      }}
+      dayHeaderFormat={{ weekday: 'long' }}
+      customButtons={{
+        deleteTime: {
+          text: 'Remove Selected Time',
+          click: handleCustomButton,
+        },
+        submitTimes: {
+          text: 'Submit Time Preference',
+          click: () => {console.log(scheduleRef.current?.getApi().getEvents())}
+        }
+      }}
+      allDaySlot={false} slotDuration="00:15:00" slotLabelInterval="01:00"
+      unselectAuto={false} editable selectable selectMirror selectOverlap={false} eventOverlap={false}
+      eventClick={handleEventClick} eventDrop={handleEventDrop}
+      select={handleDateSelect}
+    />
   );
 }

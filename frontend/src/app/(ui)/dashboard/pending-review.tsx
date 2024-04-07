@@ -44,7 +44,6 @@ export default function PendingReview( { pendingReview, setPendingReview } : { p
         <Typography> Appointment: {toDate(new Date(pendingReview.endDateTimeString))} </Typography>
 
         <Stack direction="row" spacing={1} alignContent="center" justifyContent="end" pr={2}>
-          <Button variant="contained" size="small" color="error"> Delete </Button>
           <Button variant="contained" size="small" onClick={handleRatingBox}> Open Review </Button>
         </Stack>
       </Collapse>
