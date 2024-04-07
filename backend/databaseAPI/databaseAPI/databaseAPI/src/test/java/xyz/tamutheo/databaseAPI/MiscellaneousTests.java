@@ -38,6 +38,9 @@ import xyz.tamutheo.databaseAPI.seniority.SeniorityModel;
 import xyz.tamutheo.databaseAPI.userActiveStatus.UserActiveStatusController;
 import xyz.tamutheo.databaseAPI.userActiveStatus.UserActiveStatusService;
 import xyz.tamutheo.databaseAPI.userActiveStatus.UserActiveStatusModel;
+import xyz.tamutheo.databaseAPI.weekday.WeekdayController;
+import xyz.tamutheo.databaseAPI.weekday.WeekdayService;
+import xyz.tamutheo.databaseAPI.weekday.WeekdayModel;
 
 
 @RunWith(SpringRunner.class)
@@ -67,6 +70,9 @@ public class MiscellaneousTests {
 
     @MockBean
     private UserActiveStatusService userActiveStatusService;
+
+    @MockBean
+    private WeekdayService weekdayService;
 
     // Test reading appointment sizes with no filters
     @Test
@@ -417,5 +423,45 @@ public class MiscellaneousTests {
                 .andExpect(status().isOk());
 
         verify(userActiveStatusService).read(10, 20, null);
+    }
+
+    // Test reading weekdays with no filters
+    @Test
+    public void testReadWeekdaysNoFilters() throws Exception {
+        when(weekdayService.read(null, null, null)).thenReturn(Arrays.asList(new WeekdayModel()));
+
+        mockMvc.perform(get("/weekday")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(weekdayService).read(null, null, null);
+    }
+
+    // Test reading weekdays with specific names
+    @Test
+    public void testReadWeekdaysWithNames() throws Exception {
+        List<String> names = Arrays.asList("Monday", "Wednesday");
+        when(weekdayService.read(names, null, null)).thenReturn(Arrays.asList(new WeekdayModel()));
+
+        mockMvc.perform(get("/weekday")
+                .param("weekday_name_in", "Monday, Wednesday")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(weekdayService).read(names, null, null);
+    }
+
+    // Test reading weekdays with pagination
+    @Test
+    public void testReadWeekdaysWithPagination() throws Exception {
+        when(weekdayService.read(null, 10, 20)).thenReturn(Arrays.asList(new WeekdayModel()));
+
+        mockMvc.perform(get("/weekday")
+                .param("limit", "10")
+                .param("offset", "20")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(weekdayService).read(null, 10, 20);
     }
 }
