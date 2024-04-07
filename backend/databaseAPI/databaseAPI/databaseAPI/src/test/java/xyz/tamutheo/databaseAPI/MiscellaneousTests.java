@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
@@ -463,5 +464,17 @@ public class MiscellaneousTests {
                 .andExpect(status().isOk());
 
         verify(weekdayService).read(null, 10, 20);
+    }
+
+    // Test to deny direct URL access except for the login page
+    @Test
+    public void testDenyDirectURLAccess() throws Exception {
+        mockMvc.perform(get("/dashboard")
+                .contentType("application/json"))
+                .andExpect(status().is(HttpStatus.FORBIDDEN.value()));
+
+        mockMvc.perform(get("/login")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
     }
 }
