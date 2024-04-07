@@ -3,13 +3,7 @@
 // import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import type { NextAuthOptions }
-  from 'next-auth';
-import { getSession, useSession }
-  from 'next-auth/react';
-
-import { TableFetch }
-  from '@/app/_lib/data';
-
+from 'next-auth';
 
 export const authConfig: NextAuthOptions = {
   providers: [
