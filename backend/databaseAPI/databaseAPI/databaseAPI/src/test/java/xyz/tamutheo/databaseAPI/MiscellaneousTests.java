@@ -24,12 +24,15 @@ import xyz.tamutheo.databaseAPI.course.CourseModel;
 import xyz.tamutheo.databaseAPI.location.LocationController;
 import xyz.tamutheo.databaseAPI.location.LocationService;
 import xyz.tamutheo.databaseAPI.location.LocationModel;
+import xyz.tamutheo.databaseAPI.major.MajorController;
+import xyz.tamutheo.databaseAPI.major.MajorService;
+import xyz.tamutheo.databaseAPI.major.MajorModel;
 
 import java.util.Arrays;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest({AppointmentSizeController.class, CourseController.class, LocationController.class})
+@WebMvcTest({AppointmentSizeController.class, CourseController.class, LocationController.class, MajorController.class})
 public class MiscellaneousTests {
 
     @Autowired
@@ -43,6 +46,9 @@ public class MiscellaneousTests {
 
     @MockBean
     private LocationService locationService;
+
+    @MockBean
+    private MajorService majorService;
 
     // Test reading appointment sizes with no filters
     @Test
@@ -198,5 +204,57 @@ public class MiscellaneousTests {
                 .andExpect(status().isOk());
 
         verify(locationService).read(null, 10, 20);
+    }
+    
+    // Test reading majors with no filters
+    @Test
+    public void testReadMajorsNoFilters() throws Exception {
+        when(majorService.read(null, null, null, null)).thenReturn(Arrays.asList(new MajorModel()));
+
+        mockMvc.perform(get("/major")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(majorService).read(null, null, null, null);
+    }
+
+    // Test reading majors with major abbreviation filter
+    @Test
+    public void testReadMajorsWithAbbreviationFilter() throws Exception {
+        when(majorService.read("CS", null, null, null)).thenReturn(Arrays.asList(new MajorModel()));
+
+        mockMvc.perform(get("/major")
+                .param("major_abbreviation_contains", "CS")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(majorService).read("CS", null, null, null);
+    }
+
+    // Test reading majors with major name filter
+    @Test
+    public void testReadMajorsWithNameFilter() throws Exception {
+        when(majorService.read(null, "Computer Science", null, null)).thenReturn(Arrays.asList(new MajorModel()));
+
+        mockMvc.perform(get("/major")
+                .param("major_name_contains", "Computer Science")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(majorService).read(null, "Computer Science", null, null);
+    }
+
+    // Test reading majors with pagination
+    @Test
+    public void testReadMajorsWithPagination() throws Exception {
+        when(majorService.read(null, null, 10, 20)).thenReturn(Arrays.asList(new MajorModel()));
+
+        mockMvc.perform(get("/major")
+                .param("limit", "10")
+                .param("offset", "20")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(majorService).read(null, null, 10, 20);
     }
 }
