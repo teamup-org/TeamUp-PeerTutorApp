@@ -4,11 +4,12 @@
 import Link from 'next/link';
 
 import { Box, Typography, Button, Divider, Stack }
-from '@mui/material'
+  from '@mui/material'
 import { Login, HowToReg }
-from '@mui/icons-material'
+  from '@mui/icons-material'
 
 import ResponsiveAppBar from './(ui)/app-bar'
+
 
 const links = [
   {name: 'Login', href: '/login', icon: Login},

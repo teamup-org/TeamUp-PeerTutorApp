@@ -17,12 +17,7 @@ from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 export default function SignIn() {
-  const router = useRouter();
 
-  const { data: session } = useSession()
-  if (session) {
-    return (<>{router.push('/dashboard')}</>);
-  }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

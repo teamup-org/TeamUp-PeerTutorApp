@@ -29,6 +29,22 @@ declare global {
   type Seniority = "All" | "Freshman" | "Sophomore" | "Junior" | "Senior" | "Graduate";
   type LocationType = "in-person on-campus" | "in-person off-campus" | "online";
 
+  type TimePreference = {
+    day: string,
+    startTime: dayjs.Dayjs,
+    endTime: dayjs.Dayjs
+  }
+
+  type TutorTime = {
+    weekday_name: string,
+    time_intervals: string,
+    tutor_email: string
+  }
+
+  type BackendTimes = {
+    [key: string]: string
+};
+
   // 
   type Tutor = {
     activeStatusName: "active" | "inactive" | "banned",
@@ -47,15 +63,16 @@ declare global {
     bioText: string,
     coursePreferences: Course[],
     eligibleCourses: Course[],
-    coursePreferences: Course[],
-    eligibleCourses: Course[],
-    email: string,
-    firstName: string,
-    lastName: string,
     listingTitle: string,
     locationPreferences: { 
       locationName: LocationType, 
       tutorEmail: string 
+    }[],
+    timePreferences: {
+      endTimeString: string,
+      startTimeString: string,
+      tutorEmail: string,
+      weekdayName: string
     }[],
     majorAbbreviation: string,
     payRate: number,

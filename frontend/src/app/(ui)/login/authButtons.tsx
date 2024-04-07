@@ -2,12 +2,13 @@
 import Image from 'next/image';
 
 import { signIn } 
-from 'next-auth/react';
+  from 'next-auth/react';
 
 import { Button, Typography } 
-from '@mui/material';
+  from '@mui/material';
 
 import googleLogo from '@/../public/google.png';
+
 
 export function GoogleSignInButton() {
   return (
