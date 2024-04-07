@@ -193,6 +193,19 @@ public class AppointmentTests {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().isOk());
 
-    verify(tutorTimePreferenceService).update(anyList(), anyString(), anyString());
-}
+        verify(tutorTimePreferenceService).update(anyList(), anyString(), anyString());
+    }
+
+    // Test for tutor updating location preferences
+    @Test
+    public void testTutorUpdatesLocationPreferences() throws Exception {
+        mockMvc.perform(put("/tutor/update")
+                .param("email_old", "sol@r.eclipse")
+                .param("location_preferences_new", "Valley Mills, TX")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk());
+
+        verify(tutorService).update(any(), any(), any());
+    }
+
 }
