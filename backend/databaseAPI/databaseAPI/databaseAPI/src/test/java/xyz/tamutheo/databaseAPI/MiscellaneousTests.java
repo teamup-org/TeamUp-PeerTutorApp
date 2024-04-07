@@ -35,9 +35,13 @@ import xyz.tamutheo.databaseAPI.rating.RatingModel;
 import xyz.tamutheo.databaseAPI.seniority.SeniorityController;
 import xyz.tamutheo.databaseAPI.seniority.SeniorityService;
 import xyz.tamutheo.databaseAPI.seniority.SeniorityModel;
+import xyz.tamutheo.databaseAPI.userActiveStatus.UserActiveStatusController;
+import xyz.tamutheo.databaseAPI.userActiveStatus.UserActiveStatusService;
+import xyz.tamutheo.databaseAPI.userActiveStatus.UserActiveStatusModel;
+
 
 @RunWith(SpringRunner.class)
-@WebMvcTest({AppointmentSizeController.class, CourseController.class, LocationController.class, MajorController.class, RatingController.class, SeniorityController.class})
+@WebMvcTest({AppointmentSizeController.class, CourseController.class, LocationController.class, MajorController.class, RatingController.class, SeniorityController.class, UserActiveStatusController.class})
 public class MiscellaneousTests {
 
     @Autowired
@@ -60,6 +64,9 @@ public class MiscellaneousTests {
 
     @MockBean
     private SeniorityService seniorityService;
+
+    @MockBean
+    private UserActiveStatusService userActiveStatusService;
 
     // Test reading appointment sizes with no filters
     @Test
@@ -373,4 +380,42 @@ public class MiscellaneousTests {
         verify(seniorityService).read(null, 10, 20);
     }
 
+    // Test reading user active statuses with no specific filter
+    @Test
+    public void testReadUserActiveStatusesNoFilter() throws Exception {
+        when(userActiveStatusService.read(null, null, null)).thenReturn(Arrays.asList(new UserActiveStatusModel()));
+
+        mockMvc.perform(get("/user_active_status")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(userActiveStatusService).read(null, null, null);
+    }
+
+    // Test reading user active statuses with a specific name filter
+    @Test
+    public void testReadUserActiveStatusWithNameFilter() throws Exception {
+        when(userActiveStatusService.read(null, null, "Active")).thenReturn(Arrays.asList(new UserActiveStatusModel()));
+
+        mockMvc.perform(get("/user_active_status")
+                .param("user_active_status_name", "Active")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(userActiveStatusService).read(null, null, "Active");
+    }
+
+    // Test reading user active statuses with pagination
+    @Test
+    public void testReadUserActiveStatusWithPagination() throws Exception {
+        when(userActiveStatusService.read(10, 20, null)).thenReturn(Arrays.asList(new UserActiveStatusModel()));
+
+        mockMvc.perform(get("/user_active_status")
+                .param("limit", "10")
+                .param("offset", "20")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(userActiveStatusService).read(10, 20, null);
+    }
 }
