@@ -44,7 +44,7 @@ import xyz.tamutheo.databaseAPI.weekday.WeekdayModel;
 
 
 @RunWith(SpringRunner.class)
-@WebMvcTest({AppointmentSizeController.class, CourseController.class, LocationController.class, MajorController.class, RatingController.class, SeniorityController.class, UserActiveStatusController.class})
+@WebMvcTest({AppointmentSizeController.class, CourseController.class, LocationController.class, MajorController.class, RatingController.class, SeniorityController.class, UserActiveStatusController.class, WeekdayController.class})
 public class MiscellaneousTests {
 
     @Autowired
