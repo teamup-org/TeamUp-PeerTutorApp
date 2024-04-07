@@ -472,7 +472,12 @@ public class MiscellaneousTests {
         mockMvc.perform(get("/dashboard")
                 .contentType("application/json"))
                 .andExpect(status().is(HttpStatus.FORBIDDEN.value()));
-
+        mockMvc.perform(get("/dashboar/tutors")
+                .contentType("application/json"))
+                .andExpect(status().is(HttpStatus.FORBIDDEN.value()));
+        mockMvc.perform(get("/dashboard/schedule")
+                .contentType("application/json"))
+                .andExpect(status().is(HttpStatus.FORBIDDEN.value()));
         mockMvc.perform(get("/login")
                 .contentType("application/json"))
                 .andExpect(status().isOk());
