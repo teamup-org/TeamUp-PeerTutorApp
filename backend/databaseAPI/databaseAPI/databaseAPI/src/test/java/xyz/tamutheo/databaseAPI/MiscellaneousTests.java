@@ -1,3 +1,5 @@
+import java.util.Arrays;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -27,12 +29,12 @@ import xyz.tamutheo.databaseAPI.location.LocationModel;
 import xyz.tamutheo.databaseAPI.major.MajorController;
 import xyz.tamutheo.databaseAPI.major.MajorService;
 import xyz.tamutheo.databaseAPI.major.MajorModel;
-
-import java.util.Arrays;
-import java.util.List;
+import xyz.tamutheo.databaseAPI.rating.RatingController;
+import xyz.tamutheo.databaseAPI.rating.RatingService;
+import xyz.tamutheo.databaseAPI.rating.RatingModel;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest({AppointmentSizeController.class, CourseController.class, LocationController.class, MajorController.class})
+@WebMvcTest({AppointmentSizeController.class, CourseController.class, LocationController.class, MajorController.class, RatingController.class})
 public class MiscellaneousTests {
 
     @Autowired
@@ -49,6 +51,9 @@ public class MiscellaneousTests {
 
     @MockBean
     private MajorService majorService;
+
+    @MockBean
+    private RatingService ratingService;
 
     // Test reading appointment sizes with no filters
     @Test
@@ -205,7 +210,7 @@ public class MiscellaneousTests {
 
         verify(locationService).read(null, 10, 20);
     }
-    
+
     // Test reading majors with no filters
     @Test
     public void testReadMajorsNoFilters() throws Exception {
@@ -257,4 +262,71 @@ public class MiscellaneousTests {
 
         verify(majorService).read(null, null, 10, 20);
     }
+
+    // Test reading ratings with no filters
+    @Test
+    public void testReadRatingsNoFilters() throws Exception {
+        when(ratingService.read(null, null, null, null, null)).thenReturn(Arrays.asList(new RatingModel()));
+
+        mockMvc.perform(get("/rating")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(ratingService).read(null, null, null, null, null);
+    }
+
+    // Test reading ratings with exact number of stars
+    @Test
+    public void testReadRatingsWithExactStars() throws Exception {
+        when(ratingService.read(5, null, null, null, null)).thenReturn(Arrays.asList(new RatingModel()));
+
+        mockMvc.perform(get("/rating")
+                .param("number_stars_equals", "5")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(ratingService).read(5, null, null, null, null);
+    }
+
+    // Test reading ratings with minimum number of stars
+    @Test
+    public void testReadRatingsWithMinimumStars() throws Exception {
+        when(ratingService.read(null, 3, null, null, null)).thenReturn(Arrays.asList(new RatingModel()));
+
+        mockMvc.perform(get("/rating")
+                .param("number_stars_greater_than_or_equals", "3")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(ratingService).read(null, 3, null, null, null);
+    }
+
+    // Test reading ratings with maximum number of stars
+    @Test
+    public void testReadRatingsWithMaximumStars() throws Exception {
+        when(ratingService.read(null, null, 4, null, null)).thenReturn(Arrays.asList(new RatingModel()));
+
+        mockMvc.perform(get("/rating")
+                .param("number_stars_less_than_or_equals", "4")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(ratingService).read(null, null, 4, null, null);
+    }
+
+    // Test reading ratings with pagination
+    @Test
+    public void testReadRatingsWithPagination() throws Exception {
+        when(ratingService.read(null, null, null, 10, 20)).thenReturn(Arrays.asList(new RatingModel()));
+
+        mockMvc.perform(get("/rating")
+                .param("limit", "10")
+                .param("offset", "20")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(ratingService).read(null, null, null, 10, 20);
+    }
+
+    
 }
