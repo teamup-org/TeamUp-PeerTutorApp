@@ -131,17 +131,8 @@
             </if>
         </set>
         <where>
-            <if test="appointmentModelOld.endDateTimeString != null">
-                AND end_date_time = STR_TO_DATE(#{appointmentModelOld.endDateTimeString}, #{formatPattern})
-            </if>
-            <if test="appointmentModelOld.tuteeEmail != null">
-                AND tutee_email = #{appointmentModelOld.tuteeEmail}
-            </if>
-            <if test="appointmentModelOld.tutorEmail != null">
-                AND tutor_email = #{appointmentModelOld.tutorEmail}
-            </if>
-            <if test="appointmentModelOld.startDateTimeString != null">
-                AND start_date_time = STR_TO_DATE(#{appointmentModelOld.startDateTimeString}, #{formatPattern})
+            <if test="appointmentModelOld.appointmentId != null">
+                AND appointment_id = #{appointmentModelOld.appointmentId}
             </if>
         </where>
     </update>
