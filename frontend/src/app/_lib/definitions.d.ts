@@ -64,13 +64,16 @@ declare global {
     bioText: string,
     coursePreferences: Course[],
     eligibleCourses: Course[],
-    email: string,
-    firstName: string,
-    lastName: string,
     listingTitle: string,
     locationPreferences: { 
       locationName: LocationType, 
       tutorEmail: string 
+    }[],
+    timePreferences: {
+      endTimeString: string,
+      startTimeString: string,
+      tutorEmail: string,
+      weekdayName: string
     }[],
     majorAbbreviation: string,
     payRate: number,

@@ -1,10 +1,34 @@
 'use client'
-import React, { useState, ChangeEvent, useEffect } from 'react';
-import { Card, CardContent, Skeleton, CardMedia, TextField, Grid, Button, Typography, Divider, Avatar, Paper, Link, Tab, Tabs,
-         Alert, Table, TableContainer, TableHead, TableRow, TableBody, TableCell, Checkbox } from '@mui/material';
-import { TableFetch, TablePush } from '@/app/_lib/data';
 
-import { useSession } from 'next-auth/react';
+
+import * as React from 'react';
+
+import { useSession }
+  from 'next-auth/react';
+
+import { Stack, Skeleton, TextField, Grid, Button, Typography, Divider, Avatar, Paper, Link, Tab, Tabs, Snackbar,
+  Alert, Table, TableContainer, TableHead, TableRow, TableBody, TableCell, Checkbox, MenuItem, Select } 
+  from '@mui/material';
+
+import { DemoContainer } 
+  from '@mui/x-date-pickers/internals/demo';
+
+import { LocalizationProvider } 
+  from '@mui/x-date-pickers/LocalizationProvider';
+
+import { AdapterDayjs }  
+  from '@mui/x-date-pickers/AdapterDayjs';
+
+import { TimeField } 
+  from '@mui/x-date-pickers/TimeField';
+
+import { TableFetch, TablePush }
+  from '@/app/_lib/data';
+
+import dayjs 
+  from 'dayjs';
+
+
 const tabLabels = ["Peer Tutor Profile Information", "Tutee Profile Information"];
 
 interface EditableProfileFieldProps {
@@ -14,11 +38,11 @@ interface EditableProfileFieldProps {
 }
 
 function EditableProfileField({ label, value, onSave }: EditableProfileFieldProps) {
-  const [editMode, setEditMode] = useState(false);
-  const [editedValue, setEditedValue] = useState(value);
+  const [editMode, setEditMode] = React.useState(false);
+  const [editedValue, setEditedValue] = React.useState(value);
 
   // Update editedValue when value changes
-  useEffect(() => {
+  React.useEffect(() => {
     setEditedValue(value);
   }, [value]);
 
@@ -65,53 +89,47 @@ function TuteeUpdatePage(props: any) {
   };
 
   return (
-    <div>
-      <Card style={{ width: '80%', margin: 'auto', marginTop: 50, display: 'flex' }}>
-        <CardContent style={{ padding: '20px' }}>
-
-          <Typography variant="h6" gutterBottom>
-            General Info
-          </Typography>
-          <Divider style={{ marginBottom: '20px' }} />
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <EditableProfileField
-                label="First Name"
-                value={tuteeProfileData.firstName}
-                onSave={handleInputChange('firstName')}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <EditableProfileField
-                label="Last Name"
-                value={tuteeProfileData.lastName}
-                onSave={handleInputChange('lastName')}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <EditableProfileField
-                label="Phone Number"
-                value={tuteeProfileData.phoneNumber}
-                onSave={handleInputChange('phoneNumber')}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <EditableProfileField
-                label="Major Abbreviation"
-                value={tuteeProfileData.majorAbbreviation}
-                onSave={handleInputChange('majorAbbreviation')}
-              />
-            </Grid>
+    <Paper variant="outlined" style={{ width: '80%', margin: 'auto', marginTop: 50, display: 'flex' }}>
+      <Stack direction="column" style={{ padding: '20px' }}>
+        <Typography variant="h6" gutterBottom>
+          General Info
+        </Typography>
+        <Divider style={{ marginBottom: '20px' }} />
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <EditableProfileField
+              label="First Name"
+              value={tuteeProfileData.firstName}
+              onSave={handleInputChange('firstName')}
+            />
           </Grid>
-          <Button variant="contained" color="primary" onClick={handleGeneralUpdate}>
-            Update My General Information!
-          </Button>
-        </CardContent>
-      </Card>
-        
-    </div>
-
-
+          <Grid item xs={6}>
+            <EditableProfileField
+              label="Last Name"
+              value={tuteeProfileData.lastName}
+              onSave={handleInputChange('lastName')}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <EditableProfileField
+              label="Phone Number"
+              value={tuteeProfileData.phoneNumber}
+              onSave={handleInputChange('phoneNumber')}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <EditableProfileField
+              label="Major Abbreviation"
+              value={tuteeProfileData.majorAbbreviation}
+              onSave={handleInputChange('majorAbbreviation')}
+            />
+          </Grid>
+        </Grid>
+        <Button variant="contained" color="primary" onClick={handleGeneralUpdate}>
+          Update My General Information!
+        </Button>
+      </Stack>
+    </Paper>
 );
 
 }
@@ -198,11 +216,13 @@ function LocationPreferences(props: any) {
   ];
 
   const locationChange = (location: LocationType) => {
-    if (tutorProfileData.locationPreferences.includes(location)) {
-      const updatedLocationPreferences = tutorProfileData.locationPreferences.filter((l: LocationType) => l !== location);
+    const locationObject = { locationName: location, tutorEmail: tutorProfileData.email };
+  
+    if (tutorProfileData.locationPreferences.some((loc: { locationName: LocationType; tutorEmail: string; }) => loc.locationName === location)) {
+      const updatedLocationPreferences = tutorProfileData.locationPreferences.filter((loc: { locationName: LocationType; tutorEmail: string; }) => loc.locationName !== location);
       setTutorProfileData({ ...tutorProfileData, locationPreferences: updatedLocationPreferences });
     } else {
-      const updatedLocationPreferences = [...tutorProfileData.locationPreferences, location];
+      const updatedLocationPreferences = [...tutorProfileData.locationPreferences, locationObject];
       setTutorProfileData({ ...tutorProfileData, locationPreferences: updatedLocationPreferences });
     }
   };
@@ -237,6 +257,84 @@ function LocationPreferences(props: any) {
 
 }
 
+function TimePreferences(props: any) {
+  const { tutorProfileData, setTutorProfileData } = props;
+
+  const handleTimeChange = (index: number, field: string, value: string) => {
+    const updatedTimes = [...tutorProfileData.timePreferences];
+    updatedTimes[index][field] = value;
+    setTutorProfileData({ ...tutorProfileData, timePreferences: updatedTimes});
+  };
+
+  const addRow = () => {
+    setTutorProfileData({...tutorProfileData, timePreferences: { day: '', startTime: dayjs(), endTime: dayjs() }});
+  };
+
+  return (
+    <div style={{ marginBottom: '16px' }}>
+        <Typography variant="h6">Add your preferred times</Typography>
+        <Divider />
+        <TableContainer sx={{ maxHeight: '75vh' }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Day</TableCell>
+                <TableCell>Start Time</TableCell>
+                <TableCell>End Time</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tutorProfileData.timePreferences.map((time: any, index: any) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    <Select
+                      value={time.day}
+                      onChange={(e) => handleTimeChange(index, 'day', e.target.value as string)}
+                    >
+                      <MenuItem value="monday">monday</MenuItem>
+                      <MenuItem value="tuesday">tuesday</MenuItem>
+                      <MenuItem value="wednesday">wednesday</MenuItem>
+                      <MenuItem value="thursday">thursday</MenuItem>
+                      <MenuItem value="friday">friday</MenuItem>
+                      <MenuItem value="saturday">saturday</MenuItem>
+                      <MenuItem value="sunday">sunday</MenuItem>
+                    </Select>
+                  </TableCell>
+                  <TableCell>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={['TimeField']}>
+                        <TimeField
+                          value={time.startTime}
+                          onChange={(newValue) => handleTimeChange(index, 'startTime', newValue || '')}
+                          fullWidth
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </TableCell>
+                  <TableCell>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={['TimeField']}>
+                        <TimeField
+                          value={time.endTime}
+                          onChange={(newValue) => handleTimeChange(index, 'endTime', newValue || '')}
+                          fullWidth
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Button variant="outlined" onClick={addRow} style={{ marginTop: '8px' }}>
+          Add Time
+        </Button>
+      </div>
+  );
+
+}
+
 function TutorUpdatePage(props: any) {
   const { setLocationUpdate, setTranscript, tutorProfileData, setTutorProfileData, setTutorUpdate, setEligibleUpdate, setPreferencesUpdate } = props;
 
@@ -261,116 +359,123 @@ function TutorUpdatePage(props: any) {
   }
 
   return (
-    <div>
-      <Card style={{ width: '80%', margin: 'auto', marginTop: 50, display: 'flex', flexDirection: 'column' }}>
-        <CardContent style={{ padding: '20px', flexGrow: 1 }}>
+  <Paper variant="outlined" style={{ width: '80%', margin: 'auto', marginTop: 50, display: 'flex', flexDirection: 'column' }}>
+      <Stack style={{ padding: '20px', flexGrow: 1 }}>
 
-          <Typography variant="h6" gutterBottom>
-            General Info
-          </Typography>
-          <Divider style={{ marginBottom: '20px' }} />
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <EditableProfileField
-                label="First Name"
-                value={tutorProfileData.firstName}
-                onSave={handleInputChange('firstName')}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <EditableProfileField
-                label="Last Name"
-                value={tutorProfileData.lastName}
-                onSave={handleInputChange('lastName')}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <EditableProfileField
-                label="Phone Number"
-                value={tutorProfileData.phoneNumber}
-                onSave={handleInputChange('phoneNumber')}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <EditableProfileField
-                label="Listing Title"
-                value={tutorProfileData.listingTitle}
-                onSave={handleInputChange('listingTitle')}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <EditableProfileField
-                label="Major Abbreviation"
-                value={tutorProfileData.majorAbbreviation}
-                onSave={handleInputChange('majorAbbreviation')}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <EditableProfileField
-                label="Pay Rate"
-                value={tutorProfileData.payRate}
-                onSave={handleInputChange('payRate')}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <EditableProfileField
-                label="Bio Text"
-                value={tutorProfileData.bioText}
-                onSave={handleInputChange('bioText')}
-              />
-            </Grid>
+        <Typography variant="h6" gutterBottom>
+          General Info
+        </Typography>
+        <Divider style={{ marginBottom: '20px' }} />
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <EditableProfileField
+              label="First Name"
+              value={tutorProfileData.firstName}
+              onSave={handleInputChange('firstName')}
+            />
           </Grid>
-          <Button variant="contained" color="primary" onClick={handleGeneralUpdate}>
-            Update My General Information!
-          </Button>
-        </CardContent>
+          <Grid item xs={6}>
+            <EditableProfileField
+              label="Last Name"
+              value={tutorProfileData.lastName}
+              onSave={handleInputChange('lastName')}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <EditableProfileField
+              label="Phone Number"
+              value={tutorProfileData.phoneNumber}
+              onSave={handleInputChange('phoneNumber')}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <EditableProfileField
+              label="Major Abbreviation"
+              value={tutorProfileData.majorAbbreviation}
+              onSave={handleInputChange('majorAbbreviation')}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <EditableProfileField
+              label="Pay Rate"
+              value={tutorProfileData.payRate}
+              onSave={handleInputChange('payRate')}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <EditableProfileField
+              label="Listing Title"
+              value={tutorProfileData.listingTitle}
+              onSave={handleInputChange('listingTitle')}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <EditableProfileField
+              label="Bio Text"
+              value={tutorProfileData.bioText}
+              onSave={handleInputChange('bioText')}
+            />
+          </Grid>
+        </Grid>
+        <Button variant="contained" color="primary" onClick={handleGeneralUpdate}>
+          Update My General Information!
+        </Button>
+      </Stack>
 
-        <CardContent style={{ padding: '20px', flexGrow: 1 }}>
-          <Typography variant="h6" gutterBottom>
-            Here is Your Current Course Information!! You can update your transcript or course preferences here!
-          </Typography>
-          <Divider style={{ marginBottom: '20px' }} />
-          <EligibleCoursesTable setTranscript={setTranscript} tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData} />
-          <Button variant="contained" color="primary" onClick={handleEligibleCoursesUpdate}>
-            Update My Eligible Courses!
-          </Button>
-          <Button variant="contained" color="primary" onClick={handleCoursePreferencesUpdate}>
-            Update My Course Preferences!
-          </Button>
-        </CardContent>
+      <Stack style={{ padding: '20px', flexGrow: 1 }}>
+        <Typography variant="h6" gutterBottom>
+          Here is Your Current Course Information!! You can update your transcript or course preferences here!
+        </Typography>
+        <Divider style={{ marginBottom: '20px' }} />
+        <EligibleCoursesTable setTranscript={setTranscript} tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData} />
+        <Button variant="contained" color="primary" onClick={handleEligibleCoursesUpdate}>
+          Update My Eligible Courses!
+        </Button>
+        <Button variant="contained" color="primary" onClick={handleCoursePreferencesUpdate}>
+          Update My Course Preferences!
+        </Button>
+      </Stack>
 
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            Update your Location Preferences Here!!
-          </Typography>
-          <Divider style={{ marginBottom: '20px' }} />
-          <LocationPreferences tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData}  />
-          <Button variant="contained" color="primary" onClick={handleLocationPreferencesUpdate}>
-            Update My Location Preferences!
-          </Button>
-        </CardContent>
+      <Stack style={{ padding: '20px', flexGrow: 1 }}>
+        <Typography variant="h6" gutterBottom>
+          Update your Location Preferences Here!!
+        </Typography>
+        <Divider style={{ marginBottom: '20px' }} />
+        <LocationPreferences tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData}  />
+        <Button variant="contained" color="primary" onClick={handleLocationPreferencesUpdate}>
+          Update My Location Preferences!
+        </Button>
+      </Stack>
 
-      </Card>
-    </div>
+      <Stack style={{ padding: '20px', flexGrow: 1 }}>
+        <Typography variant="h6" gutterBottom>
+          Update your Time Preferences Here!!
+        </Typography>
+        <Divider style={{ marginBottom: '20px' }} />
+        <LocationPreferences tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData}  />
+        <Button variant="contained" color="primary" onClick={handleLocationPreferencesUpdate}>
+          Update My Location Preferences!
+        </Button>
+      </Stack>
 
-
+    </Paper>
   );
-
 }
 
 
 function ProfilePage() {
   const { data: session, status } = useSession();
   const [tab, setTab] = React.useState(0);
-  const [tutorUpdate, setTutorUpdate] = useState(false);
-  const [eligibleUpdate, setEligibleUpdate] = useState(false);
-  const [preferencesUpdate, setPreferencesUpdate] = useState(false);
-  const [locationUpdate, setLocationUpdate] = useState(false);
-  const [tuteeUpdate, setTuteeUpdate] = useState(false);
-  const [updateOcurring, setUpdateOccuring] = useState(false);
-  const [transcript, setTranscript] = useState<File>();
+  const [tutorUpdate, setTutorUpdate] = React.useState(false);
+  const [alertOpen, setAlertOpen] = React.useState(false);
+  const [eligibleUpdate, setEligibleUpdate] = React.useState(false);
+  const [preferencesUpdate, setPreferencesUpdate] = React.useState(false);
+  const [locationUpdate, setLocationUpdate] = React.useState(false);
+  const [tuteeUpdate, setTuteeUpdate] = React.useState(false);
+  const [updateOcurring, setUpdateOccuring] = React.useState(false);
+  const [transcript, setTranscript] = React.useState<File>();
 
-  const [tutorProfileData, setTutorProfileData] = useState<Tutor>({
+  const [tutorProfileData, setTutorProfileData] = React.useState<Tutor>({
     activeStatusName: "active",
     firstName: "",
     lastName: "",
@@ -384,12 +489,13 @@ function ProfilePage() {
     coursePreferences: [],
     eligibleCourses: [],
     locationPreferences: [],
+    timePreferences: [],
     majorAbbreviation: "",
     payRate: 0,
     seniorityName: "Senior"
   });
 
-  const [tuteeProfileData, setTuteeProfileData] = useState<Tutee>({
+  const [tuteeProfileData, setTuteeProfileData] = React.useState<Tutee>({
     activeStatusName: "active",
     email: "",
     firstName: "",
@@ -400,20 +506,15 @@ function ProfilePage() {
   });
 
   const { data: tutorData, isLoading: tutorIsLoading, isFetching: tutorIsFetching, isSuccess: tutorIsSuccess, refetch: tutorRefetch } = 
-    TableFetch<TutorQuery>("tutor", [], `email_contains=${session?.user?.email}`);
+    TableFetch<TutorQuery>("tutor", [session], `email_contains=${session?.user?.email}`);
     
   const { data: tuteeData, isLoading: tuteeIsLoading, isFetching: tuteeIsFetching, isSuccess: tuteeIsSuccess, refetch: tuteeRefetch } = 
-    TableFetch<TuteeQuery>("tutee", [], `email_contains=${session?.user?.email}`);
+    TableFetch<TuteeQuery>("tutee", [session], `email_contains=${session?.user?.email}`);
     
   const tutorMutationUpdate = TablePush("/tutor/update");
   const tuteeMutationUpdate = TablePush("/tutee/update");
 
-  useEffect(() => {
-    tutorRefetch();
-    tuteeRefetch();
-  }, [session, status]);
-
-  useEffect(() => {
+  React.useEffect(() => {
 
     if (tutorUpdate) {
       updateTutorInformation();
@@ -421,7 +522,7 @@ function ProfilePage() {
 
   },[tutorUpdate]);
 
-  useEffect(() => {
+  React.useEffect(() => {
 
     if (eligibleUpdate) {
       updateTutorEligbleCourses();
@@ -429,7 +530,7 @@ function ProfilePage() {
 
   },[eligibleUpdate]);
 
-  useEffect(() => {
+  React.useEffect(() => {
 
     if (locationUpdate) {
       updateTutorLocationPreferences();
@@ -437,7 +538,7 @@ function ProfilePage() {
 
   },[locationUpdate]);
 
-  useEffect(() => {
+  React.useEffect(() => {
 
     if (preferencesUpdate) {
       updateTutorCoursePreferences();
@@ -445,7 +546,7 @@ function ProfilePage() {
 
   },[preferencesUpdate]);
 
-  useEffect(() => {
+  React.useEffect(() => {
 
     if (tuteeUpdate) {
       updateTuteeInformation();
@@ -453,14 +554,13 @@ function ProfilePage() {
 
   },[tuteeUpdate]);
   
-  useEffect(() => {
+  React.useEffect(() => {
     if (tutorData?.data && (tutorData.data.length > 0)) {
       setTutorProfileData(tutorData?.data[0]);
-
     }
   }, [tutorData]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (tuteeData && (tuteeData.length > 0)) {
       setTuteeProfileData(tuteeData[0]);
 
@@ -469,10 +569,12 @@ function ProfilePage() {
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
+    console.log(tutorProfileData);
   };
 
   const generateLocationString = (locations: { locationName: LocationType; tutorEmail: string; }[]): string => {
-    return locations.join(", ");
+    const locationNames = locations.map(location => location.locationName);
+    return locationNames.join(", ");
   };
 
   const updateTutorLocationPreferences = () => {
@@ -482,7 +584,12 @@ function ProfilePage() {
       location_preferences_new: generateLocationString(tutorProfileData.locationPreferences)
     }
     
-    tutorMutationUpdate.mutate(newLocation);
+    tutorMutationUpdate.mutate(newLocation, {
+      onSuccess: () => {
+        setAlertOpen(true);
+        tutorRefetch();
+      },
+    });
     setLocationUpdate(false);
 
   };
@@ -494,7 +601,12 @@ function ProfilePage() {
       transcript: transcript
     }
 
-    tutorMutationUpdate.mutate(newEligible);
+    tutorMutationUpdate.mutate(newEligible, {
+      onSuccess: () => {
+        setAlertOpen(true);
+        tutorRefetch();
+      },
+    });
     setEligibleUpdate(false);
 
   };
@@ -508,7 +620,12 @@ function ProfilePage() {
       course_preferences_new: generateCourseString(tutorProfileData?.coursePreferences)
     }
 
-    tutorMutationUpdate.mutate(newPreferences);
+    tutorMutationUpdate.mutate(newPreferences, {
+      onSuccess: () => {
+        setAlertOpen(true);
+        tutorRefetch();
+      },
+    });
     setPreferencesUpdate(false);
 
   };
@@ -516,17 +633,23 @@ function ProfilePage() {
   const updateTutorInformation = () => {
 
     const newTutorInformation = {
+      // Unique Key
       email_old: tutorProfileData.email,
-      bio_text_new: tutorProfileData.bioText,
-      first_name_new: tutorProfileData.firstName,
-      last_name_new: tutorProfileData.lastName,
+
+      first_name_new: tutorProfileData.firstName, last_name_new: tutorProfileData.lastName,
+      phone_number_new: tutorProfileData.phoneNumber,
+      major_abbreviation_new: tutorProfileData.majorAbbreviation, pay_rate_new: tutorProfileData.payRate,
+
       listing_title_new: tutorProfileData.listingTitle,
-      major_abbreviation_new: tutorProfileData.majorAbbreviation,
-      pay_rate_new: tutorProfileData.payRate,
-      phone_number_new: tutorProfileData.phoneNumber
+      bio_text_new: tutorProfileData.bioText,
     }
 
-    tutorMutationUpdate.mutate(newTutorInformation);
+    tutorMutationUpdate.mutate(newTutorInformation, {
+      onSuccess: () => {
+        setAlertOpen(true);
+        tutorRefetch();
+      },
+    });
     setTutorUpdate(false);
   };
 
@@ -542,8 +665,19 @@ function ProfilePage() {
       seniority_name_new: tuteeProfileData.seniorityName
     }
 
-    tuteeMutationUpdate.mutate(newTuteeInformation);
+    tuteeMutationUpdate.mutate(newTuteeInformation, {
+      onSuccess: () => {
+        setAlertOpen(true);
+        tuteeRefetch();
+      },
+    });
     setTuteeUpdate(false);
+  };
+
+  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === "clickaway") return;
+
+    setAlertOpen(false);
   };
 
   return (
@@ -589,7 +723,7 @@ function ProfilePage() {
             else {
               return (
                 <>
-                <Paper style={{ padding: '20px', textAlign: 'center' }}>
+                <Paper variant="outlined" style={{ padding: '20px', textAlign: 'center' }}>
                   <Typography variant="h4" gutterBottom>
                     We cannot find a Tutor Account with this Email
                   </Typography>
@@ -635,7 +769,7 @@ function ProfilePage() {
             else {
               return (
                 <>
-                <Paper style={{ padding: '20px', textAlign: 'center' }}>
+                <Paper variant="outlined" style={{ padding: '20px', textAlign: 'center' }}>
                   <Typography variant="h4" gutterBottom>
                     We cannot find a Tutee Account with this Email
                   </Typography>
@@ -663,6 +797,16 @@ function ProfilePage() {
         return (<></>);
 
       })()}
+
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} open={alertOpen} autoHideDuration={5000} onClose={handleAlertClose}>
+        <Alert
+          onClose={handleAlertClose}
+          severity="success"
+          sx={{ width: '100%' }}
+        >
+          {"request changed successfully"}
+        </Alert>
+      </Snackbar>
         
     </div>
   );
