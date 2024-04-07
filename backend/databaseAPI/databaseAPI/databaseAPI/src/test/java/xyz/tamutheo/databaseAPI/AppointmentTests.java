@@ -22,9 +22,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import xyz.tamutheo.databaseAPI.appointment.AppointmentController;
-import xyz.tamutheo.databaseAPI.appointment.AppointmentMapper;
 import xyz.tamutheo.databaseAPI.appointment.AppointmentModel;
 import xyz.tamutheo.databaseAPI.appointment.AppointmentService;
+import xyz.tamutheo.databaseAPI.tutor.TutorService;
+import xyz.tamutheo.databaseAPI.tutorTimePreference.TutorTimePreferenceService;
+import xyz.tamutheo.databaseAPI.tutorReview.TutorReviewModel;
+import xyz.tamutheo.databaseAPI.tutorReview.TutorReviewService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AppointmentController.class)
@@ -36,6 +39,15 @@ public class AppointmentTests {
     @MockBean
     private AppointmentService appointmentService;
 
+    @MockBean
+    private TutorReviewService tutorReviewService;
+
+    @MockBean
+    private TutorService tutorService;
+
+    @MockBean
+    private TutorTimePreferenceService tutorTimePreferenceService;
+
     // Test for creating an appointment
     @Test
     public void testCreateAppointment() throws Exception {
@@ -44,8 +56,8 @@ public class AppointmentTests {
                 .param("location_name", "Valley Mills, TX")
                 .param("tutor_email", "sol@r.eclipse")
                 .param("tutee_email", "aggie@gig.em")
-                .param("start_date_time", "2024-04-08T13:37")
-                .param("end_date_time", "2024-04-08T13:42")
+                .param("start_date_time", "2025-04-08T13:37")
+                .param("end_date_time", "2025-04-08T13:42")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().isOk());
 
@@ -58,8 +70,8 @@ public class AppointmentTests {
         mockMvc.perform(put("/appointment")
                 .param("tutee_email_old", "aggie@gig.em")
                 .param("tutor_email_old", "sol@r.eclipse")
-                .param("start_date_time_old", "2024-04-08T13:37")
-                .param("end_date_time_old", "2024-04-08T13:42")
+                .param("start_date_time_old", "2025-04-08T13:37")
+                .param("end_date_time_old", "2025-04-08T13:42")
                 .param("is_confirmed_new", "true")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().isOk());
@@ -74,8 +86,8 @@ public class AppointmentTests {
         mockMvc.perform(put("/appointment")
                 .param("tutee_email_old", "aggie@gig.em")
                 .param("tutor_email_old", "sol@r.eclipse")
-                .param("start_date_time_old", "2024-04-08T13:37")
-                .param("end_date_time_old", "2024-01-01T13:42")
+                .param("start_date_time_old", "2025-04-08T13:37")
+                .param("end_date_time_old", "2025-01-01T13:42")
                 .param("is_cancelled_new", "true")
                 .param("cancellation_reason_new", "Solar Eclipse")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED))
@@ -117,8 +129,8 @@ public class AppointmentTests {
                 .param("location_name", "Valley Mills, TX")
                 .param("tutor_email", "sol@r.eclipse")
                 .param("tutee_email", "aggie@gig.em")
-                .param("start_date_time", "2024-04-08T13:37")
-                .param("end_date_time", "2024-04-08T13:42")
+                .param("start_date_time", "2025-04-08T13:37")
+                .param("end_date_time", "2025-04-08T13:42")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().isBadRequest());
 
@@ -136,11 +148,26 @@ public class AppointmentTests {
                 .param("location_name", "Valley Mills, TX")
                 .param("tutor_email", "sol@r.eclipse")
                 .param("tutee_email", "aggie@gig.em")
-                .param("start_date_time", "2024-04-08T13:37")
-                .param("end_date_time", "2024-04-08T13:42")
+                .param("start_date_time", "2025-04-08T13:37")
+                .param("end_date_time", "2025-04-08T13:42")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().isBadRequest());
 
         verify(appointmentService).create(any(AppointmentModel.class));
     }
+
+    // Test for creating tutor reviews after valid appointments have taken place
+    @Test
+    public void testCreateTutorReviewAfterValidAppointment() throws Exception {
+        mockMvc.perform(post("/tutor_review")
+                .param("appointment_id", "1")
+                .param("number_stars", "5")
+                .param("review_text", "A once in a lifetime session!")
+                .param("tutor_email", "sol@r.eclipse")
+                .param("tutee_email", "aggie@gig.em")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk());
+
+        verify(tutorReviewService).create(any(TutorReviewModel.class));
+}
 }
