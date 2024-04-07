@@ -208,4 +208,15 @@ public class AppointmentTests {
         verify(tutorService).update(any(), any(), any());
     }
 
+    // Test for updating eligible courses
+    @Test
+    public void testTutorUpdatesEligibleCourses() throws Exception {
+        mockMvc.perform(put("/tutor/update")
+                .param("email_old", "sol@r.eclipse")
+                .param("eligible_courses_new", "CS101, MATH202")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk());
+
+        verify(tutorService).update(any(), any(), any());
+    }
 }
