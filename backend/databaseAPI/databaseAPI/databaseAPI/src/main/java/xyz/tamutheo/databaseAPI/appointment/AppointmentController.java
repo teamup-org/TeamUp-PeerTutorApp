@@ -71,19 +71,13 @@ public class AppointmentController {
 
     //    @PutMapping(value = {"", "/"})
     @RequestMapping(value = {"/update"})
-    public void update(@RequestParam(name = "end_date_time_old") String endDateTimeStringOld,
-                       @RequestParam(name = "tutee_email_old") String tuteeEmailOld,
-                       @RequestParam(name = "tutor_email_old") String tutorEmailOld,
-                       @RequestParam(name = "start_date_time_old") String startDateTimeStringOld,
+    public void update(@RequestParam(name = "appointment_id_old") Integer appointmentIdOld,
                        @RequestParam(name = "cancellation_reason_new", required = false) String cancellationReasonNew,
                        @RequestParam(name = "is_cancelled_new", required = false) Boolean isCancelledNew,
                        @RequestParam(name = "is_confirmed_new", required = false) Boolean isConfirmedNew,
                        @RequestParam(name = "tutee_request_comment_new", required = false) String tuteeRequestCommentNew) {
         AppointmentModel appointmentModelOld = AppointmentModel.builder()
-                .endDateTimeString(endDateTimeStringOld)
-                .tuteeEmail(tuteeEmailOld)
-                .tutorEmail(tutorEmailOld)
-                .startDateTimeString(startDateTimeStringOld)
+                .appointmentId(appointmentIdOld)
                 .build();
         AppointmentModel appointmentModelNew = AppointmentModel.builder()
                 .cancellationReason(cancellationReasonNew)
