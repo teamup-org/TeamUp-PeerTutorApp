@@ -21,12 +21,15 @@ import xyz.tamutheo.databaseAPI.appointmentSize.AppointmentSizeModel;
 import xyz.tamutheo.databaseAPI.course.CourseController;
 import xyz.tamutheo.databaseAPI.course.CourseService;
 import xyz.tamutheo.databaseAPI.course.CourseModel;
+import xyz.tamutheo.databaseAPI.location.LocationController;
+import xyz.tamutheo.databaseAPI.location.LocationService;
+import xyz.tamutheo.databaseAPI.location.LocationModel;
 
 import java.util.Arrays;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest({AppointmentSizeController.class, CourseController.class})
+@WebMvcTest({AppointmentSizeController.class, CourseController.class, LocationController.class})
 public class MiscellaneousTests {
 
     @Autowired
@@ -37,6 +40,9 @@ public class MiscellaneousTests {
 
     @MockBean
     private CourseService courseService;
+
+    @MockBean
+    private LocationService locationService;
 
     // Test reading appointment sizes with no filters
     @Test
@@ -140,5 +146,57 @@ public class MiscellaneousTests {
                 .andExpect(status().isOk());
 
         verify(courseService).read(null, null, null, null, null, 10, 20);
+    }
+
+    // Test reading locations with no filters
+    @Test
+    public void testReadLocationsNoFilters() throws Exception {
+        when(locationService.read(null, null, null)).thenReturn(Arrays.asList(new LocationModel()));
+
+        mockMvc.perform(get("/location")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(locationService).read(null, null, null);
+    }
+
+    // Test reading locations with a single location name filter
+    @Test
+    public void testReadLocationsWithSingleNameFilter() throws Exception {
+        when(locationService.read(Arrays.asList("Library"), null, null)).thenReturn(Arrays.asList(new LocationModel()));
+
+        mockMvc.perform(get("/location")
+                .param("location_name_in", "Library")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(locationService).read(Arrays.asList("Library"), null, null);
+    }
+
+    // Test reading locations with multiple location name filters
+    @Test
+    public void testReadLocationsWithMultipleNameFilters() throws Exception {
+        when(locationService.read(Arrays.asList("Library", "Cafeteria"), null, null)).thenReturn(Arrays.asList(new LocationModel()));
+
+        mockMvc.perform(get("/location")
+                .param("location_name_in", "Library, Cafeteria")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(locationService).read(Arrays.asList("Library", "Cafeteria"), null, null);
+    }
+
+    // Test reading locations with pagination
+    @Test
+    public void testReadLocationsWithPagination() throws Exception {
+        when(locationService.read(null, 10, 20)).thenReturn(Arrays.asList(new LocationModel()));
+
+        mockMvc.perform(get("/location")
+                .param("limit", "10")
+                .param("offset", "20")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(locationService).read(null, 10, 20);
     }
 }
