@@ -25,8 +25,7 @@ import { TimeField }
 import { TableFetch, TablePush }
   from '@/app/_lib/data';
 
-import dayjs 
-  from 'dayjs';
+import dayjs from 'dayjs';
 
 
 const tabLabels = ["Peer Tutor Profile Information", "Tutee Profile Information"];
@@ -272,8 +271,6 @@ function TimePreferences(props: any) {
 
   return (
     <div style={{ marginBottom: '16px' }}>
-        <Typography variant="h6">Add your preferred times</Typography>
-        <Divider />
         <TableContainer sx={{ maxHeight: '75vh' }}>
           <Table stickyHeader>
             <TableHead>
@@ -284,11 +281,11 @@ function TimePreferences(props: any) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tutorProfileData.timePreferences.map((time: any, index: any) => (
+              {tutorProfileData.timePreferences.map((timePreference: any, index: any) => (
                 <TableRow key={index}>
                   <TableCell>
                     <Select
-                      value={time.day}
+                      value={timePreference.weekdayName}
                       onChange={(e) => handleTimeChange(index, 'day', e.target.value as string)}
                     >
                       <MenuItem value="monday">monday</MenuItem>
@@ -304,7 +301,7 @@ function TimePreferences(props: any) {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={['TimeField']}>
                         <TimeField
-                          value={time.startTime}
+                          value={timePreference.startTime}
                           onChange={(newValue) => handleTimeChange(index, 'startTime', newValue || '')}
                           fullWidth
                         />
@@ -315,7 +312,7 @@ function TimePreferences(props: any) {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={['TimeField']}>
                         <TimeField
-                          value={time.endTime}
+                          value={timePreference.endTime}
                           onChange={(newValue) => handleTimeChange(index, 'endTime', newValue || '')}
                           fullWidth
                         />
@@ -452,7 +449,7 @@ function TutorUpdatePage(props: any) {
           Update your Time Preferences Here!!
         </Typography>
         <Divider style={{ marginBottom: '20px' }} />
-        <LocationPreferences tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData}  />
+        <TimePreferences tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData}  />
         <Button variant="contained" color="primary" onClick={handleLocationPreferencesUpdate}>
           Update My Location Preferences!
         </Button>

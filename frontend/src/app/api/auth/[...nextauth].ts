@@ -1,13 +1,7 @@
 // import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import type { NextAuthOptions }
-  from 'next-auth';
-import { useSession }
-  from 'next-auth/react';
-
-import { TableFetch }
-  from '@/app/_lib/data';
-
+from 'next-auth';
 
 export const authConfig: NextAuthOptions = {
   providers: [
@@ -47,25 +41,5 @@ export const authConfig: NextAuthOptions = {
   ],
   pages: {
     signIn: "/login"
-  },
-  callbacks: {
-    async redirect({ url, baseUrl }) {
-      const user = useSession();
-      
-      if (user) {
-        const { data: tutorData } = TableFetch<TutorQuery>("tutor", [user], `email_contains=${user?.data.email}`);
-        const { data: tuteeData } = TableFetch<TuteeQuery>("tutee", [user], `email_contains=${user?.data.email}`);
-
-        // If registered as tutor/tutee, redirect to /dashboard
-        if (tutorData?.data.length || tuteeData?.length) {
-          return "/dashboard";
-        }
-        
-        // Else if not registered, redirect to /register
-        return "/register";
-      }
-
-      return "/login";
-    }
   },
 };
