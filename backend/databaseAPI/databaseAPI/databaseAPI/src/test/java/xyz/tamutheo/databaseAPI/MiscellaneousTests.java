@@ -32,9 +32,12 @@ import xyz.tamutheo.databaseAPI.major.MajorModel;
 import xyz.tamutheo.databaseAPI.rating.RatingController;
 import xyz.tamutheo.databaseAPI.rating.RatingService;
 import xyz.tamutheo.databaseAPI.rating.RatingModel;
+import xyz.tamutheo.databaseAPI.seniority.SeniorityController;
+import xyz.tamutheo.databaseAPI.seniority.SeniorityService;
+import xyz.tamutheo.databaseAPI.seniority.SeniorityModel;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest({AppointmentSizeController.class, CourseController.class, LocationController.class, MajorController.class, RatingController.class})
+@WebMvcTest({AppointmentSizeController.class, CourseController.class, LocationController.class, MajorController.class, RatingController.class, SeniorityController.class})
 public class MiscellaneousTests {
 
     @Autowired
@@ -54,6 +57,9 @@ public class MiscellaneousTests {
 
     @MockBean
     private RatingService ratingService;
+
+    @MockBean
+    private SeniorityService seniorityService;
 
     // Test reading appointment sizes with no filters
     @Test
@@ -328,5 +334,43 @@ public class MiscellaneousTests {
         verify(ratingService).read(null, null, null, 10, 20);
     }
 
-    
+    // Test reading seniority levels with no filters
+    @Test
+    public void testReadSeniorityLevelsNoFilters() throws Exception {
+        when(seniorityService.read(null, null, null)).thenReturn(Arrays.asList(new SeniorityModel()));
+
+        mockMvc.perform(get("/seniority")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(seniorityService).read(null, null, null);
+    }
+
+    // Test reading seniority levels with specific names
+    @Test
+    public void testReadSeniorityLevelsWithNames() throws Exception {
+        when(seniorityService.read(Arrays.asList("Junior", "Senior"), null, null)).thenReturn(Arrays.asList(new SeniorityModel()));
+
+        mockMvc.perform(get("/seniority")
+                .param("seniority_name_in", "Junior, Senior")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(seniorityService).read(Arrays.asList("Junior", "Senior"), null, null);
+    }
+
+    // Test reading seniority levels with pagination
+    @Test
+    public void testReadSeniorityLevelsWithPagination() throws Exception {
+        when(seniorityService.read(null, 10, 20)).thenReturn(Arrays.asList(new SeniorityModel()));
+
+        mockMvc.perform(get("/seniority")
+                .param("limit", "10")
+                .param("offset", "20")
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+
+        verify(seniorityService).read(null, 10, 20);
+    }
+
 }
