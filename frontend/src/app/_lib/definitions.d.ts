@@ -78,6 +78,7 @@ declare global {
     numberFourStarRatings: number,
     numberFiveStarRatings: number,
 
+    eligibleCourses: Course[],
     coursePreferences: { 
       courseGrade: string, 
       courseNumber: number, 

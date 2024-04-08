@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 
 import ResponsiveAppBar from '../app-bar'
 import { Login, HowToReg } from '@mui/icons-material'
-import TutorCard from '../tutor-card';
+import { TutorCard } from '../tutor-card';
 const links = [
   {name: 'Login', href: '/login', icon: Login},
   {name: 'Register', href: '/register', icon: HowToReg},
@@ -592,7 +592,12 @@ export default function Registration() {
     locationPreferences: [],
     timePreferences: [],
     activeStatusName: "active",
-    numberOfRatings: 0
+    numberOfRatings: 0,
+    numberOneStarRatings: 0,
+    numberTwoStarRatings: 0,
+    numberThreeStarRatings: 0,
+    numberFourStarRatings: 0,
+    numberFiveStarRatings: 0,
   });
 
   // Button and Update Functions -------------------------------------------------------------
@@ -660,7 +665,12 @@ export default function Registration() {
           locationPreferences: [],
           timePreferences: [],
           averageRating: 5,
-          numberOfRatings: 0
+          numberOfRatings: 0,
+          numberOneStarRatings: 0,
+          numberTwoStarRatings: 0,
+          numberThreeStarRatings: 0,
+          numberFourStarRatings: 0,
+          numberFiveStarRatings: 0,
         };
   
         setTutor(newTutor);

@@ -529,7 +529,12 @@ function ProfilePage() {
     timePreferences: [],
     majorAbbreviation: "",
     payRate: 0,
-    seniorityName: "Senior"
+    seniorityName: "Senior",
+    numberOneStarRatings: 0,
+    numberTwoStarRatings: 0,
+    numberThreeStarRatings: 0,
+    numberFourStarRatings: 0,
+    numberFiveStarRatings: 0,
   });
 
   const [tuteeProfileData, setTuteeProfileData] = React.useState<Tutee>({
@@ -559,7 +564,7 @@ function ProfilePage() {
       updateTutorInformation();
     }
 
-  },[tutorUpdate]);
+  }, [tutorUpdate]);
 
   React.useEffect(() => {
 
@@ -567,7 +572,7 @@ function ProfilePage() {
       updateTutorEligbleCourses();
     }
 
-  },[eligibleUpdate]);
+  }, [eligibleUpdate]);
 
   React.useEffect(() => {
 
@@ -575,7 +580,7 @@ function ProfilePage() {
       updateTutorLocationPreferences();
     }
 
-  },[locationUpdate]);
+  }, [locationUpdate]);
 
   React.useEffect(() => {
 
@@ -583,7 +588,7 @@ function ProfilePage() {
       updateTutorCoursePreferences();
     }
 
-  },[preferencesUpdate]);
+  }, [preferencesUpdate]);
 
   React.useEffect(() => {
 
@@ -591,7 +596,7 @@ function ProfilePage() {
       updateTutorTimePreferences();
     }
 
-  },[timeUpdate]);
+  }, [timeUpdate]);
 
   React.useEffect(() => {
 
@@ -599,7 +604,7 @@ function ProfilePage() {
       updateTuteeInformation();
     }
 
-  },[tuteeUpdate]);
+  }, [tuteeUpdate]);
   
   React.useEffect(() => {
     if (tutorData?.data && (tutorData.data.length > 0)) {
