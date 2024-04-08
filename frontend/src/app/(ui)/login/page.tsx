@@ -28,17 +28,17 @@ export default function SignIn() {
   const email = session.data?.user?.email;
   const route = useRouter();
 
-  const { data: tutorData, isFetching: tutorIsFetching } = TableFetch<TutorQuery>("tutor", [email], `email_contains=${email}`);
-  const { data: tuteeData, isFetching: tuteeIsFetching } = TableFetch<TuteeQuery>("tutee", [email], `email_contains=${email}`);
+  const { data: tutorData, isSuccess: tutorSuccess } = TableFetch<TutorQuery>("tutor", [email], `email_contains=${email}`);
+  const { data: tuteeData, isSuccess: tuteeSuccess } = TableFetch<TuteeQuery>("tutee", [email], `email_contains=${email}`);
 
-  if (session.status === "authenticated") {
+  if (session.status === "authenticated" && tutorSuccess && tuteeSuccess) {
     // If registered as tutor/tutee, redirect to /dashboard
     if (tutorData?.data.length || tuteeData?.length) {
       route.push("/dashboard");
     }
-    
-    // Else if not registered, redirect to /register
-    if (!tutorIsFetching && !tuteeIsFetching) route.push("/register");
+    else {
+      route.push("/register");
+    }
   }
   ////////////////
 
