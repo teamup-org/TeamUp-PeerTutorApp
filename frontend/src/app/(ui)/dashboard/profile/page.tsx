@@ -7,8 +7,11 @@ import { useSession }
   from 'next-auth/react';
 
 import { Stack, Skeleton, TextField, Grid, Button, Typography, Divider, Avatar, Paper, Link, Tab, Tabs, Snackbar,
-  Alert, Table, TableContainer, TableHead, TableRow, TableBody, TableCell, Checkbox, MenuItem, Select } 
+  Alert, Table, TableContainer, TableHead, TableRow, TableBody, TableCell, Checkbox, MenuItem, Select, IconButton } 
   from '@mui/material';
+
+import DeleteIcon 
+  from '@mui/icons-material/Delete';
 
 import { DemoContainer } 
   from '@mui/x-date-pickers/internals/demo';
@@ -285,6 +288,12 @@ function TimePreferences(props: any) {
     });
   };
 
+  const handleDeleteRow = (index: number) => {
+    const updatedTimes = [...tutorProfileData.timePreferences];
+    updatedTimes.splice(index, 1);
+    setTutorProfileData({ ...tutorProfileData, timePreferences: updatedTimes });
+  };
+
 
   return (
     <div style={{ marginBottom: '16px' }}>
@@ -295,6 +304,7 @@ function TimePreferences(props: any) {
                 <TableCell>Day</TableCell>
                 <TableCell>Start Time</TableCell>
                 <TableCell>End Time</TableCell>
+                <TableCell>Delete</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -336,6 +346,15 @@ function TimePreferences(props: any) {
                       </DemoContainer>
                     </LocalizationProvider>
                   </TableCell>
+                  <TableCell>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={['TimeField']}>
+                      <IconButton onClick={() => handleDeleteRow(index)} aria-label="delete">
+                        <DeleteIcon />
+                      </IconButton>
+                    </DemoContainer>
+                  </LocalizationProvider>
+                </TableCell>
                 </TableRow>
               ))}
             </TableBody>
