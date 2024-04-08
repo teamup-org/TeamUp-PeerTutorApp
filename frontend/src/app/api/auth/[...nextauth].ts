@@ -3,7 +3,7 @@
 // import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import type { NextAuthOptions }
-from 'next-auth';
+  from 'next-auth';
 
 export const authConfig: NextAuthOptions = {
   providers: [
