@@ -6,12 +6,9 @@ import * as React from 'react';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin, { Draggable, DateClickArg } from '@fullcalendar/interaction';
-import { EventImpl } 
-  from '@fullcalendar/core/internal';
-import { EventResizeDoneArg } 
-  from '@fullcalendar/interaction';
-import type { DateSelectArg, EventClickArg, EventSourceInput, EventInput, EventDropArg } 
+import interactionPlugin from '@fullcalendar/interaction';
+
+import type { DateSelectArg, EventClickArg, EventDropArg } 
   from '@fullcalendar/core/index.js';
 
 
