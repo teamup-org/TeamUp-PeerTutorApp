@@ -259,6 +259,14 @@ function LocationPreferences(props: any) {
 
 }
 
+import FullCalendar from '@fullcalendar/react';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+
+import type { DateSelectArg, EventClickArg, EventDropArg } 
+  from '@fullcalendar/core/index.js';
+
 function TimePreferences(props: any) {
   const { tutorProfileData, setTutorProfileData } = props;
 
@@ -293,8 +301,70 @@ function TimePreferences(props: any) {
     updatedTimes.splice(index, 1);
     setTutorProfileData({ ...tutorProfileData, timePreferences: updatedTimes });
   };
+  
+  /////////////////////////////////////////////////
 
+  const scheduleRef = React.useRef<FullCalendar>(null);
+  const [selectedEvent, setSelectedEvent] = React.useState<EventClickArg>();
 
+  const handleEventRemove = () => {
+    selectedEvent?.event.remove();
+  };
+
+  const handleEventSubmit = () => {
+    
+  };
+
+  // Callback function after releasing click on date selection
+  const handleDateSelect = (event: DateSelectArg) => {
+    event.view.calendar.unselect();
+    event.view.calendar.addEvent(event);
+  };
+
+  const handleEventDrop = (event: EventDropArg) => {
+    if (selectedEvent) selectedEvent.el.style.outline = "";
+    event.el.style.outline = "2px solid black";
+    setSelectedEvent(event);
+  };
+
+  // Callback function after clicking event
+  const handleEventClick = (info: EventClickArg) => {
+    if (selectedEvent) selectedEvent.el.style.outline = "";
+    info.el.style.outline = "2px solid black";
+    setSelectedEvent(info);
+  };
+
+  return (
+    <FullCalendar
+      ref={scheduleRef}
+      plugins={[ interactionPlugin, dayGridPlugin, timeGridPlugin ]}
+      
+      initialView="timeGridWeek"
+      height="70vh"
+      headerToolbar={{
+        left: 'deleteTime',
+        right: 'submitTimes',
+      }}
+      dayHeaderFormat={{ weekday: 'long' }}
+      customButtons={{
+        deleteTime: {
+          text: 'Remove Selected Time',
+          click: handleEventRemove,
+        },
+        submitTimes: {
+          text: 'Submit Time Preferences',
+          click: handleEventSubmit,
+        }
+      }}
+
+      allDaySlot={false} slotDuration="00:15:00" slotLabelInterval="01:00"
+      unselectAuto={false} editable selectable selectMirror selectOverlap={false} eventOverlap={false}
+      eventClick={handleEventClick} eventDrop={handleEventDrop}
+      select={handleDateSelect}
+    />
+  );
+
+/*
   return (
     <div style={{ marginBottom: '16px' }}>
         <TableContainer sx={{ maxHeight: '75vh' }}>
@@ -364,7 +434,7 @@ function TimePreferences(props: any) {
           Add Time
         </Button>
       </div>
-  );
+  ); */
 
 }
 
@@ -396,106 +466,117 @@ function TutorUpdatePage(props: any) {
   }
 
   return (
-  <Paper variant="outlined" style={{ width: '80%', margin: 'auto', marginTop: 50, display: 'flex', flexDirection: 'column' }}>
-      <Stack style={{ padding: '20px', flexGrow: 1 }}>
+    <Stack direction="column" spacing={4} m={4}>
+      <Stack direction="row" spacing={2} mx={2}>
+        <Paper variant="outlined">
 
-        <Typography variant="h6" gutterBottom>
-          General Info
-        </Typography>
-        <Divider style={{ marginBottom: '20px' }} />
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <EditableProfileField
-              label="First Name"
-              value={tutorProfileData.firstName}
-              onSave={handleInputChange('firstName')}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <EditableProfileField
-              label="Last Name"
-              value={tutorProfileData.lastName}
-              onSave={handleInputChange('lastName')}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <EditableProfileField
-              label="Phone Number"
-              value={tutorProfileData.phoneNumber}
-              onSave={handleInputChange('phoneNumber')}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <EditableProfileField
-              label="Major Abbreviation"
-              value={tutorProfileData.majorAbbreviation}
-              onSave={handleInputChange('majorAbbreviation')}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <EditableProfileField
-              label="Pay Rate"
-              value={tutorProfileData.payRate}
-              onSave={handleInputChange('payRate')}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <EditableProfileField
-              label="Listing Title"
-              value={tutorProfileData.listingTitle}
-              onSave={handleInputChange('listingTitle')}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <EditableProfileField
-              label="Bio Text"
-              value={tutorProfileData.bioText}
-              onSave={handleInputChange('bioText')}
-            />
-          </Grid>
-        </Grid>
-        <Button variant="contained" color="primary" onClick={handleGeneralUpdate}>
-          Update My General Information!
-        </Button>
+          <Stack direction="column" p={2} style={{ flexGrow: 1 }}>
+
+            <Typography variant="h6" gutterBottom>
+              General Info
+            </Typography>
+            <Divider style={{ marginBottom: '20px' }} />
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <EditableProfileField
+                  label="First Name"
+                  value={tutorProfileData.firstName}
+                  onSave={handleInputChange('firstName')}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <EditableProfileField
+                  label="Last Name"
+                  value={tutorProfileData.lastName}
+                  onSave={handleInputChange('lastName')}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <EditableProfileField
+                  label="Phone Number"
+                  value={tutorProfileData.phoneNumber}
+                  onSave={handleInputChange('phoneNumber')}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <EditableProfileField
+                  label="Major Abbreviation"
+                  value={tutorProfileData.majorAbbreviation}
+                  onSave={handleInputChange('majorAbbreviation')}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <EditableProfileField
+                  label="Pay Rate"
+                  value={tutorProfileData.payRate}
+                  onSave={handleInputChange('payRate')}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <EditableProfileField
+                  label="Listing Title"
+                  value={tutorProfileData.listingTitle}
+                  onSave={handleInputChange('listingTitle')}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <EditableProfileField
+                  label="Bio Text"
+                  value={tutorProfileData.bioText}
+                  onSave={handleInputChange('bioText')}
+                />
+              </Grid>
+            </Grid>
+            <Button variant="contained" color="primary" onClick={handleGeneralUpdate}>
+              Update My General Information!
+            </Button>
+
+          </Stack>
+        </Paper>
+
+        <Paper variant="outlined">
+          <Stack direction="column" style={{ padding: '20px', flexGrow: 1 }}>
+            <Typography variant="h6" gutterBottom>
+              Here is Your Current Course Information!! You can update your transcript or course preferences here!
+            </Typography>
+            <Divider style={{ marginBottom: '20px' }} />
+            <EligibleCoursesTable setTranscript={setTranscript} tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData} />
+            <Button variant="contained" color="primary" onClick={handleEligibleCoursesUpdate}>
+              Update My Eligible Courses!
+            </Button>
+            <Button variant="contained" color="primary" onClick={handleCoursePreferencesUpdate}>
+              Update My Course Preferences!
+            </Button>
+          </Stack>
+        </Paper>
       </Stack>
+      
+      <Paper variant="outlined">
+        <Stack style={{ padding: '20px', flexGrow: 1 }}>
+          <Typography variant="h6" gutterBottom>
+            Update your Location Preferences Here!!
+          </Typography>
+          <Divider style={{ marginBottom: '20px' }} />
+          <LocationPreferences tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData}  />
+          <Button variant="contained" color="primary" onClick={handleLocationPreferencesUpdate}>
+            Update My Location Preferences!
+          </Button>
+        </Stack>
+      </Paper>
 
-      <Stack style={{ padding: '20px', flexGrow: 1 }}>
-        <Typography variant="h6" gutterBottom>
-          Here is Your Current Course Information!! You can update your transcript or course preferences here!
-        </Typography>
-        <Divider style={{ marginBottom: '20px' }} />
-        <EligibleCoursesTable setTranscript={setTranscript} tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData} />
-        <Button variant="contained" color="primary" onClick={handleEligibleCoursesUpdate}>
-          Update My Eligible Courses!
-        </Button>
-        <Button variant="contained" color="primary" onClick={handleCoursePreferencesUpdate}>
-          Update My Course Preferences!
-        </Button>
-      </Stack>
-
-      <Stack style={{ padding: '20px', flexGrow: 1 }}>
-        <Typography variant="h6" gutterBottom>
-          Update your Location Preferences Here!!
-        </Typography>
-        <Divider style={{ marginBottom: '20px' }} />
-        <LocationPreferences tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData}  />
-        <Button variant="contained" color="primary" onClick={handleLocationPreferencesUpdate}>
-          Update My Location Preferences!
-        </Button>
-      </Stack>
-
-      <Stack style={{ padding: '20px', flexGrow: 1 }}>
-        <Typography variant="h6" gutterBottom>
-          Update your Time Preferences Here!!
-        </Typography>
-        <Divider style={{ marginBottom: '20px' }} />
-        <TimePreferences tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData}  />
-        <Button variant="contained" color="primary" onClick={handleTimePreferencesUpdate}>
-          Update My Time Preferences!
-        </Button>
-      </Stack>
-
-    </Paper>
+      <Paper variant="outlined">
+        <Stack style={{ padding: '20px', flexGrow: 1 }}>
+          <Typography variant="h6" gutterBottom>
+            Update your Time Preferences Here!!
+          </Typography>
+          <Divider style={{ marginBottom: '20px' }} />
+          <TimePreferences tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData}  />
+          <Button variant="contained" color="primary" onClick={handleTimePreferencesUpdate}>
+            Update My Time Preferences!
+          </Button>
+        </Stack>
+      </Paper>
+    </Stack>
   );
 }
 
