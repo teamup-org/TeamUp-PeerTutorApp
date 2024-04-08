@@ -319,9 +319,11 @@ def getReviews(appointments):
 
 # generate demo tutors      
 def getTutorsDemo():
+    # info = [("https://lh3.googleusercontent.com/a/ACg8ocI6st_Ph9hGFsRfNNpX9aenZ5OzUkiORUCLJ8uVZMbiVQ=s96-c", 'kyle', 'lang', 'lang.kyl24@tamu.edu', 3256276760),
+    #         ("https://brandguide.tamu.edu/assets/img/logos/tam-box-logo.png", 'cap', 'stone', 'capstoneteamup@gmail.com', 3256276760),
+    #         ('https://lh3.googleusercontent.com/a/ACg8ocKmhFfHatGRwnSEiD1tdnLmiX4Aea61ZsoBl49Dd9k-fxMDuJQ=s96-c', 'trey', 'wells', 'wells.t.2024@tamu.edu', 2146017139)]
     info = [("https://lh3.googleusercontent.com/a/ACg8ocI6st_Ph9hGFsRfNNpX9aenZ5OzUkiORUCLJ8uVZMbiVQ=s96-c", 'kyle', 'lang', 'lang.kyl24@tamu.edu', 3256276760),
-            ("https://brandguide.tamu.edu/assets/img/logos/tam-box-logo.png", 'cap', 'stone', 'capstoneteamup@gmail.com', 3256276760),
-            ('https://lh3.googleusercontent.com/a/ACg8ocKmhFfHatGRwnSEiD1tdnLmiX4Aea61ZsoBl49Dd9k-fxMDuJQ=s96-c', 'trey', 'wells', 'wells.t.2024@tamu.edu', 2146017139)]
+            ("https://brandguide.tamu.edu/assets/img/logos/tam-box-logo.png", 'cap', 'stone', 'capstoneteamup@gmail.com', 3256276760)]
     tutors = []
     # create empty tutors
     for _ in range(len(info)):
@@ -366,9 +368,11 @@ def getTutorsDemo():
 
 # generate demo tutees
 def getTuteesDemo():
+    # info = [("https://lh3.googleusercontent.com/a/ACg8ocI6st_Ph9hGFsRfNNpX9aenZ5OzUkiORUCLJ8uVZMbiVQ=s96-c", 'kyle', 'lang', 'lang.kyl24@tamu.edu', 3256276760),
+    #         ("https://brandguide.tamu.edu/assets/img/logos/tam-box-logo.png", 'cap', 'stone', 'capstoneteamup@gmail.com', 3256276760),
+    #         ('https://lh3.googleusercontent.com/a/ACg8ocKmhFfHatGRwnSEiD1tdnLmiX4Aea61ZsoBl49Dd9k-fxMDuJQ=s96-c', 'trey', 'wells', 'wells.t.2024@tamu.edu', 2146017139)]
     info = [("https://lh3.googleusercontent.com/a/ACg8ocI6st_Ph9hGFsRfNNpX9aenZ5OzUkiORUCLJ8uVZMbiVQ=s96-c", 'kyle', 'lang', 'lang.kyl24@tamu.edu', 3256276760),
-            ("https://brandguide.tamu.edu/assets/img/logos/tam-box-logo.png", 'cap', 'stone', 'capstoneteamup@gmail.com', 3256276760),
-            ('https://lh3.googleusercontent.com/a/ACg8ocKmhFfHatGRwnSEiD1tdnLmiX4Aea61ZsoBl49Dd9k-fxMDuJQ=s96-c', 'trey', 'wells', 'wells.t.2024@tamu.edu', 2146017139)]
+            ("https://brandguide.tamu.edu/assets/img/logos/tam-box-logo.png", 'cap', 'stone', 'capstoneteamup@gmail.com', 3256276760)]
     tutees = []
     # create empty tutees
     for _ in range(len(info)):
