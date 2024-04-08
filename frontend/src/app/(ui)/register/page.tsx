@@ -579,7 +579,6 @@ export default function Registration() {
 
   const [tutor, setTutor] = React.useState<Tutor>({
     activeStatusName: "active",
-    locationPreferences: [ { locationName: '', tutorEmail: '' } ],
     firstName: '',
     lastName: '',
     pictureUrl: '',
@@ -594,7 +593,6 @@ export default function Registration() {
     coursePreferences: [],
     eligibleCourses: [],
     locationPreferences: [],
-    activeStatusName: "active",
     numberOfRatings: 0
   });
 
@@ -645,8 +643,6 @@ export default function Registration() {
           alert("Please upload a transcript before proceeding");
           return;
         }
-
-        ocrAPI();
   
         const newTutor: Tutor = {
           activeStatusName: 'active',
