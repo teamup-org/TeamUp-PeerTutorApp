@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>xyz.tamutheo</groupId>
 	<artifactId>databaseAPI</artifactId>
-	<version>4.0</version>
+	<version>5.0</version>
 	<name>databaseAPI</name>
 	<description>API for database</description>
 	<properties>

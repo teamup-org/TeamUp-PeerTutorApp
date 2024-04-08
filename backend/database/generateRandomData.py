@@ -2,6 +2,7 @@ import csv
 import random
 import math
 import collections
+import datetime
 
 random.seed(42)
 
@@ -315,10 +316,162 @@ def getReviews(appointments):
         temp.reviewText = reviewText
         reviews.append(temp)
     return reviews
+
+# generate demo tutors      
+def getTutorsDemo():
+    info = [("https://lh3.googleusercontent.com/a/ACg8ocI6st_Ph9hGFsRfNNpX9aenZ5OzUkiORUCLJ8uVZMbiVQ=s96-c", 'kyle', 'lang', 'lang.kyl24@tamu.edu', 3256276760),
+            ("https://brandguide.tamu.edu/assets/img/logos/tam-box-logo.png", 'cap', 'stone', 'capstoneteamup@gmail.com', 3256276760),
+            ('https://lh3.googleusercontent.com/a/ACg8ocKmhFfHatGRwnSEiD1tdnLmiX4Aea61ZsoBl49Dd9k-fxMDuJQ=s96-c', 'trey', 'wells', 'wells.t.2024@tamu.edu', 2146017139)]
+    tutors = []
+    # create empty tutors
+    for _ in range(len(info)):
+        tutors.append(Tutor())
+    # add tutor names and picture urls
+    for idx in range(len(tutors)):
+        tutors[idx].pictureUrl = info[idx][0]
+        tutors[idx].firstName = info[idx][1]
+        tutors[idx].lastName = info[idx][2]
+    for idx, tutor in enumerate(tutors):
+        # add email
+        tutor.email = info[idx][3]
+        # add bio text
+        tutor.bioText = f"{greetings[idx % len(greetings)][0]} I am {tutor.firstName} {tutor.lastName}!"
+        # add major
+        tutor.majorAbbreviation = "csce"
+        # add listing title
+        tutor.listingTitle = f"{tutor.majorAbbreviation.upper()} tutor"
+        # add phone number
+        tutor.phoneNumber = info[idx][4]
+        # add pay rate
+        tutor.payRate = max(5, (idx * 10) % 200)
+        # add seniority
+        tutor.seniorityName = "senior"
+        # add time preferences
+        timePreferences = []
+        for weekday in weekdays:
+            startTimes = random.sample(range(0, 20, 3), 2)
+            for startTime in startTimes:
+                timePreferences.append(TimePreference(f"{str(startTime).zfill(2)}:00:00", f"{str(startTime + 3).zfill(2)}:00:00", weekday[0]))
+        tutor.timePreferences = timePreferences
+        # add courses
+        tutor.courses = getCourses(tutor.majorAbbreviation, tutor.seniorityName, 10)
+        # add location preference
+        tutor.locationPreference = locations[idx % len(locations)][0]
+    # check for anyone with no courses
+    validTutors = []
+    for tutor in tutors:
+        if len(tutor.courses) > 0:
+            validTutors.append(tutor)
+    return validTutors 
+
+# generate demo tutees
+def getTuteesDemo():
+    info = [("https://lh3.googleusercontent.com/a/ACg8ocI6st_Ph9hGFsRfNNpX9aenZ5OzUkiORUCLJ8uVZMbiVQ=s96-c", 'kyle', 'lang', 'lang.kyl24@tamu.edu', 3256276760),
+            ("https://brandguide.tamu.edu/assets/img/logos/tam-box-logo.png", 'cap', 'stone', 'capstoneteamup@gmail.com', 3256276760),
+            ('https://lh3.googleusercontent.com/a/ACg8ocKmhFfHatGRwnSEiD1tdnLmiX4Aea61ZsoBl49Dd9k-fxMDuJQ=s96-c', 'trey', 'wells', 'wells.t.2024@tamu.edu', 2146017139)]
+    tutees = []
+    # create empty tutees
+    for _ in range(len(info)):
+        tutees.append(Tutee())
+    # add tutee names and picture urls
+    for idx in range(len(tutees)):
+        tutees[idx].pictureUrl = info[idx][0]
+        tutees[idx].firstName = info[idx][1]
+        tutees[idx].lastName = info[idx][2]
+      
+    for idx, tutee in enumerate(tutees):
+        # add email
+        tutee.email = info[idx][3]
+        # add major
+        tutee.majorAbbreviation = "csce"
+        # add phone number
+        tutee.phoneNumber = info[idx][4]
+        # add seniority
+        tutee.seniorityName = "senior"
+            
+    return tutees
+
+# generate demo random start and end times
+def getStartAndEndTimeDemo():
+    date = datetime.datetime.now() + datetime.timedelta(days = random.randint(1, 5))
+    month = date.month
+    day = date.day
+    year = date.year
+    startTime = random.randint(1, 22)
+    endTime = startTime + 1
+    startDateTime = f"{year}-{month}-{str(day).zfill(2)} {str(startTime).zfill(2)}:00:00"
+    endDateTime = f"{year}-{month}-{str(day).zfill(2)} {str(endTime).zfill(2)}:00:00"
+    return (startDateTime, endDateTime, f"{year}-{month}-{str(day).zfill(2)}")
+
+# generate demo appointment
+def getAppointmentsDemo(tutors, tutees, numAppointmentsPerTutor):
+    # create dictionary of majors to tutees
+    tuteeMajorDict = collections.defaultdict(lambda: [])
+    for tutee in tutees:
+        tuteeMajorDict[tutee.majorAbbreviation].append(tutee)
+    # create place holder appointments
+    appointments = []
+    for idx in range(len(tutors) * numAppointmentsPerTutor):
+        appointments.append(Appointment(idx + 1))
         
+    
+    for tutorIdx, tutor in enumerate(tutors):
+        # find population of valid tutees
+        validTuteeSeniority = ["freshman", "sophomore", "junior", "senior", "graduate"]
+        if tutor.seniorityName == "freshman":
+            validTuteeSeniority = ["freshman"]
+        elif tutor.seniorityName == "sophomore":
+            validTuteeSeniority = ["freshman", "sophomore"]
+        elif tutor.seniorityName == "junior":
+            validTuteeSeniority = ["freshman", "sophomore", "junior"]
+        elif tutor.seniorityName == "senior":
+            validTuteeSeniority = ["freshman", "sophomore", "junior", "senior"]
+        elif tutor.seniorityName == "graduate":
+            validTuteeSeniority = ["graduate"]
+        validTutees = [*filter(lambda tutee: tutee.seniorityName in validTuteeSeniority, tuteeMajorDict[tutor.majorAbbreviation])]
+        # assign tutor and tutees to appointment and other details
+        for tuteeIdx, tutee in enumerate(random.sample(validTutees, min(len(validTutees), numAppointmentsPerTutor))):
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].tutorEmail = tutor.email
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].tuteeEmail = tutee.email
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].appointmentSizeName = "single"
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].locationName = tutor.locationPreference
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].isConfirmed = "false"
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].isCancelled = "false"
+            startTime, endTime, date = getStartAndEndTimeDemo()
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].startDateTime = startTime
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].endDateTime = endTime
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].date = date
+            
+    return appointments
+
+# generate demo2 appointment
+def getAppointmentsDemo2(tutors, tutees, numAppointmentsPerTutor):
+    # create dictionary of majors to tutees
+    tuteeMajorDict = collections.defaultdict(lambda: [])
+    for tutee in tutees:
+        tuteeMajorDict[tutee.majorAbbreviation].append(tutee)
+    # create place holder appointments
+    appointments = []
+    for idx in range(len(tutors) * numAppointmentsPerTutor):
+        appointments.append(Appointment(idx + 1))
+    for tutorIdx, tutor in enumerate(tutors):
+        # assign tutor and tutees to appointment and other details
+        for tuteeIdx, tutee in enumerate(random.sample(tutees, min(len(tutees), numAppointmentsPerTutor))):
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].tutorEmail = tutor.email
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].tuteeEmail = tutee.email
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].appointmentSizeName = "single"
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].locationName = tutor.locationPreference
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].isConfirmed = "true"
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].isCancelled = "false"
+            startTime, endTime, date = getStartAndEndTime()
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].startDateTime = startTime
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].endDateTime = endTime
+            appointments[tutorIdx * numAppointmentsPerTutor + tuteeIdx].date = date
+            
+    return appointments
 
 # set parameters
-numTutors = 270 * 15
+numTutors = len(majors) * 15
 numAppointmentsPerTutor = 15
 numTutees = numTutors * numAppointmentsPerTutor
 
@@ -327,6 +480,12 @@ tutors = getTutors(numTutors)
 tutees = getTutees(numTutees)
 appointments = getAppointments(tutors, tutees, numAppointmentsPerTutor)
 reviews = getReviews(appointments)
+
+# generate data
+tutorsDemo = getTutorsDemo()
+tuteesDemo = getTuteesDemo()
+appointmentsDemo = getAppointmentsDemo(tutorsDemo, tutees, numAppointmentsPerTutor)
+appointmentsDemo2 = getAppointmentsDemo2(random.sample(tutors, 10), tutorsDemo, len(tutorsDemo))
 
 # format output
 with open("generatedData.sql", "w") as file:
@@ -337,7 +496,6 @@ with open("generatedData.sql", "w") as file:
         file.write(hardcodedCourses.read() + "\n\n")
     with open("hardcoded/misc") as hardcodedMisc:
         file.write(hardcodedMisc.read() + "\n\n")
-    
     # insert tutors
     file.write("INSERT INTO tutor" + "\n")
     file.write("\t(first_name, last_name, major_abbreviation, seniority_name, pay_rate, bio_text, picture_url, phone_number, email, listing_title)" + "\n")
@@ -367,10 +525,6 @@ with open("generatedData.sql", "w") as file:
     for courseNumber in tutors[-1].courses[:-1]:
         file.write(f"\t('{tutors[-1].email}', '{tutors[-1].majorAbbreviation}', {courseNumber}, 'a')," + "\n")
     file.write(f"\t('{tutors[-1].email}', '{tutors[-1].majorAbbreviation}', {tutors[-1].courses[-1]}, 'a');" + "\n")
-    
-    with open("hardcoded/coursePreferences") as hardcodedCoursePreferences:
-            file.write(hardcodedCoursePreferences.read() + "\n\n")
-    
     # insert tutor location preferences
     file.write("\n")
     file.write("INSERT INTO tutor_location_preference" + "\n")
@@ -401,6 +555,69 @@ with open("generatedData.sql", "w") as file:
         file.write(f"\t('{review.appointmentId}', '{review.tuteeEmail}', '{review.tutorEmail}', {review.numberStars}, '{review.reviewText}', '{review.reviewDate}')," + "\n")
     file.write(f"\t('{reviews[-1].appointmentId}', '{reviews[-1].tuteeEmail}', '{reviews[-1].tutorEmail}', {reviews[-1].numberStars}, '{reviews[-1].reviewText}', '{reviews[-1].reviewDate}');" + "\n")
     
-    with open("hardcoded/demo") as hardcodedDemo:
-        file.write(hardcodedDemo.read() + "\n\n")
+    # demo data
+            
+    # insert tutorsDemo
+    file.write("INSERT INTO tutor" + "\n")
+    file.write("\t(first_name, last_name, major_abbreviation, seniority_name, pay_rate, bio_text, picture_url, phone_number, email, listing_title)" + "\n")
+    file.write("VALUES" + "\n")
+    for tutor in tutorsDemo[:-1]:
+        file.write(f"\t('{tutor.firstName}', '{tutor.lastName}', '{tutor.majorAbbreviation}', '{tutor.seniorityName}', {tutor.payRate}, '{tutor.bioText}', '{tutor.pictureUrl}', {tutor.phoneNumber}, '{tutor.email}', '{tutor.listingTitle}')," + "\n")
+    file.write(f"\t('{tutorsDemo[-1].firstName}', '{tutorsDemo[-1].lastName}', '{tutorsDemo[-1].majorAbbreviation}', '{tutorsDemo[-1].seniorityName}', {tutorsDemo[-1].payRate}, '{tutorsDemo[-1].bioText}', '{tutorsDemo[-1].pictureUrl}', {tutorsDemo[-1].phoneNumber}, '{tutorsDemo[-1].email}', '{tutorsDemo[-1].listingTitle}');" + "\n")
+    # insert tutor time preferences
+    file.write("\n")
+    file.write("INSERT INTO tutor_time_preference" + "\n")
+    file.write("\t(tutor_email, start_time, end_time, weekday_name)" + "\n")
+    file.write("VALUES" + "\n")
+    for tutor in tutorsDemo[:-1]:
+        for timePreference in tutor.timePreferences:
+            file.write(f"\t('{tutor.email}', '{timePreference.startTime}', '{timePreference.endTime}', '{timePreference.weekdayName}')," + "\n")
+    for timePreference in tutorsDemo[-1].timePreferences[:-1]:
+        file.write(f"\t('{tutorsDemo[-1].email}', '{timePreference.startTime}', '{timePreference.endTime}', '{timePreference.weekdayName}')," + "\n")
+    file.write(f"\t('{tutorsDemo[-1].email}', '{tutorsDemo[-1].timePreferences[-1].startTime}', '{tutorsDemo[-1].timePreferences[-1].endTime}', '{tutorsDemo[-1].timePreferences[-1].weekdayName}');" + "\n")
+    # insert tutor eligible course
+    file.write("\n")
+    file.write("INSERT INTO tutor_eligible_course" + "\n")
+    file.write("\t(tutor_email, major_abbreviation, course_number, course_grade)" + "\n")
+    file.write("VALUES" + "\n")
+    for tutor in tutorsDemo[:-1]:
+        for courseNumber in tutor.courses:
+            file.write(f"\t('{tutor.email}', '{tutor.majorAbbreviation}', {courseNumber}, 'a')," + "\n")
+    for courseNumber in tutorsDemo[-1].courses[:-1]:
+        file.write(f"\t('{tutorsDemo[-1].email}', '{tutorsDemo[-1].majorAbbreviation}', {courseNumber}, 'a')," + "\n")
+    file.write(f"\t('{tutorsDemo[-1].email}', '{tutorsDemo[-1].majorAbbreviation}', {tutorsDemo[-1].courses[-1]}, 'a');" + "\n")
+    # insert tutor location preferences
+    file.write("\n")
+    file.write("INSERT INTO tutor_location_preference" + "\n")
+    file.write("\t(tutor_email, location_name)" + "\n")
+    file.write("VALUES" + "\n")
+    for tutor in tutorsDemo[:-1]:
+        file.write(f"\t('{tutor.email}', '{tutor.locationPreference}')," + "\n")
+    file.write(f"\t('{tutorsDemo[-1].email}', '{tutorsDemo[-1].locationPreference}');" + "\n")
+    # insert tuteesDemo
+    file.write("INSERT INTO tutee" + "\n")
+    file.write("\t(first_name, last_name, major_abbreviation, seniority_name, phone_number, email, picture_url)" + "\n")
+    file.write("VALUES" + "\n")
+    for tutee in tuteesDemo[:-1]:
+        file.write(f"\t('{tutee.firstName}', '{tutee.lastName}', '{tutee.majorAbbreviation}', '{tutee.seniorityName}', {tutee.phoneNumber}, '{tutee.email}', '{tutee.pictureUrl}')," + "\n")
+    file.write(f"\t('{tuteesDemo[-1].firstName}', '{tuteesDemo[-1].lastName}', '{tuteesDemo[-1].majorAbbreviation}', '{tuteesDemo[-1].seniorityName}', {tuteesDemo[-1].phoneNumber}, '{tuteesDemo[-1].email}', '{tuteesDemo[-1].pictureUrl}');" + "\n")
+    # insert appointmentsDemo
+    file.write("INSERT INTO appointment" + "\n")
+    file.write("\t(tutee_email, tutor_email, start_date_time, end_date_time, location_name, is_confirmed)" + "\n")
+    file.write("VALUES" + "\n")
+    for appointment in appointmentsDemo[:-1]:
+        file.write(f"\t('{appointment.tuteeEmail}', '{appointment.tutorEmail}', '{appointment.startDateTime}', '{appointment.endDateTime}', '{appointment.locationName}', {appointment.isConfirmed})," + "\n")
+    file.write(f"\t('{appointmentsDemo[-1].tuteeEmail}', '{appointmentsDemo[-1].tutorEmail}', '{appointmentsDemo[-1].startDateTime}', '{appointmentsDemo[-1].endDateTime}', '{appointmentsDemo[-1].locationName}', {appointmentsDemo[-1].isConfirmed});" + "\n")  
+    # insert appointmentsDemo2
+    file.write("INSERT INTO appointment" + "\n")
+    file.write("\t(tutee_email, tutor_email, start_date_time, end_date_time, location_name, is_confirmed)" + "\n")
+    file.write("VALUES" + "\n")
+    for appointment in appointmentsDemo2[:-1]:
+        file.write(f"\t('{appointment.tuteeEmail}', '{appointment.tutorEmail}', '{appointment.startDateTime}', '{appointment.endDateTime}', '{appointment.locationName}', {appointment.isConfirmed})," + "\n")
+    file.write(f"\t('{appointmentsDemo2[-1].tuteeEmail}', '{appointmentsDemo2[-1].tutorEmail}', '{appointmentsDemo2[-1].startDateTime}', '{appointmentsDemo2[-1].endDateTime}', '{appointmentsDemo2[-1].locationName}', {appointmentsDemo2[-1].isConfirmed});" + "\n")      
+    with open("hardcoded/coursePreferences") as hardcodedCoursePreferences:
+            file.write(hardcodedCoursePreferences.read() + "\n\n")
+        
+        
+    
     
