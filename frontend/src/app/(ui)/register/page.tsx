@@ -563,9 +563,6 @@ export default function Registration() {
   
   const [tab, setTab] = React.useState(0);
   
-  //const [inputs, setInputs] = useState<Tutor["coursePreferences"]>([{ majorAbbreviation: '', courseNumber: 0, courseGrade: '', tutorEmail: '' }]);
-  const [inputs, setInputs] = useState([{ courseType: '', courseNumber: '', courseGrade: '' }]);
-
   const [peerTutorFormData, setPeerTutorFormData] = useState({
     firstName: '',
     lastName: '',
@@ -577,8 +574,7 @@ export default function Registration() {
     seniority: '' as Seniority
   });
 
-  const [tutor, setTutor] = React.useState<Tutor>({
-    activeStatusName: "active",
+  const [tutor, setTutor] = useState<Tutor>({
     firstName: '',
     lastName: '',
     pictureUrl: '',
@@ -593,6 +589,7 @@ export default function Registration() {
     coursePreferences: [],
     eligibleCourses: [],
     locationPreferences: [],
+    activeStatusName: "active",
     numberOfRatings: 0
   });
 
@@ -816,7 +813,7 @@ export default function Registration() {
   return (
     <>
     <header>
-      <ResponsiveAppBar links={links} settings={[]} />
+      <ResponsiveAppBar settings={settings} links={links} />
     </header>
     <Container component="main" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '5vh'}}>
       <CssBaseline />
@@ -1022,6 +1019,7 @@ export default function Registration() {
 
 
           })()}
+
         </Box>
       </Paper>
     </Container>
