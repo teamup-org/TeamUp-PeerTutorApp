@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 /Users/evbot/Desktop/CAPSTONE/TeamUp-PeerTutorApp/backend/databaseAPI/databaseAPI/databaseAPI/src/test/java/xyz/tamutheo/databaseAPI/TutorTests.java
 /Users/evbot/Desktop/CAPSTONE/TeamUp-PeerTutorApp/backend/databaseAPI/databaseAPI/databaseAPI/src/test/java/xyz/tamutheo/databaseAPI/MiscellaneousTests.java
 /Users/evbot/Desktop/CAPSTONE/TeamUp-PeerTutorApp/backend/databaseAPI/databaseAPI/databaseAPI/src/test/java/xyz/tamutheo/databaseAPI/TuteeTests.java
@@ -7,3 +8,6 @@
 =======
 C:\Users\Brandon\Documents\College\13 - Senior+ Spring Semester\CSCE 482 - Capstone\06 - Code\backend\databaseAPI\databaseAPI\databaseAPI\src\test\java\xyz\tamutheo\databaseAPI\DatabaseApiApplicationTests.java
 >>>>>>> 95e9a20 (Brandon: changed all PUT request endpoints to generic REQUEST endpoints)
+=======
+C:\Users\Brandon\Documents\College\13 - Senior+ Spring Semester\CSCE 482 - Capstone\06 - Code\backend\databaseAPI\databaseAPI\databaseAPI\src\test\java\xyz\tamutheo\databaseAPI\DatabaseApiApplicationTests.java
+>>>>>>> a1e2bc71ccd5a24408f64830666489744a6fabb4

@@ -1,9 +1,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 xyz\tamutheo\databaseAPI\tutorReview\TutorPendingReviewModel.class
 >>>>>>> b7b24f9 (Brandon: Added fields to tutor pending reviews)
+=======
+xyz\tamutheo\databaseAPI\tutorReview\TutorPendingReviewModel.class
+>>>>>>> a1e2bc71ccd5a24408f64830666489744a6fabb4
 xyz\tamutheo\databaseAPI\rating\RatingModel.class
 xyz\tamutheo\databaseAPI\tutor\TutorModel.class
 xyz\tamutheo\databaseAPI\util\tamuMajorAndCourse\tamuMajor\TamuMajorModel.class
@@ -96,4 +100,7 @@ xyz\tamutheo\databaseAPI\WebConfig.class
 xyz\tamutheo\databaseAPI\appointmentSize\AppointmentSizeModel.class
 xyz\tamutheo\databaseAPI\tutorTimePreference\TutorTimePreferenceModel.class
 xyz\tamutheo\databaseAPI\tutee\TuteeService.class
+<<<<<<< HEAD
 >>>>>>> 95e9a20 (Brandon: changed all PUT request endpoints to generic REQUEST endpoints)
+=======
+>>>>>>> a1e2bc71ccd5a24408f64830666489744a6fabb4

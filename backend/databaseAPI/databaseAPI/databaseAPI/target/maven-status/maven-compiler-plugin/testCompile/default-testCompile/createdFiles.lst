@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 xyz/tamutheo/databaseAPI/DatabaseApiApplicationTests.class
 AppointmentTests.class
 MiscellaneousTests.class
@@ -14,3 +15,6 @@ xyz\tamutheo\databaseAPI\DatabaseApiApplicationTests.class
 =======
 xyz\tamutheo\databaseAPI\DatabaseApiApplicationTests.class
 >>>>>>> a747543 (Brandon: Added more dummy data; added picture urls to appointments)
+=======
+xyz\tamutheo\databaseAPI\DatabaseApiApplicationTests.class
+>>>>>>> a1e2bc71ccd5a24408f64830666489744a6fabb4
