@@ -33,7 +33,7 @@ export default function RootLayout({
         <QueryProvider>
           <AuthProvider>
             <ThemeProvider theme={ theme }>
-              <CssBaseline />{children}
+              <CssBaseline /> {children}
             </ThemeProvider>
           </AuthProvider>
         </QueryProvider>

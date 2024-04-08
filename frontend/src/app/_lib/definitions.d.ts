@@ -46,6 +46,15 @@ declare global {
     [key: string]: string
 };
 
+  // REST API: /tutor_time_preference
+  type TutorTimePreference = {
+    startTimeString: string,
+    endTimeString: string,
+
+    tutorEmail: string,
+    weekdayName: string,
+  };
+
   // 
   type Tutor = {
     activeStatusName: "active" | "inactive" | "banned",
@@ -61,20 +70,26 @@ declare global {
     listingTitle: string,
     bioText: string,
     averageRating: number,
-    bioText: string,
-    coursePreferences: Course[],
-    eligibleCourses: Course[],
-    listingTitle: string,
+
+    numberOfRatings: number,
+    numberOneStarRatings: number,
+    numberTwoStarRatings: number,
+    numberThreeStarRatings: number,
+    numberFourStarRatings: number,
+    numberFiveStarRatings: number,
+
+    coursePreferences: { 
+      courseGrade: string, 
+      courseNumber: number, 
+      majorAbbreviation: string, 
+      tutorEmail: string 
+    }[],
     locationPreferences: { 
       locationName: LocationType, 
       tutorEmail: string 
     }[],
-    timePreferences: {
-      endTimeString: string,
-      startTimeString: string,
-      tutorEmail: string,
-      weekdayName: string
-    }[],
+    timePreferences: TutorTimePreference[],
+
     majorAbbreviation: string,
     payRate: number,
     seniorityName: Seniority,
@@ -121,6 +136,7 @@ declare global {
     // Appointment Information
     appointmentSizeName: "single" | "group",
     cancellationReason: string,
+    tuteeRequestComment: string,
     startDateTimeString: Date,
     endDateTimeString: Date,
     isCancelled: boolean,
@@ -129,20 +145,63 @@ declare global {
 
     // Tutee Information
     tuteeEmail: string,
+    tuteePictureUrl: string,
     tuteeFirstName: string,
     tuteeLastName: string,
     tuteePhoneNumber: number,
+    tuteeSeniorityName: Seniority,
+    tuteeMajorAbbreviation: string,
 
     // Tutor Information
     tutorEmail: string,
+    tutorPictureUrl: string,
     tutorFirstName: string,
     tutorLastName: string,
     tutorPhoneNumber: number,
+    tutorSeniorityName: Seniority,
+    tutorMajorAbbreviation: string,
   };
 
   // REST API: /appointment
   type AppointmentQuery = {
     data: Appointment[],
     metaData: Metadata,
+  };
+
+  // 
+  type Review = {
+    appointmentId: number | null,
+    numberStars: number | null,
+    reviewText: string,
+    reviewDateString: string,
+
+    tuteePictureUrl: string,
+    tuteeEmail: string,
+    tuteeFirstName: string,
+    tuteeLastName: string,
+    tuteeSeniority: string,
+    tuteeMajorAbbreviation: string,
+
+    tutorEmail: string,
+  };
+
+  // REST API: /tutor_review
+  type ReviewQuery = {
+    data: Review[],
+    metaData: Metadata,
+  };
+
+  // REST API: /tutor_review/pending_reviews
+  type PendingReview = {
+    appointmentId: number,
+    startDateTimeString: string,
+    endDateTimeString, string,
+
+    tutorEmail: string,
+    tutorPictureUrl: string,
+    tutorFirstName: string,
+    tutorLastName: string,
+    tutorMajorAbbreviation: string,
+    tutorSeniority: Seniority,
   };
 }

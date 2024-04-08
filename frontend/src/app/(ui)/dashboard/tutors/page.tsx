@@ -1,73 +1,83 @@
 'use client';
 
 
-import React, { useEffect, useState } 
-from 'react';
+import * as React from 'react';
 
-import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
-import { Box, Container, Grid, Stack, Skeleton, Pagination, TextField, Typography, ToggleButtonGroup, ToggleButton, IconButton, Tooltip }
+import SearchIcon from '@mui/icons-material/Search';
+import { Box, Container, Grid, Stack, TextField, Pagination, Typography, ToggleButtonGroup, ToggleButton, ButtonBase 
+, Tooltip, IconButton }
 from '@mui/material';
 
-import TutorCard from '@/app/(ui)/tutor-card';
+import { TutorCard, TutorSkeleton }
+  from '@/app/(ui)/tutor-card';
 import TutorFilter from './tutor-filter';
+import TutorProfile from './tutor-profile';
 import { TableFetch } 
 from '@/app/_lib/data';
 
 
 const tutorsPerPageOptions = [ 5, 10, 15 ];
 
-const tutorSkeleton: Tutor = { activeStatusName: "active", averageRating: 0, bioText: "", coursePreferences: [], email: "", firstName: "", lastName: "", 
-  listingTitle: "", locationPreferences: [], majorAbbreviation: "", numberOfRatings: 0, payRate: 0, phoneNumber: 0, pictureUrl: "", seniorityName: "Freshman" };
-
 
 export default function TutorPage() {
-  const [sort, setSort] = useState("average_rating_descending");
-  const [rate, setRate] = useState([0, 200]);
-  const [major, setMajor] = useState<string | null>(null);
-  const [course, setCourse] = useState<string | null>(null);
-  const [seniority, setSeniority] = useState<Seniority>("All");
+  const [search, setSearch] = React.useState<string>("");
+    const [searchQuery, setSearchQuery] = React.useState("");
+  const [sort, setSort] = React.useState("average_rating_descending");
+  const [rate, setRate] = React.useState([0, 200]);
+  const [major, setMajor] = React.useState<string | null>(null);
+  const [course, setCourse] = React.useState<string | null>(null);
+  const [seniority, setSeniority] = React.useState<Seniority>("All");
+  const [selectedTutor, setSelectedTutor] = React.useState<Tutor | null>(null);
+    const [profileOpen, setProfileOpen] = React.useState(false);
 
-  const [tutorsPerPage, setTutorsPerPage] = useState(5);
+  const [tutorsPerPage, setTutorsPerPage] = React.useState(5);
   const handleTutorsPerPageChange = (event: any, value: number) => {
-    value && setTutorsPerPage(value);
+    setTutorsPerPage(value);
   };
   
-  const [page, setPage] = useState(1);
+  const [page, setPage] = React.useState(1);
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
+    window.moveTo(0, 0);
   };
 
-  const [search, setSearch] = useState<string>("");
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
   };
 
 
   // Database Fetching
-  const { data: tutorData, isLoading: tutorIsLoading, isFetching: tutorIsFetching, refetch: tutorRefetch } = 
-  TableFetch<TutorQuery>("tutor", [tutorsPerPage, page, sort, major, course, seniority], `number_entries_per_page=${tutorsPerPage}`, `page_number=${page}`, 
+  const { data: tutorData, isLoading: tutorIsLoading, isFetching: tutorIsFetching } = 
+  TableFetch<TutorQuery>("tutor", [tutorsPerPage, page, sort, rate, major, course, seniority, searchQuery], `number_entries_per_page=${tutorsPerPage}`, `page_number=${page}`, 
     `sort_by=${sort}`,
-    `pay_rate_greater_than_or_equals=${rate[0]}`, 
+    `pay_rate_greater_than_or_equals=${rate[0]}`,
     `pay_rate_less_than_or_equals=${rate[1]}`,
-    `course_major_abbreviation_contains=${major ? major : ""}`,
-    `course_number_equals=${course ? course : ""}`,
-    `contains=${search}`,
+    `course_preference_major_abbreviation_contains=${major ? major : ""}`,
+    `course_preference_number_equals=${course ? course : ""}`,
+    `seniority_name_in=${seniority}`,
+    `contains=${searchQuery}`,
   );
   
-  useEffect(() => {
+  // Listen to page or tutorData change. Restrains page number to less than total pages from pagination data
+  // If page is larger than total pages, set to max page to prevent display error, i.e. Current Page 3 > Total Pages 2
+  React.useEffect(() => {
     setPage(Math.max(Math.min(page, (tutorData ? tutorData?.metaData?.totalNumberPages : page)), 1));
   }, [page, tutorData]);
 
+
+  // Display tutor information as tutor cards
   const printTutors = () => {
-    if (tutorIsLoading || tutorIsFetching) {
-      return (
-        <Skeleton animation="wave" variant="rounded" width="100%"> <TutorCard tutor={tutorSkeleton} /> </Skeleton>
-      );
+    if (tutorIsLoading) {
+      return ( <TutorSkeleton /> );
     } 
     else if (tutorData && tutorData?.data?.length > 0) { 
       return tutorData?.data?.map((tutor: Tutor, index: number) => (
-        <TutorCard tutor={tutor} key={index} />
+        <ButtonBase key={index} disableRipple disabled={tutorIsFetching}
+          onClick={() => { setSelectedTutor(tutor); setProfileOpen(true); }}
+        > 
+          <TutorCard key={index} tutor={tutor} disabled={tutorIsFetching} />
+        </ButtonBase>
       ));
     }
     
@@ -76,29 +86,29 @@ export default function TutorPage() {
     )
   };
 
-  const [test, setTest] = useState(true);
-  useEffect(() => {
+  /*React.useEffect(() => {
     tutorRefetch();
-  }, [test]);
+  }, [searchQuery]);*/
 
-  const searchAdornments: React.JSX.Element = (
-    <Stack direction="row" height="100%"> 
-      { 
-        search && ( 
-          <Tooltip title="Clear">
-            <IconButton aria-label="Clear" onClick={ () => {
-                setSearch("");
-                setTest(!test);
-                } }> 
-              <ClearIcon />
-            </IconButton> 
-          </Tooltip>
-        ) 
-      } 
-      <IconButton onClick={ () => tutorRefetch() }> 
-        <SearchIcon /> 
+  const startSearchAdornment: React.JSX.Element = (
+    <IconButton onClick={ () => setSearchQuery(search) }> 
+      <SearchIcon /> 
+    </IconButton> 
+  );
+
+  const endSearchAdornment: React.JSX.Element = (
+    search ? 
+    <Tooltip title="Clear">
+      <IconButton aria-label="Clear" 
+        onClick={ () => {
+          setSearch("");
+          setSearchQuery("");
+        } }
+      > 
+        <ClearIcon />
       </IconButton> 
-    </Stack>
+    </Tooltip>
+    : <></>
   );
 
 
@@ -106,26 +116,38 @@ export default function TutorPage() {
     <Box position="static" mb="40px">
       <Container maxWidth="lg" sx={{ width: '100%' }}>
         <Grid container direction="row" spacing={2} my="10px">
-          <Grid item xs={0} md={4}>
-            <TutorFilter rate={[rate, setRate]} sort={[sort, setSort]} major={[major, setMajor]} course={[course, setCourse]} seniority={[seniority, setSeniority]} tutorRefetch={tutorRefetch} />
+          {/* Left side of grid */}
+          <Grid item xs={12} md={4}>
+            <TutorFilter 
+              rate={[rate, setRate]} 
+              sort={[sort, setSort]} 
+              major={[major, setMajor]} course={[course, setCourse]} 
+              seniority={[seniority, setSeniority]} 
+            />
           </Grid>
 
+          {/* Pop-up modal box for tutor profile */}
+          <TutorProfile tutor={selectedTutor} open={[profileOpen, setProfileOpen]} />
+          
+          {/* Right side of grid */}
           <Grid item xs={12} md={8}>
-            <Stack direction="column" spacing={2} alignItems="center">
+            <Stack direction="column" spacing={2} height="100%">
               <TextField 
-                id="outlined-tutor-search" label="Search" variant="outlined"
-                value={search} onChange={handleSearchChange} onKeyUp={ (event) => {if (event.key === "Enter") tutorRefetch();} }
-                fullWidth InputProps={{ endAdornment: searchAdornments }} sx={{ bgcolor: 'white' }}
+                id="outlined-tutor-search" label="Search"
+                variant="outlined" fullWidth
+                value={search} onChange={handleSearchChange} onKeyUp={ (event) => {if (event.key === "Enter") setSearchQuery(search);} }
+                InputProps={{ startAdornment: startSearchAdornment, endAdornment: endSearchAdornment }} 
+                sx={{ bgcolor: 'white' }}
               />
 
               { printTutors() }
 
-              <Stack direction="row" width="100%" alignItems="center">
+              <Stack direction="row" width="100%" height="100%" alignItems="end">
                 <Box display="flex" flexGrow={1} justifyContent="center">
                   <Pagination 
                     color="primary" size="large"
                     count={tutorData ? tutorData?.metaData?.totalNumberPages : 0} page={page} onChange={handlePageChange} 
-                    disabled={tutorIsLoading || tutorIsFetching}
+                    disabled={tutorIsFetching}
                   />
                 </Box>
 

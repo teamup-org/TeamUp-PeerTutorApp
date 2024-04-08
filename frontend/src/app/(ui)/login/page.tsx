@@ -55,14 +55,7 @@ export default function SignIn() {
   return (
     <Container component="main" maxWidth="xs">
       <Paper elevation={4}>
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
+        <Box mt={8} p={4} display="flex" flexDirection="column" alignItems="center">
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
@@ -70,6 +63,7 @@ export default function SignIn() {
             Sign in
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            {/*
             <TextField
               margin="normal"
               required
@@ -104,7 +98,7 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-
+            */}
             <GoogleSignInButton />
           </Box>
         </Box>
