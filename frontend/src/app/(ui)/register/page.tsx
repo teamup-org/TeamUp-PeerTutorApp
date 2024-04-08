@@ -15,8 +15,11 @@ const tabLabels = ["Register as Peer Tutor", "Register as Tutee"];
 import { 
   Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Paper, InputLabel, MenuItem, Select, SelectChangeEvent,
   OutlinedInput, InputAdornment, Tabs, Tab, Step, Stepper, StepLabel, FormGroup, Checkbox, FormControlLabel, Alert, Skeleton,
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Divider
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Divider, IconButton
 } from '@mui/material';
+
+import DeleteIcon 
+  from '@mui/icons-material/Delete';
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -365,7 +368,6 @@ function CoursePreferences(props: any) {
   const { checkedItems, setCheckedItems} = props;
   const { locationPreferences, setLocationPreferences } = props;
   const { timePreferences, setTimePreferences } = props;
-  const { tutorTimePreferences, setTutorTimePreferences } = props;
 
   const { data: session, status } = useSession();
 
@@ -390,6 +392,12 @@ function CoursePreferences(props: any) {
     }
   };
 
+  const handleDeleteRow = (index: number) => {
+    const updatedTimes = [...timePreferences];
+    updatedTimes.splice(index, 1);
+    setTimePreferences(updatedTimes);
+  };
+
   const handleTimeChange = (index: number, field: string, value: string) => {
     const updatedTimes = [...timePreferences];
     updatedTimes[index][field] = value;
@@ -411,7 +419,7 @@ function CoursePreferences(props: any) {
               <TableRow>
                 <TableCell>Course</TableCell>
                 <TableCell>Grade</TableCell>
-                <TableCell>Select</TableCell>
+                <TableCell>Preferred</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -440,7 +448,7 @@ function CoursePreferences(props: any) {
             <TableHead>
               <TableRow>
                 <TableCell>Location</TableCell>
-                <TableCell>Select</TableCell>
+                <TableCell>Preferred</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -470,6 +478,7 @@ function CoursePreferences(props: any) {
                 <TableCell>Day</TableCell>
                 <TableCell>Start Time</TableCell>
                 <TableCell>End Time</TableCell>
+                <TableCell>Delete</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -510,6 +519,11 @@ function CoursePreferences(props: any) {
                         />
                       </DemoContainer>
                     </LocalizationProvider>
+                  </TableCell>
+                  <TableCell>
+                    <IconButton onClick={() => handleDeleteRow(index)} aria-label="delete">
+                      <DeleteIcon />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}
