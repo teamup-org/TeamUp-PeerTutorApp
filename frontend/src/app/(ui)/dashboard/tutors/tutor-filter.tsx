@@ -27,7 +27,14 @@ const sortOptions = [
   { label: "Highest Payrate", query: "pay_rate_descending" }
 ];
 
-const seniorityOptions: Seniority[] = ["All", "Freshman", "Sophomore", "Junior", "Senior", "Graduate"];
+const seniorityOptions: { label: Seniority, query: string }[] = [
+  { label: "All", query: "freshman, sophomore, junior, senior, graduate" }, 
+  { label: "Freshman", query: "freshman" }, 
+  { label: "Sophomore", query: "sophomore" }, 
+  { label:"Junior", query: "junior" }, 
+  { label: "Senior", query: "senior" }, 
+  { label: "Graduate", query: "graduate" }
+];
 
 
 export default function TutorFilter(
@@ -175,7 +182,7 @@ export default function TutorFilter(
         <FormControl fullWidth>
           <InputLabel id="select-seniority-label"> Seniority </InputLabel>
           <Select labelId="select-seniority-label" id="select-seniority" value={seniority} label="Seniority" onChange={handleSeniorityChange}>
-            { seniorityOptions?.map((option, index) => (<MenuItem value={option} key={index}> {option} </MenuItem>)) }
+            { seniorityOptions?.map((option, index) => (<MenuItem value={option.query} key={index}> {option.label} </MenuItem>)) }
           </Select>
         </FormControl>
       </Stack>

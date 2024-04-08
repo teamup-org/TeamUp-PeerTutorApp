@@ -36,12 +36,6 @@ import { useSession } from 'next-auth/react';
 import dayjs from 'dayjs';
 
 
-import axios from 'axios';
-import { truncate } from 'fs/promises';
-const development = "http://localhost:8080";
-const deployment = "https://tamutheo.xyz/database_api";
-axios.defaults.baseURL = development;
-
 const steps = ['General Info', 'Transcript', 'Submit Registration','Tutor Preferences'];
 
 const settings: Link[] = [

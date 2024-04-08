@@ -27,7 +27,7 @@ export default function TutorPage() {
   const [rate, setRate] = React.useState([0, 200]);
   const [major, setMajor] = React.useState<string | null>(null);
   const [course, setCourse] = React.useState<string | null>(null);
-  const [seniority, setSeniority] = React.useState<Seniority>("All");
+  const [seniority, setSeniority] = React.useState<string>("freshman, sophomore, junior, senior, graduate");
   const [selectedTutor, setSelectedTutor] = React.useState<Tutor | null>(null);
     const [profileOpen, setProfileOpen] = React.useState(false);
 
