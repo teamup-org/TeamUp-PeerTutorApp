@@ -261,10 +261,17 @@ function TimePreferences(props: any) {
 
   const handleTimeChange = (index: number, field: string, value: string) => {
     const updatedTimes = [...tutorProfileData.timePreferences];
-    updatedTimes[index] = {
-      ...updatedTimes[index],
-      [field]: value
-    };
+    if (field == 'weekdayName') {
+      updatedTimes[index] = {
+        ...updatedTimes[index],
+        [field]: `${value}`
+      };
+    } else {
+      updatedTimes[index] = {
+        ...updatedTimes[index],
+        [field]: `${value}:00`
+      };
+    }
     setTutorProfileData({ ...tutorProfileData, timePreferences: updatedTimes});
   };
 
@@ -277,6 +284,7 @@ function TimePreferences(props: any) {
       ]
     });
   };
+
 
   return (
     <div style={{ marginBottom: '16px' }}>
@@ -310,7 +318,7 @@ function TimePreferences(props: any) {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={['TimeField']}>
                       <TimeField
-                        value={dayjs(timePreference.startTimeString, 'HH:mm')} // Convert string to dayjs object
+                        value={dayjs(timePreference.startTimeString, 'HH:mm')}
                         onChange={(newValue) => handleTimeChange(index, 'startTimeString', newValue ? newValue.format('HH:mm') : '')}
                         fullWidth
                       />
@@ -321,7 +329,7 @@ function TimePreferences(props: any) {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={['TimeField']}>
                         <TimeField
-                          value={dayjs(timePreference.endTimeString, 'HH:mm')} // Convert string to dayjs object
+                          value={dayjs(timePreference.endTimeString, 'HH:mm')}
                           onChange={(newValue) => handleTimeChange(index, 'endTimeString', newValue ? newValue.format('HH:mm') : '')}
                           fullWidth
                         />
@@ -522,6 +530,7 @@ function ProfilePage() {
     TableFetch<TuteeQuery>("tutee", [session], `email_contains=${session?.user?.email}`);
     
   const tutorMutationUpdate = TablePush("/tutor/update");
+  const tutorTimeMutationUpdate = TablePush("/tutor_time_preference/update");
   const tuteeMutationUpdate = TablePush("/tutee/update");
 
   React.useEffect(() => {
@@ -595,8 +604,51 @@ function ProfilePage() {
     return locationNames.join(", ");
   };
 
+  function formatTimePreferences(timePreferences: any[]): any {
+    const formattedData: any = {};
+  
+    // Iterate through timePreferences array
+    timePreferences.forEach((timePreference) => {
+      const { tutorEmail, weekdayName, startTimeString, endTimeString } = timePreference;
+  
+      // Check if there's already an entry for the current day
+      if (!formattedData[weekdayName]) {
+        // If not, create an entry for the current day
+        formattedData[weekdayName] = [];
+      }
+  
+      // Add the time interval to the corresponding day
+      formattedData[weekdayName].push(`${startTimeString} ${endTimeString}`);
+    });
+  
+    // Create the final object with email and time intervals for each day
+    const result: any = {};
+    timePreferences.forEach((timePreference) => {
+      const { tutorEmail, weekdayName } = timePreference;
+  
+      if (!result.tutor_email) {
+        result.tutor_email = tutorEmail;
+      }
+  
+      if (formattedData[weekdayName]) {
+        if (!result[`${weekdayName}_time_intervals`]) {
+          result[`${weekdayName}_time_intervals`] = formattedData[weekdayName].join(', ');
+        }
+      }
+    });
+  
+    return result;
+  }
+  
+
   const updateTutorTimePreferences = () => {
 
+    tutorTimeMutationUpdate.mutate(formatTimePreferences(tutorProfileData.timePreferences), {
+      onSuccess: () => {
+        setAlertOpen(true);
+        tutorRefetch();
+      },
+    });
     setTimeUpdate(false);
 
   };
@@ -730,7 +782,7 @@ function ProfilePage() {
             if (tutorData?.data?.length > 0) {
               return (
                 <>
-                <TutorUpdatePage setTranscript={setTranscript} setLocationUpdate={setLocationUpdate} setEligibleUpdate={setEligibleUpdate} setPreferencesUpdate={setPreferencesUpdate} setTutorUpdate={setTutorUpdate} tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData} />
+                <TutorUpdatePage setTranscript={setTranscript} setTimeUpdate={setTimeUpdate} setLocationUpdate={setLocationUpdate} setEligibleUpdate={setEligibleUpdate} setPreferencesUpdate={setPreferencesUpdate} setTutorUpdate={setTutorUpdate} tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData} />
                 </>
               );
             }
@@ -820,7 +872,7 @@ function ProfilePage() {
           severity="success"
           sx={{ width: '100%' }}
         >
-          {"request changed successfully"}
+          {"Profile Successfully Updated"}
         </Alert>
       </Snackbar>
         
