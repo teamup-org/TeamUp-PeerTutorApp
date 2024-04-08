@@ -590,6 +590,7 @@ export default function Registration() {
     coursePreferences: [],
     eligibleCourses: [],
     locationPreferences: [],
+    timePreferences: [],
     activeStatusName: "active",
     numberOfRatings: 0
   });
@@ -657,6 +658,7 @@ export default function Registration() {
           coursePreferences: [],
           eligibleCourses: [],
           locationPreferences: [],
+          timePreferences: [],
           averageRating: 5,
           numberOfRatings: 0
         };
