@@ -44,7 +44,7 @@ CREATE TABLE tutor (
 	email VARCHAR(50) NOT NULL,
 	first_name VARCHAR(20) NOT NULL,
 	last_name VARCHAR(20) NOT NULL,
-	pay_rate DECIMAL (6, 2) NOT NULL,
+	pay_rate DECIMAL (15, 2) NOT NULL,
 	phone_number BIGINT NOT NULL,
 	picture_url VARCHAR(2000),
 	seniority_name VARCHAR(25) NOT NULL,
