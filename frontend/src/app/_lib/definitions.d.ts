@@ -46,6 +46,15 @@ declare global {
     [key: string]: string
 };
 
+  // REST API: /tutor_time_preference
+  type TutorTimePreference = {
+    startTimeString: string,
+    endTimeString: string,
+
+    tutorEmail: string,
+    weekdayName: string,
+  };
+
   // 
   type Tutor = {
     activeStatusName: "active" | "inactive" | "banned",
