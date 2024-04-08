@@ -539,7 +539,8 @@ function ProfilePage() {
     lastName: "",
     majorAbbreviation: "",
     phoneNumber: 0,
-    seniorityName: "Senior"
+    seniorityName: "Senior",
+    pictureUrl: ""
   });
 
   const { data: tutorData, isLoading: tutorIsLoading, isFetching: tutorIsFetching, isSuccess: tutorIsSuccess, refetch: tutorRefetch } = 
