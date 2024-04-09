@@ -92,8 +92,8 @@ export function scheduleToTimes(schedule: React.RefObject<FullCalendar>) {
     const endHours = end?.getHours().toString().padStart(2, '0');
     const endMinutes = end?.getMinutes().toString().padStart(2, '0');
 
-    const startTime = `${startHours}:${startMinutes}`;
-    const endTime = `${endHours}:${endMinutes}`;
+    const startTime = `${startHours}:${startMinutes}:00`;
+    const endTime = `${endHours}:${endMinutes}:00`;
 
     return { 
       dow: [ startDOW, endDOW ],
