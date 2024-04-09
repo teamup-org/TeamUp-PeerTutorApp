@@ -35,6 +35,9 @@ from '@mui/icons-material';
 import { useSession } from 'next-auth/react';
 import dayjs from 'dayjs';
 
+import { scheduleToTimes }
+  from '@/app/_lib/utils';
+
 
 const steps = ['General Info', 'Transcript', 'Submit Registration','Tutor Preferences'];
 
@@ -356,12 +359,116 @@ function TutorCardPage(props: any) {
 
 }
 
+import FullCalendar from '@fullcalendar/react';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import { EventInput }
+  from '@fullcalendar/core/index.js';
+
+import type { DateSelectArg, EventClickArg, EventDropArg, EventAddArg } 
+  from '@fullcalendar/core/index.js';
+
+
+function TimePreferences(props: any) {
+  const { setTimePreferences } = props;
+
+  const scheduleRef = React.useRef<FullCalendar | null>(null);
+  var selectedEvent: EventClickArg;
+
+  const Day: { [key: string]: number } = { 
+    "sunday": 0, 
+    "monday": 1, 
+    "tuesday": 2, 
+    "wednesday": 3, 
+    "thursday": 4, 
+    "friday": 5, 
+    "saturday": 6 
+  };
+
+  const userEmail = useSession()?.data?.user?.email;
+  const { data: tutor } = TableFetch<TutorQuery>("tutor", [userEmail], `email_contains=${userEmail}`);
+  const [events, setEvents] = React.useState<EventInput[]>();
+
+  React.useEffect(() => {
+    setEvents(tutor?.data[0].timePreferences.map<EventInput>((time) => (
+      {
+        startTime: time.startTimeString,
+        endTime: time.endTimeString,
+        daysOfWeek: [ Day[time.weekdayName] ],
+      }
+    )));
+  }, [tutor]);
+
+  const handleEventRemove = () => {
+    if (selectedEvent) selectedEvent.event.remove();
+  };
+
+  const handleEventSubmit = () => {
+    const timeEvents = scheduleToTimes(scheduleRef);
+    let times: TutorTimePreference[] = [];
+
+    timeEvents?.map((timeSlot, index) => {
+      times.push({tutorEmail: userEmail || '',
+                  weekdayName: timeSlot.dow[0],
+                  startTimeString: timeSlot.time[0],
+                  endTimeString: timeSlot.time[1]})
+    });
+
+    setTimePreferences(times);
+
+  };
+
+  // Callback function after releasing click on date selection
+  const handleDateSelect = (event: DateSelectArg) => {
+    scheduleRef.current?.getApi().addEvent(event);
+    scheduleRef.current?.getApi().unselect();
+  };
+
+  // Callback function after clicking event
+  const handleEventClick = (info: EventClickArg) => {
+    if (selectedEvent) selectedEvent.el.style.outline = "";
+    info.el.style.outline = "2px solid black";
+    selectedEvent = info;
+  };
+
+  return (
+    <FullCalendar
+      ref={scheduleRef}
+      plugins={[ interactionPlugin, dayGridPlugin, timeGridPlugin ]}
+      events={events}
+
+      initialView="timeGridWeek"
+      height="70vh"
+      headerToolbar={{
+        left: 'deleteTime',
+        right: 'submitTimes',
+      }}
+      dayHeaderFormat={{ weekday: 'long' }}
+      customButtons={{
+        deleteTime: {
+          text: 'Remove Selected Time',
+          click: handleEventRemove,
+        },
+        submitTimes: {
+          text: 'Submit Time Preferences',
+          click: handleEventSubmit,
+        }
+      }}
+
+      allDaySlot={false} slotDuration="00:15:00" slotLabelInterval="01:00"
+      unselectAuto={false} editable selectable selectMirror selectOverlap={false} eventOverlap={false}
+      eventClick={handleEventClick} select={handleDateSelect}
+    />
+  );
+}
+
 function CoursePreferences(props: any) {
 
   const { eligibleCourses } = props;
   const { checkedItems, setCheckedItems} = props;
   const { locationPreferences, setLocationPreferences } = props;
-  const { timePreferences, setTimePreferences } = props;
+  const { setTimePreferences } = props;
 
   const { data: session, status } = useSession();
 
@@ -384,22 +491,6 @@ function CoursePreferences(props: any) {
     } else {
       setLocationPreferences([...locationPreferences, location]);
     }
-  };
-
-  const handleDeleteRow = (index: number) => {
-    const updatedTimes = [...timePreferences];
-    updatedTimes.splice(index, 1);
-    setTimePreferences(updatedTimes);
-  };
-
-  const handleTimeChange = (index: number, field: string, value: string) => {
-    const updatedTimes = [...timePreferences];
-    updatedTimes[index][field] = value;
-    setTimePreferences(updatedTimes);
-  };
-
-  const addRow = () => {
-    setTimePreferences([...timePreferences, { day: '', startTime: dayjs(), endTime: dayjs() }]);
   };
 
   return (
@@ -463,70 +554,9 @@ function CoursePreferences(props: any) {
       </div>
   
       <div style={{ marginBottom: '16px' }}>
-        <Typography variant="h6">Add your preferred times</Typography>
+        <Typography variant="h6">Select your time preferences</Typography>
         <Divider />
-        <TableContainer sx={{ maxHeight: '75vh' }}>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableCell>Day</TableCell>
-                <TableCell>Start Time</TableCell>
-                <TableCell>End Time</TableCell>
-                <TableCell>Delete</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {timePreferences.map((time: any, index: any) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <Select
-                      value={time.day}
-                      onChange={(e) => handleTimeChange(index, 'day', e.target.value as string)}
-                    >
-                      <MenuItem value="monday">monday</MenuItem>
-                      <MenuItem value="tuesday">tuesday</MenuItem>
-                      <MenuItem value="wednesday">wednesday</MenuItem>
-                      <MenuItem value="thursday">thursday</MenuItem>
-                      <MenuItem value="friday">friday</MenuItem>
-                      <MenuItem value="saturday">saturday</MenuItem>
-                      <MenuItem value="sunday">sunday</MenuItem>
-                    </Select>
-                  </TableCell>
-                  <TableCell>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={['TimeField']}>
-                        <TimeField
-                          value={time.startTime}
-                          onChange={(newValue) => handleTimeChange(index, 'startTime', newValue || '')}
-                          fullWidth
-                        />
-                      </DemoContainer>
-                    </LocalizationProvider>
-                  </TableCell>
-                  <TableCell>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={['TimeField']}>
-                        <TimeField
-                          value={time.endTime}
-                          onChange={(newValue) => handleTimeChange(index, 'endTime', newValue || '')}
-                          fullWidth
-                        />
-                      </DemoContainer>
-                    </LocalizationProvider>
-                  </TableCell>
-                  <TableCell>
-                    <IconButton onClick={() => handleDeleteRow(index)} aria-label="delete">
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <Button variant="outlined" onClick={addRow} style={{ marginTop: '8px' }}>
-          Add Time
-        </Button>
+        <TimePreferences setTimePreferences={setTimePreferences}/>
       </div>
     </div>
   );
@@ -542,14 +572,12 @@ export default function Registration() {
   const [tuteeRegistered, setTuteeRegistered] = useState(false);   // This will be set to true when registration is submitted
   const [preferencesSet, setPreferencesSet] = useState(false);
   const [tutorRefetched, setTutorRefetched] = useState(false);
-  const [tutorTimesSet, setTutorTimesSet] = useState(false);
   const [transcript, setTranscript] = useState(null);
   const [coursePreferences, setCoursePreferences] = useState<Course[]>();
   const [eligibleCourses, setEligibleCourses] = useState<Course[]  | undefined>(undefined);
   const [checkedItems, setCheckedItems] = useState<{ [index: number]: boolean }>({});
   const [locationPreferences, setLocationPreferences] = useState<LocationType[]>([]);
-  const [timePreferences, setTimePreferences] = useState<TimePreference[]>([]);
-  const [tutorTimePreferences, setTutorTimePreferences] = useState<TutorTime[]>([]);
+  const [timePreferences, setTimePreferences] = useState<TutorTimePreference[]>([]);
 
   const { data: session, status } = useSession();
   const email = session?.user?.email;
@@ -602,24 +630,6 @@ export default function Registration() {
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
-  };
-
-  const convertTimeToString = (time: dayjs.Dayjs) => {
-    const hour = time.hour().toString().padStart(2, '0');
-    const minute = time.minute().toString().padStart(2, '0');
-    
-    // Always set seconds to '00'
-    const second = '00';
-    
-    // Return the formatted time string
-    return `${hour}:${minute}:${second}`;
-  };
-
-  const convertPreferenceToString = (time: TimePreference) => {
-    const start = time['startTime'];
-    const end = time['endTime'];
-
-    return `${convertTimeToString(start)} ${convertTimeToString(end)}`
   };
 
   const handleNext = () => {
@@ -764,44 +774,46 @@ export default function Registration() {
 
   }
 
-  useEffect(() => {
-
-    if (tutorTimesSet) {
-      tutorTimeMutationUpdate.mutate(convertTutorSchedule(timePreferences));
-    }
-
-  }, [tutorTimesSet]);
-
-  const convertTutorSchedule = (tutorTimes: TimePreference[]) => {
-    const formattedSchedule: BackendTimes = {};
-
-    const weekdays = ['monday_time_intervals', 'tuesday_time_intervals', 'wednesday_time_intervals', 'thursday_time_intervals', 'friday_time_intervals', 'saturday_time_intervals', 'sunday_time_intervals'];
-    weekdays.forEach(weekday => {
-        formattedSchedule[weekday] = '';
-    });
-
-    // Iterate through each TutorTime object
-    for (let i = 0; i < tutorTimes.length; i++) {
-        const tutorTime = tutorTimes[i];
-
-        const { day } = tutorTime;
-
-        formattedSchedule[`${day}_time_intervals`] += `${convertPreferenceToString(tutorTime)}, `;
+  function formatTimePreferences(timePreferences: any[]): any {
+    const formattedData: any = {};
+  
+    // Iterate through timePreferences array
+    timePreferences.forEach((timePreference) => {
+      const { tutorEmail, weekdayName, startTimeString, endTimeString } = timePreference;
+  
+      // Check if there's already an entry for the current day
+      if (!formattedData[weekdayName]) {
+        // If not, create an entry for the current day
+        formattedData[weekdayName] = [];
       }
+  
+      // Add the time interval to the corresponding day
+      formattedData[weekdayName].push(`${startTimeString} ${endTimeString}`);
+    });
+  
+    // Create the final object with email and time intervals for each day
+    const result: any = {};
+    timePreferences.forEach((timePreference) => {
+      const { tutorEmail, weekdayName } = timePreference;
+  
+      if (!result.tutor_email) {
+        result.tutor_email = tutorEmail;
+      }
+  
+      if (formattedData[weekdayName]) {
+        if (!result[`${weekdayName}_time_intervals`]) {
+          result[`${weekdayName}_time_intervals`] = formattedData[weekdayName].join(', ');
+        }
+      }
+    });
+  
+    return result;
+  }
 
-    // Return the formatted schedule
-    formattedSchedule['tutor_email'] = session?.user?.email || '';
-    return formattedSchedule;
-};
-
-  async function UpdateTutorPreferences() {
+  function UpdateTutorPreferences() {
 
     const generateCourseString = (courses: Course[]): string => courses.map(course => `${course.majorAbbreviation} ${course.courseNumber} ${course.courseGrade}`).join(", ");
     const generateLocationString = (locations: LocationType[]): string => locations.join(", ");
-
-    timePreferences.map((time: TimePreference) => (
-      setTutorTimePreferences([...tutorTimePreferences, { weekday_name: time['day'], time_intervals: convertPreferenceToString(time), tutor_email: session?.user?.email || ''}])
-    ))
 
     if (coursePreferences && locationPreferences && timePreferences) {
       const tutorPreferences = { 
@@ -811,7 +823,7 @@ export default function Registration() {
       }
 
       tutorMutationUpdate.mutate(tutorPreferences);
-      setTutorTimesSet(true);
+      tutorTimeMutationUpdate.mutate(formatTimePreferences(timePreferences));
     }
 
 
@@ -954,7 +966,7 @@ export default function Registration() {
                               </Step>
                             ))}
                           </Stepper>
-                          <CoursePreferences tutorTimePreferences={tutorTimePreferences} setTutorTimePreferences={setTutorTimePreferences} timePreferences={timePreferences} setTimePreferences={setTimePreferences} locationPreferences={locationPreferences} setLocationPreferences={setLocationPreferences} eligibleCourses={eligibleCourses} checkedItems={checkedItems} setCheckedItems={setCheckedItems}/>
+                          <CoursePreferences setTimePreferences={setTimePreferences} locationPreferences={locationPreferences} setLocationPreferences={setLocationPreferences} eligibleCourses={eligibleCourses} checkedItems={checkedItems} setCheckedItems={setCheckedItems}/>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
                             <Button disabled={true} onClick={handleBack}>
                               Back
