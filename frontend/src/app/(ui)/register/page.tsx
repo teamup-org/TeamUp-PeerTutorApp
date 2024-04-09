@@ -38,6 +38,9 @@ import dayjs from 'dayjs';
 import { scheduleToTimes }
   from '@/app/_lib/utils';
 
+import { scheduleToTimes }
+  from '@/app/_lib/utils';
+
 
 const steps = ['General Info', 'Transcript', 'Submit Registration','Tutor Preferences'];
 
