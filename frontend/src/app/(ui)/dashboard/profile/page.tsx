@@ -112,7 +112,7 @@ function TuteeUpdatePage(props: any) {
               onSave={handleInputChange('lastName')}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <EditableProfileField
               label="Phone Number"
               value={tuteeProfileData.phoneNumber}
@@ -146,7 +146,7 @@ function EligibleCoursesTable(props: any) {
       const file = files[0];
       setTranscript(file);
     } else {
-      console.log("No file selected");
+      setTranscript("");
     }
   };
 
@@ -505,6 +505,7 @@ function ProfilePage() {
   const [tab, setTab] = React.useState(0);
   const [tutorUpdate, setTutorUpdate] = React.useState(false);
   const [alertOpen, setAlertOpen] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState('');
   const [eligibleUpdate, setEligibleUpdate] = React.useState(false);
   const [preferencesUpdate, setPreferencesUpdate] = React.useState(false);
   const [locationUpdate, setLocationUpdate] = React.useState(false);
@@ -621,7 +622,6 @@ function ProfilePage() {
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
-    console.log(tutorProfileData);
   };
 
   const generateLocationString = (locations: { locationName: LocationType; tutorEmail: string; }[]): string => {
@@ -648,12 +648,11 @@ function ProfilePage() {
   
     // Create the final object with email and time intervals for each day
     const result: any = {};
+
+    result.tutor_email = session?.user?.email;
+
     timePreferences.forEach((timePreference) => {
       const { tutorEmail, weekdayName } = timePreference;
-  
-      if (!result.tutor_email) {
-        result.tutor_email = tutorEmail;
-      }
   
       if (formattedData[weekdayName]) {
         if (!result[`${weekdayName}_time_intervals`]) {
@@ -665,12 +664,11 @@ function ProfilePage() {
     return result;
   }
   
-
   const updateTutorTimePreferences = () => {
 
     tutorTimeMutationUpdate.mutate(formatTimePreferences(tutorProfileData.timePreferences), {
       onSuccess: () => {
-        setAlertOpen(true);
+        successfulUpdate();
         tutorRefetch();
       },
     });
@@ -680,58 +678,150 @@ function ProfilePage() {
 
   const updateTutorLocationPreferences = () => {
 
+    setLocationUpdate(false);
+
     const newLocation = {
       email_old: tutorProfileData.email,
       location_preferences_new: generateLocationString(tutorProfileData.locationPreferences)
     }
+
+    if (!newLocation.location_preferences_new) {
+      errorUpdate("Please select at least one location preference");
+      return;
+    }
     
     tutorMutationUpdate.mutate(newLocation, {
       onSuccess: () => {
-        setAlertOpen(true);
+        successfulUpdate();
         tutorRefetch();
       },
     });
-    setLocationUpdate(false);
+    
 
   };
 
   const updateTutorEligbleCourses = () => {
+
+    setEligibleUpdate(false);
 
     const newEligible = {
       email_old: tutorProfileData.email,
       transcript: transcript
     }
 
+    if (!newEligible.transcript) {
+      errorUpdate("Please upload a transcript");
+      return;
+    }
+
     tutorMutationUpdate.mutate(newEligible, {
       onSuccess: () => {
-        setAlertOpen(true);
+        successfulUpdate();
         tutorRefetch();
       },
     });
-    setEligibleUpdate(false);
 
   };
+
+  const successfulUpdate = () => {
+    setAlertOpen(true);
+    setAlertMessage("success");
+  }
+
+  const errorUpdate = (message: string) => {
+    setAlertOpen(true);
+    setAlertMessage(message);
+  }
+
+  const TutorGeneralInfoErrorChecking = (formData: any) => {
+    
+    if (formData.firstName.length > 20) {
+      return "First name must be 20 characters or less.";
+    }
+  
+    // Check lastName length
+    if (formData.lastName.length > 20) {
+        return "Last name must be 20 characters or less.";
+    }
+
+    // Check phoneNumber
+    if (!/^[1-9]\d{9}$/.test(formData.phoneNumber)) {
+        return("Phone number must be 10 digits long and contain only numbers.");
+    }
+
+    // Check payRate
+    const payRateNum = parseFloat(formData.payRate);
+    if (isNaN(payRateNum) || payRateNum < 0 || payRateNum > 1000) {
+        return("Pay rate must be a non-negative number less than $1,000.");
+    }
+
+    // Check title length
+    if (formData.listingTitle.length > 100) {
+      return "Title must be 100 characters or less.";
+    }
+
+    // Check bioText length
+    if (formData.bioText.length > 1000) {
+        return "Bio text must be 1000 characters or less.";
+    }
+
+    return('');
+  }
+
+  const TuteeGeneralInfoErrorChecking = (formData: any) => {
+    
+    if (formData.firstName.length > 20) {
+      return "First name must be 20 characters or less.";
+    }
+  
+    // Check lastName length
+    if (formData.lastName.length > 20) {
+        return "Last name must be 20 characters or less.";
+    }
+
+    // Check phoneNumber
+    if (!/^[1-9]\d{9}$/.test(formData.phoneNumber)) {
+        return("Phone number must be 10 digits long and contain only numbers.");
+    }
+
+    return('');
+  }
 
   const generateCourseString = (courses: Course[]): string => courses.map(course => `${course.majorAbbreviation} ${course.courseNumber} ${course.courseGrade}`).join(", ");
 
   const updateTutorCoursePreferences = () => {
+
+    setPreferencesUpdate(false);
 
     const newPreferences = {
       email_old: tutorProfileData.email,
       course_preferences_new: generateCourseString(tutorProfileData?.coursePreferences)
     }
 
+    if (!newPreferences.course_preferences_new) {
+      errorUpdate("Please select at least one course preference");
+      return;
+    }
+
     tutorMutationUpdate.mutate(newPreferences, {
       onSuccess: () => {
-        setAlertOpen(true);
+        successfulUpdate();
         tutorRefetch();
       },
     });
-    setPreferencesUpdate(false);
 
   };
 
   const updateTutorInformation = () => {
+
+    setTutorUpdate(false);
+
+    // Error Checking
+    const errors = TutorGeneralInfoErrorChecking(tutorProfileData);
+    if (errors) {
+      errorUpdate(errors);
+      return;
+    }
 
     const newTutorInformation = {
       // Unique Key
@@ -747,14 +837,15 @@ function ProfilePage() {
 
     tutorMutationUpdate.mutate(newTutorInformation, {
       onSuccess: () => {
-        setAlertOpen(true);
+        successfulUpdate();
         tutorRefetch();
       },
     });
-    setTutorUpdate(false);
   };
 
   const updateTuteeInformation = () => {
+
+    setTuteeUpdate(false);
 
     const newTuteeInformation = {
       email_old: tuteeProfileData.email,
@@ -766,13 +857,20 @@ function ProfilePage() {
       seniority_name_new: tuteeProfileData.seniorityName
     }
 
+    const error = TuteeGeneralInfoErrorChecking(tuteeProfileData);
+
+    if (error) {
+      errorUpdate(error);
+      return;
+    }
+
     tuteeMutationUpdate.mutate(newTuteeInformation, {
       onSuccess: () => {
-        setAlertOpen(true);
+        successfulUpdate();
         tuteeRefetch();
       },
     });
-    setTuteeUpdate(false);
+    
   };
 
   const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
@@ -894,10 +992,11 @@ function ProfilePage() {
       <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} open={alertOpen} autoHideDuration={5000} onClose={handleAlertClose}>
         <Alert
           onClose={handleAlertClose}
-          severity="success"
+          severity={alertMessage === "success" ? "success" : "error"}
           sx={{ width: '100%' }}
         >
-          {"Profile Successfully Updated"}
+          {alertMessage === "success" ? "Profile Successfully Updated"
+                                      : alertMessage }
         </Alert>
       </Snackbar>
         

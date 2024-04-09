@@ -15,7 +15,7 @@ const tabLabels = ["Register as Peer Tutor", "Register as Tutee"];
 import { 
   Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Paper, InputLabel, MenuItem, Select, SelectChangeEvent,
   OutlinedInput, InputAdornment, Tabs, Tab, Step, Stepper, StepLabel, FormGroup, Checkbox, FormControlLabel, Alert, Skeleton,
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Divider, IconButton
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Divider, IconButton, Snackbar
 } from '@mui/material';
 
 import DeleteIcon 
@@ -543,6 +543,8 @@ export default function Registration() {
   const [preferencesSet, setPreferencesSet] = useState(false);
   const [tutorRefetched, setTutorRefetched] = useState(false);
   const [tutorTimesSet, setTutorTimesSet] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
   const [transcript, setTranscript] = useState(null);
   const [coursePreferences, setCoursePreferences] = useState<Course[]>();
   const [eligibleCourses, setEligibleCourses] = useState<Course[]  | undefined>(undefined);
@@ -622,6 +624,41 @@ export default function Registration() {
     return `${convertTimeToString(start)} ${convertTimeToString(end)}`
   };
 
+  const TutorGeneralInfoErrorChecking = (formData: any) => {
+    
+    if (formData.firstName.length > 20) {
+      return "First name must be 20 characters or less.";
+    }
+  
+    // Check lastName length
+    if (formData.lastName.length > 20) {
+        return "Last name must be 20 characters or less.";
+    }
+
+    // Check phoneNumber
+    if (!/^[1-9]\d{9}$/.test(formData.phoneNumber)) {
+        return("Phone number must be 10 digits long and contain only numbers.");
+    }
+
+    // Check payRate
+    const payRateNum = parseFloat(formData.payRate);
+    if (isNaN(payRateNum) || payRateNum < 0 || payRateNum > 1000) {
+        return("Pay rate must be a non-negative number less than $1,000.");
+    }
+
+    // Check title length
+    if (formData.title.length > 100) {
+      return "Title must be 100 characters or less.";
+    }
+
+    // Check bioText length
+    if (formData.bioText.length > 1000) {
+        return "Bio text must be 1000 characters or less.";
+    }
+
+    return('');
+}
+
   const handleNext = () => {
   
     if (tab == 0) {
@@ -630,7 +667,15 @@ export default function Registration() {
   
         for (const key in peerTutorFormData) {
           if (!(peerTutorFormData as any)[key] || (peerTutorFormData['seniority'] === "All")) {
-            alert("Fill out all fields first before continuing");
+            setAlertOpen(true);
+            setAlertMessage("Fill out all fields first before continuing");
+            return;
+          }
+
+          const errors = TutorGeneralInfoErrorChecking(peerTutorFormData);
+          if (errors) {
+            setAlertOpen(true);
+            setAlertMessage(errors);
             return;
           }
         }
@@ -638,7 +683,8 @@ export default function Registration() {
       else if (activeStep === 1) {
 
         if (!transcript) {
-          alert("Please upload a transcript before proceeding");
+          setAlertOpen(true);
+          setAlertMessage("Please upload a transcript before proceeding");
           return;
         }
   
@@ -712,7 +758,6 @@ export default function Registration() {
   useEffect(() => {
 
     if (tutorMutation.isSuccess) {
-      console.log("transcript added");
       setTutorRegistered(true);
       tutorRefetch();
     }
@@ -816,6 +861,12 @@ export default function Registration() {
 
 
   }
+
+  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === "clickaway") return;
+
+    setAlertOpen(false);
+  };
 
   return (
     <>
@@ -1030,6 +1081,17 @@ export default function Registration() {
         </Box>
       </Paper>
     </Container>
+
+    <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} open={alertOpen} autoHideDuration={5000} onClose={handleAlertClose}>
+        <Alert
+          onClose={handleAlertClose}
+          severity="error"
+          sx={{ width: '100%' }}
+        >
+          {`${alertMessage}`}
+        </Alert>
+      </Snackbar>
+
     </>
   );
 }
