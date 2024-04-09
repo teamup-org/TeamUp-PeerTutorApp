@@ -255,16 +255,6 @@ import type { DateSelectArg, EventClickArg, EventDropArg, EventAddArg }
   from '@fullcalendar/core/index.js';
 
 
-const Day: { [key: string]: number } = { 
-  "sunday": 0, 
-  "monday": 1, 
-  "tuesday": 2, 
-  "wednesday": 3, 
-  "thursday": 4, 
-  "friday": 5, 
-  "saturday": 6 
-};
-
 function TimePreferences(props: any) {
   const { tutorProfileData, setTutorProfileData } = props;
 
@@ -304,6 +294,16 @@ function TimePreferences(props: any) {
 
   const scheduleRef = React.useRef<FullCalendar | null>(null);
   var selectedEvent: EventClickArg;
+
+  const Day: { [key: string]: number } = { 
+    "sunday": 0, 
+    "monday": 1, 
+    "tuesday": 2, 
+    "wednesday": 3, 
+    "thursday": 4, 
+    "friday": 5, 
+    "saturday": 6 
+  };
 
   const userEmail = useSession()?.data?.user?.email;
   const { data: tutor } = TableFetch<TutorQuery>("tutor", [userEmail], `email_contains=${userEmail}`);
