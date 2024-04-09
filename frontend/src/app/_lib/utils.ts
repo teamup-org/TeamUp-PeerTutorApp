@@ -1,6 +1,11 @@
 
 // Define utility functions here
 
+import FullCalendar from "@fullcalendar/react";
+import { EventApi } 
+  from "@fullcalendar/core/index.js";
+
+
 // Takes a string as input and returns a string in Title Case, i.e. "lorem ipsum" -> "Lorem Ipsum"
 export function toTitleCase(sentence: string | null | undefined) {
   if (!sentence) return "";
@@ -49,8 +54,6 @@ export function toAppointmentTime(startDate: Date, endDate: Date) {
 }
 
 export function toAppointmentTimeOnly(startDate: Date, endDate: Date) {
-  const startTime = `${startDate.getHours()}:${startDate.getMinutes().toString().padEnd(2, '0')}`;
-  const endTime = `${endDate.getHours()}:${endDate.getMinutes().toString().padEnd(2, '0')}`;
   const interval = `${toTime(startDate)} - ${toTime(endDate)}`
 
   return `${interval}`;
@@ -70,4 +73,29 @@ export function toDate(day: Date) {
   const year = day.getFullYear();
 
   return `${month}/${date}/${year}`;
+}
+
+export function scheduleToTimes(schedule: React.RefObject<FullCalendar>) {
+  const scheduleEvents = schedule.current?.getApi().getEvents();
+  
+  return scheduleEvents?.map((event: EventApi) => {
+    const start = event.start;
+    const end = event.end;
+
+    const startDOW = start?.getDay();
+    const endDOW = end?.getDay();
+
+    const startHours = start?.getHours().toString().padStart(2, '0');
+    const startMinutes = start?.getMinutes().toString().padStart(2, '0');
+    const endHours = end?.getHours().toString().padStart(2, '0');
+    const endMinutes = end?.getMinutes().toString().padStart(2, '0');
+
+    const startTime = `${startHours}:${startMinutes}`;
+    const endTime = `${endHours}:${endMinutes}`;
+
+    return { 
+      dow: [ startDOW, endDOW ],
+      time: [ startTime, endTime ], 
+    };
+  });
 }

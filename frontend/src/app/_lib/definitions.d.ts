@@ -9,8 +9,9 @@ from "@mui/icons-material";
 import dayjs, { Dayjs } from 'dayjs';
 
 
-// Must declare global to access types without import, IF importing. Imports flag file as React module and prevent global scoping by default.
+// Must declareglobal to access types without import, IF importing. Imports flag file as React module and prevent global scoping by default.
 declare global {
+  
   // Custom Hyperlink type, useful for passing custom links to app-bar component as shown in /dashboard layout.tsx
   type Link = {
     name: string,
