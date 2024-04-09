@@ -1,8 +1,10 @@
 package xyz.tamutheo.databaseAPI.tutor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceMapper;
 import xyz.tamutheo.databaseAPI.tutorCoursePreference.TutorCoursePreferenceModel;
 import xyz.tamutheo.databaseAPI.tutorEligibleCourse.TutorEligibleCourseMapper;
@@ -177,6 +179,12 @@ public class TutorService {
 
     public void update(TutorModel tutorModelOld, TutorModel tutorModelNew, MultipartFile transcript) {
         if (transcript != null) {
+            // check if transcript is invalid
+            Boolean isValidTranscript = this.tutorEligibleCourseService.isValidTranscript(transcript, tutorModelOld);
+            if (!isValidTranscript) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "Invalid transcript.");
+            }
             this.tutorEligibleCourseService.create(tutorModelOld.getEmail(), transcript);
         }
         if (tutorModelNew.getCoursePreferences() != null) {

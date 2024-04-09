@@ -6,6 +6,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.tamutheo.databaseAPI.tutor.TutorModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -123,6 +124,23 @@ public class TutorEligibleCourseService {
             System.out.println(e);
         }
         return null;
+    }
+
+    public Boolean isValidTranscript (MultipartFile file, TutorModel tutorModel) {
+        try {
+            PDDocument document = Loader.loadPDF(file.getBytes());
+            PDFTextStripper stripper = new PDFTextStripper();
+            String text = stripper.getText(document);
+            document.close();
+            Boolean containsFirstName = text.toLowerCase().contains(tutorModel.getFirstName().toLowerCase());
+            Boolean containsLastName = text.toLowerCase().contains(tutorModel.getLastName().toLowerCase());
+            if (containsFirstName && containsLastName) {
+                return true;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return false;
     }
 
     public void create(String tutorEmail, MultipartFile file) {

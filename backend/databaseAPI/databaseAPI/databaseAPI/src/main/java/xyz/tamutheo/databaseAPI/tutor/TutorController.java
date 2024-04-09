@@ -145,6 +145,8 @@ public class TutorController {
 //    @PutMapping(value = {"", "/"})
     @RequestMapping(value = {"/update"})
     public void update(@RequestParam(name = "email_old") String emailOld,
+                       @RequestParam(name = "first_name_old", required = false) String firstNameOld,
+                       @RequestParam(name = "last_name_old", required = false) String lastNameOld,
                        @RequestParam(name = "active_status_name_new", required = false) String activeStatusNameNew,
                        @RequestParam(name = "bio_text_new", required = false) String bioTextNew,
                        @RequestParam(name = "transcript", required = false) MultipartFile transcript,
@@ -194,6 +196,8 @@ public class TutorController {
         }
         TutorModel tutorModelOld = TutorModel.builder()
                 .email(emailOld)
+                .firstName(firstNameOld)
+                .lastName(lastNameOld)
                 .build();
         TutorModel tutorModelNew = TutorModel.builder()
                 .activeStatusName(activeStatusNameNew)
