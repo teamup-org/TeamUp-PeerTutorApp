@@ -256,41 +256,7 @@ import type { DateSelectArg, EventClickArg, EventDropArg, EventAddArg }
 
 
 function TimePreferences(props: any) {
-  const { tutorProfileData, setTutorProfileData } = props;
-
-  const handleTimeChange = (index: number, field: string, value: string) => {
-    const updatedTimes = [...tutorProfileData.timePreferences];
-    if (field == 'weekdayName') {
-      updatedTimes[index] = {
-        ...updatedTimes[index],
-        [field]: `${value}`
-      };
-    } else {
-      updatedTimes[index] = {
-        ...updatedTimes[index],
-        [field]: `${value}:00`
-      };
-    }
-    setTutorProfileData({ ...tutorProfileData, timePreferences: updatedTimes});
-  };
-
-  const addRow = () => {
-    setTutorProfileData({
-      ...tutorProfileData,
-      timePreferences: [
-        ...tutorProfileData.timePreferences,
-        { weekdayName: '', startTimeString: '', endTimeString: '', tutorEmail: '' }
-      ]
-    });
-  };
-
-  const handleDeleteRow = (index: number) => {
-    const updatedTimes = [...tutorProfileData.timePreferences];
-    updatedTimes.splice(index, 1);
-    setTutorProfileData({ ...tutorProfileData, timePreferences: updatedTimes });
-  };
-  
-  /////////////////////////////////////////////////
+  const { tutorProfileData, setTutorProfileData, setTimeUpdate } = props;
 
   const scheduleRef = React.useRef<FullCalendar | null>(null);
   var selectedEvent: EventClickArg;
@@ -324,7 +290,23 @@ function TimePreferences(props: any) {
   };
 
   const handleEventSubmit = () => {
-    console.log(scheduleToTimes(scheduleRef));
+    const timeEvents = scheduleToTimes(scheduleRef);
+    let times: TutorTimePreference[] = [];
+
+    timeEvents?.map((timeSlot, index) => {
+      times.push({tutorEmail: tutorProfileData.email,
+                            weekdayName: timeSlot.dow[0],
+                            startTimeString: timeSlot.time[0],
+                            endTimeString: timeSlot.time[1]})
+    });
+
+    setTutorProfileData({
+      ...tutorProfileData,
+      timePreferences: times
+    });
+
+    setTimeUpdate(true);
+
   };
 
   // Callback function after releasing click on date selection
@@ -369,79 +351,6 @@ function TimePreferences(props: any) {
       eventClick={handleEventClick} select={handleDateSelect}
     />
   );
-
-/*
-  return (
-    <div style={{ marginBottom: '16px' }}>
-        <TableContainer sx={{ maxHeight: '75vh' }}>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableCell>Day</TableCell>
-                <TableCell>Start Time</TableCell>
-                <TableCell>End Time</TableCell>
-                <TableCell>Delete</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {tutorProfileData.timePreferences.map((timePreference: any, index: any) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <Select
-                      value={timePreference.weekdayName}
-                      onChange={(e) => handleTimeChange(index, 'weekdayName', e.target.value as string)}
-                    >
-                      <MenuItem value="monday">monday</MenuItem>
-                      <MenuItem value="tuesday">tuesday</MenuItem>
-                      <MenuItem value="wednesday">wednesday</MenuItem>
-                      <MenuItem value="thursday">thursday</MenuItem>
-                      <MenuItem value="friday">friday</MenuItem>
-                      <MenuItem value="saturday">saturday</MenuItem>
-                      <MenuItem value="sunday">sunday</MenuItem>
-                    </Select>
-                  </TableCell>
-                  <TableCell>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={['TimeField']}>
-                      <TimeField
-                        value={dayjs(timePreference.startTimeString, 'HH:mm')}
-                        onChange={(newValue) => handleTimeChange(index, 'startTimeString', newValue ? newValue.format('HH:mm') : '')}
-                        fullWidth
-                      />
-                      </DemoContainer>
-                    </LocalizationProvider>
-                  </TableCell>
-                  <TableCell>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={['TimeField']}>
-                        <TimeField
-                          value={dayjs(timePreference.endTimeString, 'HH:mm')}
-                          onChange={(newValue) => handleTimeChange(index, 'endTimeString', newValue ? newValue.format('HH:mm') : '')}
-                          fullWidth
-                        />
-                      </DemoContainer>
-                    </LocalizationProvider>
-                  </TableCell>
-                  <TableCell>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['TimeField']}>
-                      <IconButton onClick={() => handleDeleteRow(index)} aria-label="delete">
-                        <DeleteIcon />
-                      </IconButton>
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <Button variant="outlined" onClick={addRow} style={{ marginTop: '8px' }}>
-          Add Time
-        </Button>
-      </div>
-  ); */
-
 }
 
 function TutorUpdatePage(props: any) {
@@ -465,10 +374,6 @@ function TutorUpdatePage(props: any) {
 
   const handleLocationPreferencesUpdate = () => {
     setLocationUpdate(true);
-  }
-
-  const handleTimePreferencesUpdate = () => {
-    setTimeUpdate(true);
   }
 
   return (
@@ -576,10 +481,7 @@ function TutorUpdatePage(props: any) {
             Update your Time Preferences Here!!
           </Typography>
           <Divider style={{ marginBottom: '20px' }} />
-          <TimePreferences tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData}  />
-          <Button variant="contained" color="primary" onClick={handleTimePreferencesUpdate}>
-            Update My Time Preferences!
-          </Button>
+          <TimePreferences setTimeUpdate={setTimeUpdate} tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData}  />
         </Stack>
       </Paper>
     </Stack>
