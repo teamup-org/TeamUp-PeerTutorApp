@@ -195,7 +195,7 @@ function TuteeForm(props: any) {
   
   const [seniority, setSeniority] = React.useState('');
 
-  const { setTuteeRegistered } = props;
+  const { setTuteeRegistered, setAlertOpen, setAlertMessage } = props;
   
   const changeSeniority = (event: SelectChangeEvent) => {
     setSeniority(event.target.value as string);
@@ -207,7 +207,26 @@ function TuteeForm(props: any) {
 
   // Form submission -----------------------------------------------------
 
-  const { mutate } = useTuteeMutation();
+  const tuteeMutationUpdate = TablePush("/tutee");
+
+  const TuteeGeneralInfoErrorChecking = (formData: any) => {
+      
+    if (formData.first_name.length > 20) {
+      return "First name must be 20 characters or less.";
+    }
+
+    // Check lastName length
+    if (formData.last_name.length > 20) {
+        return "Last name must be 20 characters or less.";
+    }
+
+    // Check phoneNumber
+    if (!/^[1-9]\d{9}$/.test(formData.phone_number)) {
+        return("Phone number must be 10 digits long and contain only numbers.");
+    }
+
+    return('');
+  }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -221,10 +240,19 @@ function TuteeForm(props: any) {
       major_abbreviation: formData.get('major') as string,
       picture_url: session?.user?.image as string
     };
-    
-    mutate(registrationData);
 
-    setTuteeRegistered(true);
+    const error = TuteeGeneralInfoErrorChecking(registrationData);
+    if (error) {
+      setAlertOpen(true);
+      setAlertMessage(error);
+      return;
+    }
+    
+    tuteeMutationUpdate.mutate(registrationData, {
+      onSuccess: () => {
+        setTuteeRegistered(true);
+      }
+    });
 
   };
 
@@ -657,7 +685,7 @@ export default function Registration() {
     }
 
     return('');
-}
+  }
 
   const handleNext = () => {
   
@@ -1057,7 +1085,7 @@ export default function Registration() {
                 else if (tuteeResult && tuteeResult?.length === 0 && !tuteeRegistered) {
                   return (
                     <>
-                      <TuteeForm tuteeRegistered={tuteeRegistered} setTuteeRegistered={setTuteeRegistered}/>
+                      <TuteeForm setAlertOpen={setAlertOpen} setAlertMessage={setAlertMessage} setTuteeRegistered={setTuteeRegistered}/>
                     </>
                   )
                 }
