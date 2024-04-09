@@ -6,29 +6,14 @@ import * as React from 'react';
 import { useSession }
   from 'next-auth/react';
 
-import { Stack, Skeleton, TextField, Grid, Button, Typography, Divider, Avatar, Paper, Link, Tab, Tabs, Snackbar,
-  Alert, Table, TableContainer, TableHead, TableRow, TableBody, TableCell, Checkbox, MenuItem, Select, IconButton } 
+import { Stack, Skeleton, TextField, Grid, Button, Typography, Divider, Avatar, Paper, Tab, Tabs, Snackbar,
+  Alert, Table, TableContainer, TableHead, TableRow, TableBody, TableCell, Checkbox, } 
   from '@mui/material';
-
-import DeleteIcon 
-  from '@mui/icons-material/Delete';
-
-import { DemoContainer } 
-  from '@mui/x-date-pickers/internals/demo';
-
-import { LocalizationProvider } 
-  from '@mui/x-date-pickers/LocalizationProvider';
-
-import { AdapterDayjs }  
-  from '@mui/x-date-pickers/AdapterDayjs';
-
-import { TimeField } 
-  from '@mui/x-date-pickers/TimeField';
 
 import { TableFetch, TablePush }
   from '@/app/_lib/data';
-
-import dayjs from 'dayjs';
+import { scheduleToTimes }
+  from '@/app/_lib/utils';
 
 
 const tabLabels = ["Peer Tutor Profile Information", "Tutee Profile Information"];
@@ -263,9 +248,22 @@ import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-
-import type { DateSelectArg, EventClickArg, EventDropArg } 
+import { EventInput }
   from '@fullcalendar/core/index.js';
+
+import type { DateSelectArg, EventClickArg, EventDropArg, EventAddArg } 
+  from '@fullcalendar/core/index.js';
+
+
+const Day: { [key: string]: number } = { 
+  "sunday": 0, 
+  "monday": 1, 
+  "tuesday": 2, 
+  "wednesday": 3, 
+  "thursday": 4, 
+  "friday": 5, 
+  "saturday": 6 
+};
 
 function TimePreferences(props: any) {
   const { tutorProfileData, setTutorProfileData } = props;
@@ -304,41 +302,50 @@ function TimePreferences(props: any) {
   
   /////////////////////////////////////////////////
 
-  const scheduleRef = React.useRef<FullCalendar>(null);
-  const [selectedEvent, setSelectedEvent] = React.useState<EventClickArg>();
+  const scheduleRef = React.useRef<FullCalendar | null>(null);
+  var selectedEvent: EventClickArg;
+
+  const userEmail = useSession()?.data?.user?.email;
+  const { data: tutor } = TableFetch<TutorQuery>("tutor", [userEmail], `email_contains=${userEmail}`);
+  const [events, setEvents] = React.useState<EventInput[]>();
+
+  React.useEffect(() => {
+    setEvents(tutor?.data[0].timePreferences.map<EventInput>((time) => (
+      {
+        startTime: time.startTimeString,
+        endTime: time.endTimeString,
+        daysOfWeek: [ Day[time.weekdayName] ],
+      }
+    )));
+  }, [tutor]);
 
   const handleEventRemove = () => {
-    selectedEvent?.event.remove();
+    if (selectedEvent) selectedEvent.event.remove();
   };
 
   const handleEventSubmit = () => {
-    
+    console.log(scheduleToTimes(scheduleRef));
   };
 
   // Callback function after releasing click on date selection
   const handleDateSelect = (event: DateSelectArg) => {
-    event.view.calendar.unselect();
-    event.view.calendar.addEvent(event);
-  };
-
-  const handleEventDrop = (event: EventDropArg) => {
-    if (selectedEvent) selectedEvent.el.style.outline = "";
-    event.el.style.outline = "2px solid black";
-    setSelectedEvent(event);
+    scheduleRef.current?.getApi().addEvent(event);
+    scheduleRef.current?.getApi().unselect();
   };
 
   // Callback function after clicking event
   const handleEventClick = (info: EventClickArg) => {
     if (selectedEvent) selectedEvent.el.style.outline = "";
     info.el.style.outline = "2px solid black";
-    setSelectedEvent(info);
+    selectedEvent = info;
   };
 
   return (
     <FullCalendar
       ref={scheduleRef}
       plugins={[ interactionPlugin, dayGridPlugin, timeGridPlugin ]}
-      
+      events={events}
+
       initialView="timeGridWeek"
       height="70vh"
       headerToolbar={{
@@ -359,8 +366,7 @@ function TimePreferences(props: any) {
 
       allDaySlot={false} slotDuration="00:15:00" slotLabelInterval="01:00"
       unselectAuto={false} editable selectable selectMirror selectOverlap={false} eventOverlap={false}
-      eventClick={handleEventClick} eventDrop={handleEventDrop}
-      select={handleDateSelect}
+      eventClick={handleEventClick} select={handleDateSelect}
     />
   );
 
