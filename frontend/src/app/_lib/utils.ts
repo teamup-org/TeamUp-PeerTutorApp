@@ -78,12 +78,14 @@ export function toDate(day: Date) {
 export function scheduleToTimes(schedule: React.RefObject<FullCalendar>) {
   const scheduleEvents = schedule.current?.getApi().getEvents();
   
+  enum Day { "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" };
+
   return scheduleEvents?.map((event: EventApi) => {
     const start = event.start;
     const end = event.end;
 
-    const startDOW = start?.getDay();
-    const endDOW = end?.getDay();
+    const startDOW = start ? Day[start?.getDay()] : "";
+    const endDOW = end ? Day[end?.getDay()] : "";
 
     const startHours = start?.getHours().toString().padStart(2, '0');
     const startMinutes = start?.getMinutes().toString().padStart(2, '0');
