@@ -431,7 +431,13 @@ function TimePreferences(props: any) {
     if (selectedEvent) selectedEvent.event.remove();
   };
 
-  const handleEventSubmit = () => {
+  // Callback function after releasing click on date selection
+  const handleDateSelect = (event: DateSelectArg) => {
+    scheduleRef.current?.getApi().addEvent(event);
+    scheduleRef.current?.getApi().unselect();
+  };
+
+  const handleEventSet = (event: any) => {
     const timeEvents = scheduleToTimes(scheduleRef);
     let times: TutorTimePreference[] = [];
 
@@ -443,13 +449,6 @@ function TimePreferences(props: any) {
     });
 
     setTimePreferences(times);
-
-  };
-
-  // Callback function after releasing click on date selection
-  const handleDateSelect = (event: DateSelectArg) => {
-    scheduleRef.current?.getApi().addEvent(event);
-    scheduleRef.current?.getApi().unselect();
   };
 
   // Callback function after clicking event
@@ -468,24 +467,19 @@ function TimePreferences(props: any) {
       initialView="timeGridWeek"
       height="70vh"
       headerToolbar={{
-        left: 'deleteTime',
-        right: 'submitTimes',
+        left: 'deleteTime'
       }}
       dayHeaderFormat={{ weekday: 'long' }}
       customButtons={{
         deleteTime: {
           text: 'Remove Selected Time',
           click: handleEventRemove,
-        },
-        submitTimes: {
-          text: 'Submit Time Preferences',
-          click: handleEventSubmit,
         }
       }}
 
       allDaySlot={false} slotDuration="00:15:00" slotLabelInterval="01:00"
       unselectAuto={false} editable selectable selectMirror selectOverlap={false} eventOverlap={false}
-      eventClick={handleEventClick} select={handleDateSelect}
+      eventClick={handleEventClick} select={handleDateSelect} eventsSet={handleEventSet}
     />
   );
 }
