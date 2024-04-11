@@ -440,11 +440,6 @@ function TutorUpdatePage(props: any) {
                   value={tutorProfileData.majorAbbreviation || null} onChange={handleMajorChange} 
                   renderInput={ (params) => <TextField {...params} label="Major" /> } 
                 />
-                {/* <EditableProfileField
-                  label="Major Abbreviation"
-                  value={tutorProfileData.majorAbbreviation}
-                  onSave={handleInputChange('majorAbbreviation')}
-                /> */}
               </Grid>
               <Grid item xs={6}>
                 <EditableProfileField
@@ -483,10 +478,10 @@ function TutorUpdatePage(props: any) {
             <Divider style={{ marginBottom: '20px' }} />
             <EligibleCoursesTable setTranscript={setTranscript} tutorProfileData={tutorProfileData} setTutorProfileData={setTutorProfileData} />
             <Button variant="contained" color="primary" onClick={handleEligibleCoursesUpdate}>
-              Update My Eligible Courses!
+              Update My Transcript!
             </Button>
             <Button variant="contained" color="primary" onClick={handleCoursePreferencesUpdate}>
-              Update My Course Preferences!
+              Update My Preferred Courses!
             </Button>
           </Stack>
         </Paper>
