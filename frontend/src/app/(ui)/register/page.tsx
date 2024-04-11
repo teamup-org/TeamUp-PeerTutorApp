@@ -15,7 +15,7 @@ const tabLabels = ["Register as Peer Tutor", "Register as Tutee"];
 import { 
   Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, Paper, InputLabel, MenuItem, Select, SelectChangeEvent,
   OutlinedInput, InputAdornment, Tabs, Tab, Step, Stepper, StepLabel, FormGroup, Checkbox, FormControlLabel, Alert, Skeleton,
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Divider, IconButton, Snackbar
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Divider, IconButton, Snackbar, CircularProgress, Autocomplete
 } from '@mui/material';
 
 import DeleteIcon 
@@ -47,7 +47,24 @@ const settings: Link[] = [
 
 function PeerTutorForm(props: any) {
 
-  const { formData, setFormData } = props;  
+  const { formData, setFormData } = props; 
+  
+  // Fetch all majors
+  const { data: majorData, isLoading: majorIsLoading } = 
+    TableFetch<Major[]>("major", []);
+
+  const populateMajorOptions = () => {
+    if (majorData) 
+      return (
+        majorData.map( 
+          (major: Major) => (major.majorAbbreviation.toUpperCase()) 
+        )
+      ).sort( 
+        (a, b) => (-b.localeCompare(a)) 
+      );
+
+    return [];
+  };
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -62,8 +79,12 @@ function PeerTutorForm(props: any) {
     { value: 'Graduate', label: 'Graduate Student' }
   ];
   
-  const changeSeniority = (event: SelectChangeEvent) => {
+  const handleSeniorityChange = (event: SelectChangeEvent) => {
     setFormData((prevData: any) => ({ ...prevData, ['seniority']: event.target.value as Seniority}));
+  };
+
+  const handleMajorChange = (event: any, value: string | null) => {
+    setFormData((prevData: any) => ({ ...prevData, major: value }));
   };
 
 
@@ -129,7 +150,7 @@ function PeerTutorForm(props: any) {
           id="seniority"
           value={formData.seniority}
           label="seniority"
-          onChange={changeSeniority}
+          onChange={handleSeniorityChange}
           defaultValue=''
         >
           {seniorityOptions.map(option => (
@@ -153,16 +174,15 @@ function PeerTutorForm(props: any) {
         </Grid>
 
         <Grid item xs={12}>
-          <TextField
-            required
-            fullWidth
-            id="major"
-            label="Undergraduate Department (4 letter abbreviation)"
-            name="major"
-            autoComplete="major"
-            value={formData.major}
-            onChange={handleChange}
-          />
+          <Autocomplete 
+              fullWidth loading={majorIsLoading}
+              id="autocomplete-major" 
+              options={populateMajorOptions()} 
+              isOptionEqualToValue={ (option, value) => (option === value) }
+              groupBy={ (option) => option[0] }
+              value={formData.major || null} onChange={handleMajorChange} 
+              renderInput={ (params) => <TextField {...params} label="Major" /> } 
+            />
         </Grid>
 
         <Grid item xs={12}>
@@ -395,6 +415,7 @@ import { EventInput }
 
 import type { DateSelectArg, EventClickArg, EventDropArg, EventAddArg } 
   from '@fullcalendar/core/index.js';
+import { AxiosError } from 'axios';
 
 
 function TimePreferences(props: any) {
@@ -529,7 +550,7 @@ function CoursePreferences(props: any) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {eligibleCourses.map((item: any, index: number) => (
+              {eligibleCourses?.map((item: any, index: number) => (
                 <TableRow key={index}>
                   <TableCell>{`${item.majorAbbreviation} ${item.courseNumber}`}</TableCell>
                   <TableCell>{item.courseGrade}</TableCell>
@@ -593,8 +614,10 @@ export default function Registration() {
   const [tuteeRegistered, setTuteeRegistered] = useState(false);   // This will be set to true when registration is submitted
   const [preferencesSet, setPreferencesSet] = useState(false);
   const [tutorRefetched, setTutorRefetched] = useState(false);
-  const [tutorTimesSet, setTutorTimesSet] = useState(false);
+  const [locationSet, setLocationSet] = useState(false);
+  const [timeSet, setTimeSet] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
+  const [loadingWheelOpen, setLoadingWheelOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [transcript, setTranscript] = useState(null);
   const [coursePreferences, setCoursePreferences] = useState<Course[]>();
@@ -656,24 +679,6 @@ export default function Registration() {
     setTab(newValue);
   };
 
-  const convertTimeToString = (time: dayjs.Dayjs) => {
-    const hour = time.hour().toString().padStart(2, '0');
-    const minute = time.minute().toString().padStart(2, '0');
-    
-    // Always set seconds to '00'
-    const second = '00';
-    
-    // Return the formatted time string
-    return `${hour}:${minute}:${second}`;
-  };
-
-  const convertPreferenceToString = (time: TimePreference) => {
-    const start = time['startTime'];
-    const end = time['endTime'];
-
-    return `${convertTimeToString(start)} ${convertTimeToString(end)}`
-  };
-
   const TutorGeneralInfoErrorChecking = (formData: any) => {
     
     if (formData.firstName.length > 20) {
@@ -692,7 +697,7 @@ export default function Registration() {
 
     // Check payRate
     const payRateNum = parseFloat(formData.payRate);
-    if (isNaN(payRateNum) || payRateNum < 0 || payRateNum > 1000) {
+    if (isNaN(formData.payRate) || payRateNum < 0 || payRateNum > 1000) {
         return("Pay rate must be a non-negative number less than $1,000.");
     }
 
@@ -707,7 +712,17 @@ export default function Registration() {
     }
 
     return('');
-  }
+  };
+
+  const successAlert = () => {
+    setAlertOpen(true);
+    setAlertMessage("");
+  };
+
+  const errorAlert = (message: string) => {
+    setAlertOpen(true);
+    setAlertMessage(message);
+  };
 
   const handleNext = () => {
   
@@ -717,15 +732,13 @@ export default function Registration() {
   
         for (const key in peerTutorFormData) {
           if (!(peerTutorFormData as any)[key] || (peerTutorFormData['seniority'] === "All")) {
-            setAlertOpen(true);
-            setAlertMessage("Fill out all fields first before continuing");
+            errorAlert("Fill out all fields first before continuing")
             return;
           }
 
           const errors = TutorGeneralInfoErrorChecking(peerTutorFormData);
           if (errors) {
-            setAlertOpen(true);
-            setAlertMessage(errors);
+            errorAlert(errors)
             return;
           }
         }
@@ -733,8 +746,7 @@ export default function Registration() {
       else if (activeStep === 1) {
 
         if (!transcript) {
-          setAlertOpen(true);
-          setAlertMessage("Please upload a transcript before proceeding");
+          errorAlert("Please upload a transcript before proceeding")
           return;
         }
   
@@ -769,12 +781,14 @@ export default function Registration() {
       else if (activeStep === 2) {
 
         TutorCreation();
+        return;
 
       }
       else if (activeStep === 3) {
 
         const newVariables = eligibleCourses?.filter((_: any, index: any) => checkedItems[index]);
         setCoursePreferences(newVariables);
+        return;
 
       }
     }
@@ -784,35 +798,14 @@ export default function Registration() {
 
   // Checks to see if account is already registered --------------------------------------------------------------
 
-  const {data: tutorResult, isSuccess: tutorFinished, refetch: tutorRefetch } = TableFetch<TutorQuery>("tutor", [], `email_contains=${session?.user?.email}`);
-  const {data: tuteeResult, isSuccess: tuteeFinished, refetch: tuteeRefetch } = TableFetch<TuteeQuery>("tutee", [], `email_contains=${session?.user?.email}`);
+  const {data: tutorResult, isSuccess: tutorFinished, refetch: tutorRefetch } = TableFetch<TutorQuery>("tutor", [session], `email_contains=${session?.user?.email}`);
+  const {data: tuteeResult, isSuccess: tuteeFinished, refetch: tuteeRefetch } = TableFetch<TuteeQuery>("tutee", [session], `email_contains=${session?.user?.email}`);
 
   // Operations for database insertions ---------------------------------------------------------------------------
 
   const tutorMutation = TablePush("/tutor");
   const tutorMutationUpdate = TablePush("/tutor/update");
   const tutorTimeMutationUpdate = TablePush("/tutor_time_preference/update");
-
-  useEffect(() => {
-
-    if (!tutorRegistered) {
-      tutorRefetch();
-    }
-
-    if (!tuteeRegistered) {
-      tuteeRefetch();
-    }
-
-  }, [session?.user?.email]);
-
-  useEffect(() => {
-
-    if (tutorMutation.isSuccess) {
-      setTutorRegistered(true);
-      tutorRefetch();
-    }
-
-  }, [tutorMutation.isSuccess]);
 
   useEffect(() => {
 
@@ -837,7 +830,7 @@ export default function Registration() {
     }
   }, [eligibleCourses])
 
-  async function TutorCreation() {
+  const TutorCreation = () => {
 
     const tutorCreateData = {
       active_status_name: 'active',
@@ -855,7 +848,28 @@ export default function Registration() {
 
     }
 
-    tutorMutation.mutate(tutorCreateData);
+    setLoadingWheelOpen(true);
+
+    tutorMutation.mutate(tutorCreateData, {
+      onSuccess: () => {
+        successAlert();
+        setLoadingWheelOpen(false);
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        setTutorRegistered(true);
+        tutorRefetch();
+      },
+      onError: (error: any) => {
+        if (error.response.data.message === 'Invalid transcript.') {
+          errorAlert("Transcript Upload Failed, please re-upload transcript on Profile Page");
+          setLoadingWheelOpen(false);
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+          setTutorRegistered(true);
+          tutorRefetch();
+          return;
+        }
+        errorAlert("Tutor Creation Failed, please review your info and try again");
+      }
+    });
 
   }
 
@@ -907,12 +921,38 @@ export default function Registration() {
         location_preferences_new: generateLocationString(locationPreferences)
       }
 
-      tutorMutationUpdate.mutate(tutorPreferences);
-      tutorTimeMutationUpdate.mutate(formatTimePreferences(timePreferences));
+      setLoadingWheelOpen(true);
+
+      tutorMutationUpdate.mutate(tutorPreferences, {
+        onError: (error: any) => {
+          errorAlert("Failed to set tutor preferences, please refresh and try on Profile Page");
+          setLoadingWheelOpen(false);
+        },
+        onSuccess: () => {
+          setLocationSet(true);
+        }
+      });
+
+      tutorTimeMutationUpdate.mutate(formatTimePreferences(timePreferences), {
+        onError: (error: any) => {
+          errorAlert("Failed to set tutor preferences, please refresh and try on Profile Page");
+          setLoadingWheelOpen(false);
+        },
+        onSuccess: () => {
+          setTimeSet(true);
+        }
+      });
+    }
+  }
+
+  // When both requests go through for setting tutor preferences, advance page and unset the loading wheel
+  useEffect(() => {
+    if (locationSet && timeSet) {
+      setLoadingWheelOpen(false);
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
 
-
-  }
+  },[locationSet, timeSet])
 
   const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === "clickaway") return;
@@ -1046,27 +1086,25 @@ export default function Registration() {
 
                   // Course Preferences Page
                   else if (activeStep === 3) {
-                    if (tutorRegistered && tutorRefetched) {
-                      if (!preferencesSet) {
-                        return (
-                          <>
-                          <Stepper activeStep={activeStep} alternativeLabel>
-                            {steps.map((label) => (
-                              <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                              </Step>
-                            ))}
-                          </Stepper>
-                          <CoursePreferences setTimePreferences={setTimePreferences} locationPreferences={locationPreferences} setLocationPreferences={setLocationPreferences} eligibleCourses={eligibleCourses} checkedItems={checkedItems} setCheckedItems={setCheckedItems}/>
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
-                            <Button disabled={true} onClick={handleBack}>
-                              Back
-                            </Button>
-                            <Button onClick={handleNext}>Next</Button>
-                          </Box>
-                          </>
-                        );
-                      }
+                    if (tutorResult?.data?.length > 0) {
+                      return (
+                        <>
+                        <Stepper activeStep={activeStep} alternativeLabel>
+                          {steps.map((label) => (
+                            <Step key={label}>
+                              <StepLabel>{label}</StepLabel>
+                            </Step>
+                          ))}
+                        </Stepper>
+                        <CoursePreferences setTimePreferences={setTimePreferences} locationPreferences={locationPreferences} setLocationPreferences={setLocationPreferences} eligibleCourses={eligibleCourses} checkedItems={checkedItems} setCheckedItems={setCheckedItems}/>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '16px' }}>
+                          <Button disabled={true} onClick={handleBack}>
+                            Back
+                          </Button>
+                          <Button onClick={handleNext}>Next</Button>
+                        </Box>
+                        </>
+                      );
                     }
                     else {
                       return (
@@ -1078,16 +1116,14 @@ export default function Registration() {
                   }
 
                   else if (activeStep === 4) {
-                    if (preferencesSet) {
-                      return (
-                      <>
-                      <Typography align="center"> Thank you for Registering as a Peer Tutor! </Typography>
-                      <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
-                        <Typography align="center"> Click Here to See Your Profile! </Typography>
-                      </Button>
-                      </>
-                      );
-                    }
+                    return (
+                    <>
+                    <Typography align="center"> Thank you for Registering as a Peer Tutor! </Typography>
+                    <Button key={'hello'} component={Link} href={'/dashboard/profile'} fullWidth sx={{ p: 3 }}> 
+                      <Typography align="center"> Click Here to See Your Profile! </Typography>
+                    </Button>
+                    </>
+                    );
                   }
                 }
               }
@@ -1137,12 +1173,15 @@ export default function Registration() {
     <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} open={alertOpen} autoHideDuration={5000} onClose={handleAlertClose}>
         <Alert
           onClose={handleAlertClose}
-          severity="error"
+          severity={(alertMessage === '') ? "success" : "error"}
           sx={{ width: '100%' }}
         >
-          {`${alertMessage}`}
+          {(alertMessage === '') ? 'Tutor Creation Successful' : `${alertMessage}`}
         </Alert>
       </Snackbar>
+    <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right'}} open={!alertOpen && loadingWheelOpen}>
+      <CircularProgress />
+    </Snackbar>
 
     </>
   );

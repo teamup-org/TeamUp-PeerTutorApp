@@ -7,7 +7,7 @@ import { useSession }
   from 'next-auth/react';
 
 import { Stack, Skeleton, TextField, Grid, Button, Typography, Divider, Avatar, Paper, Tab, Tabs, Snackbar,
-  Alert, Table, TableContainer, TableHead, TableRow, TableBody, TableCell, Checkbox, } 
+  Alert, Table, TableContainer, TableHead, TableRow, TableBody, TableCell, Checkbox, Autocomplete } 
   from '@mui/material';
 
 import { TableFetch, TablePush }
@@ -356,6 +356,23 @@ function TimePreferences(props: any) {
 function TutorUpdatePage(props: any) {
   const { setTimeUpdate, setLocationUpdate, setTranscript, tutorProfileData, setTutorProfileData, setTutorUpdate, setEligibleUpdate, setPreferencesUpdate } = props;
 
+  // Database Fetching
+  const { data: majorData, isLoading: majorIsLoading } = 
+    TableFetch<Major[]>("major", []);
+
+  const populateMajorOptions = () => {
+    if (majorData) 
+      return (
+        majorData.map( 
+          (major: Major) => (major.majorAbbreviation.toUpperCase()) 
+        )
+      ).sort( 
+        (a, b) => (-b.localeCompare(a)) 
+      );
+
+    return [];
+  };
+
   const handleInputChange = (field: keyof typeof tutorProfileData) => (newValue: string | number) => {
     setTutorProfileData({ ...tutorProfileData, [field]: newValue });
   };
@@ -375,6 +392,10 @@ function TutorUpdatePage(props: any) {
   const handleLocationPreferencesUpdate = () => {
     setLocationUpdate(true);
   }
+
+  const handleMajorChange = (event: any, value: string | null) => {
+    setTutorProfileData({...tutorProfileData, majorAbbreviation: value});
+  };
 
   return (
     <Stack direction="column" spacing={4} m={4}>
@@ -410,11 +431,20 @@ function TutorUpdatePage(props: any) {
                 />
               </Grid>
               <Grid item xs={6}>
-                <EditableProfileField
+                <Autocomplete 
+                  fullWidth loading={majorIsLoading}
+                  id="autocomplete-major" 
+                  options={populateMajorOptions()} 
+                  isOptionEqualToValue={ (option, value) => (option === value) }
+                  groupBy={ (option) => option[0] }
+                  value={tutorProfileData.majorAbbreviation || null} onChange={handleMajorChange} 
+                  renderInput={ (params) => <TextField {...params} label="Major" /> } 
+                />
+                {/* <EditableProfileField
                   label="Major Abbreviation"
                   value={tutorProfileData.majorAbbreviation}
                   onSave={handleInputChange('majorAbbreviation')}
-                />
+                /> */}
               </Grid>
               <Grid item xs={6}>
                 <EditableProfileField
@@ -660,6 +690,10 @@ function ProfilePage() {
         successfulUpdate();
         tutorRefetch();
       },
+      onError: (error: Error) => {
+        errorUpdate("Failed to update time preferences, please try again later");
+        return;
+      }
     });
     setTimeUpdate(false);
 
@@ -684,6 +718,10 @@ function ProfilePage() {
         successfulUpdate();
         tutorRefetch();
       },
+      onError: (error: Error) => {
+        errorUpdate("Failed to update location preferences, please try again later");
+        return;
+      }
     });
     
 
@@ -708,6 +746,11 @@ function ProfilePage() {
         successfulUpdate();
         tutorRefetch();
       },
+      onError: (error: Error) => {
+        console.log(error);
+        errorUpdate("Transcript failed to upload. Make sure profile name matches transcript name");
+        return;
+      }
     });
 
   };
@@ -797,6 +840,10 @@ function ProfilePage() {
         successfulUpdate();
         tutorRefetch();
       },
+      onError: (error: Error) => {
+        errorUpdate("Failed to update course preferences, please try again later");
+        return;
+      }
     });
 
   };
@@ -829,6 +876,10 @@ function ProfilePage() {
         successfulUpdate();
         tutorRefetch();
       },
+      onError: (error: Error) => {
+        errorUpdate("Failed to update tutor general information, please try again later");
+        return;
+      }
     });
   };
 
@@ -858,6 +909,10 @@ function ProfilePage() {
         successfulUpdate();
         tuteeRefetch();
       },
+      onError: (error: Error) => {
+        errorUpdate("Failed to update tutee information, please try again later");
+        return;
+      }
     });
     
   };
