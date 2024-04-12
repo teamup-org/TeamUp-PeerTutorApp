@@ -101,3 +101,57 @@ export function scheduleToTimes(schedule: React.RefObject<FullCalendar>) {
     };
   });
 }
+
+export function TutorInfoChecking (formData: any) {
+    
+  if (formData.firstName.length > 20) {
+    return "First name must be 20 characters or less.";
+  }
+
+  // Check lastName length
+  if (formData.lastName.length > 20) {
+      return "Last name must be 20 characters or less.";
+  }
+
+  // Check phoneNumber
+  if (!/^[1-9]\d{9}$/.test(formData.phoneNumber)) {
+      return("Phone number must be 10 digits long and contain only numbers.");
+  }
+
+  // Check payRate
+  const payRateNum = parseFloat(formData.payRate);
+  if (isNaN(payRateNum) || payRateNum < 0 || payRateNum > 1000) {
+      return("Pay rate must be a non-negative number less than $1,000.");
+  }
+
+  // Check title length
+  if (formData.listingTitle.length > 100) {
+    return "Title must be 100 characters or less.";
+  }
+
+  // Check bioText length
+  if (formData.bioText.length > 1000) {
+      return "Bio text must be 1000 characters or less.";
+  }
+
+  return('');
+}
+
+export function TuteeGeneralInfoErrorChecking (formData: any) {
+    
+  if (formData.firstName.length > 20) {
+    return "First name must be 20 characters or less.";
+  }
+
+  // Check lastName length
+  if (formData.lastName.length > 20) {
+      return "Last name must be 20 characters or less.";
+  }
+
+  // Check phoneNumber
+  if (!/^[1-9]\d{9}$/.test(formData.phoneNumber)) {
+      return("Phone number must be 10 digits long and contain only numbers.");
+  }
+
+  return('');
+}

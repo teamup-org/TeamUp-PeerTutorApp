@@ -1180,7 +1180,7 @@ export default function Registration() {
         </Alert>
       </Snackbar>
     <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right'}} open={!alertOpen && loadingWheelOpen}>
-      <CircularProgress />
+    <CircularProgress color='secondary' size='10vh'/>
     </Snackbar>
 
     </>
