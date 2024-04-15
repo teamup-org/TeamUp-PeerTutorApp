@@ -464,7 +464,7 @@ function TimePreferences(props: any) {
   const [events, setEvents] = React.useState<EventInput[]>();
 
   React.useEffect(() => {
-    setEvents(tutor?.data[0].timePreferences.map<EventInput>((time) => (
+    setEvents(tutor?.data[0]?.timePreferences.map<EventInput>((time) => (
       {
         startTime: time.startTimeString,
         endTime: time.endTimeString,
