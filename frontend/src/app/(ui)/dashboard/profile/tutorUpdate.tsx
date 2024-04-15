@@ -6,10 +6,7 @@ import EditIcon
 import { Stack, Paper, Typography, Divider, Button, IconButton}
     from '@mui/material'
 
-import { TableFetch }
-    from '@/app/_lib/data';
-
-import TutorGeneralInfoPopup
+import GeneralInfoPopup
     from './popup';
   
 import TutorInformation
@@ -54,7 +51,7 @@ export default function TutorUpdatePage(props: any) {
         <Stack direction="row" spacing={2} mx={2}>
           <Paper variant="outlined">
   
-          <TutorGeneralInfoPopup setSave={setSave} data={data} setData={setData} open={popupOpen} setOpen={setPopupOpen} />
+          <GeneralInfoPopup setSave={setTutorUpdate} data={data} setData={setData} open={popupOpen} setOpen={setPopupOpen} tutor={true} />
   
             <Stack direction="column" p={2} style={{ flexGrow: 1 }}>
   

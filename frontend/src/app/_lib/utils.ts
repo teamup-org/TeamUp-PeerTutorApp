@@ -137,7 +137,7 @@ export function TutorInfoChecking (formData: any) {
   return('');
 }
 
-export function TuteeGeneralInfoErrorChecking (formData: any) {
+export function TuteeInfoChecking (formData: any) {
     
   if (formData.firstName.length > 20) {
     return "First name must be 20 characters or less.";

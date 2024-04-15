@@ -3,11 +3,17 @@ import * as React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { TransitionProps }
   from '@mui/material/transitions';
-import { Dialog, DialogTitle, DialogContent, Divider, Container, IconButton, Stack, Slide, SlideProps, Typography, Button }
+import { Dialog, DialogTitle, DialogContent, Divider, Container, IconButton, Stack, Slide, SlideProps, Typography, Button, Snackbar, Alert }
   from '@mui/material';
+
+import { TutorInfoChecking, TuteeInfoChecking }
+  from '@/app/_lib/utils'
 
 import EditTutorInfo 
   from './editTutorInfo';
+
+import EditTuteeInfo 
+  from './editTuteeInfo';
 
 
 const Transition = React.forwardRef(function Transition(
@@ -19,9 +25,13 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
     });
 
-export default function TutorGeneralInfoPopup(props: any) {
+export default function GeneralInfoPopup(props: any) {
 
-    const { open, setOpen, data, setData, setSave } = props;
+    const { open, setOpen, data, setData, setSave, tutor } = props;
+
+    // State Variables for error checking
+    const [alertOpen, setAlertOpen] = React.useState(false);
+    const [alertMessage, setAlertMessage] = React.useState('');
 
     const title = `${data.firstName} ${data.lastName}'s General Information`
 
@@ -29,12 +39,36 @@ export default function TutorGeneralInfoPopup(props: any) {
         setOpen(false);
       };
 
-    const handleSave = () => {
-        setSave(true);
-        setOpen(false);
+    const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === "clickaway") return;
+    
+        setAlertOpen(false);
     };
 
+    const handleSave = () => {
+
+        let error = '';
+
+        if (tutor) {
+          error = TutorInfoChecking(data);
+        }
+        else {
+          error = TuteeInfoChecking(data);
+        }
+
+        if (error) {
+          setAlertMessage(error);
+          setAlertOpen(true);
+        }
+        else {
+          setSave(true);
+          setOpen(false);
+        }
+    };
+
+
     return (
+        <>
         <Dialog 
             open={open} onClose={handleDialogClose}
             TransitionComponent={Transition} transitionDuration={250}  
@@ -54,7 +88,8 @@ export default function TutorGeneralInfoPopup(props: any) {
             <DialogContent dividers sx={{ pt: 4, pb: 8 }}>
             <Container maxWidth="xl" sx={{ minWidth: 800 }}>
                 <Stack direction="column" spacing={4} alignItems="center" divider={ <Divider orientation="horizontal" flexItem /> }>
-                    <EditTutorInfo data={data} setData={setData} />
+                    {tutor ? <EditTutorInfo data={data} setData={setData} /> : 
+                             <EditTuteeInfo data={data} setData={setData} />}
                     <Button onClick={handleSave}>
                         <Typography color='secondary'> Save </Typography>
                     </Button>
@@ -63,5 +98,16 @@ export default function TutorGeneralInfoPopup(props: any) {
             </DialogContent>
 
         </Dialog>
+
+        <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} open={alertOpen} autoHideDuration={5000} onClose={handleAlertClose}>
+        <Alert
+        onClose={handleAlertClose}
+        severity="error"
+        sx={{ width: '100%' }}
+        >
+        {alertMessage}
+        </Alert>
+        </Snackbar>
+        </>
     );
 }

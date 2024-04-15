@@ -50,7 +50,7 @@ export function CoursePreferences (props: any) {
   
     return (
       <div >
-          <TableContainer sx={{ maxHeight: '75vh' }}>
+          <TableContainer sx={{ maxHeight: '25em' }}>
             <Table stickyHeader>
               <TableHead>
                 <TableRow>

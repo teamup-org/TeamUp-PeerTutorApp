@@ -5,17 +5,17 @@ import * as React from 'react';
 import { useSession }
   from 'next-auth/react';
 
-import { Stack, Skeleton, TextField, Grid, Button, Typography, Divider, Avatar, Paper, Tab, Tabs, Snackbar,
-  Alert, Table, TableContainer, TableHead, TableRow, TableBody, TableCell, Checkbox, Autocomplete, CircularProgress, IconButton } 
+import { Skeleton, Button, Typography, Avatar, Paper, Tab, Tabs, Snackbar, Alert, CircularProgress } 
   from '@mui/material';
 
 import { TableFetch, TablePush }
   from '@/app/_lib/data';
-import { scheduleToTimes }
-  from '@/app/_lib/utils';
 
 import TutorUpdatePage
   from './tutorUpdate'
+
+import TuteeUpdatePage
+  from './tuteeUpdate'
 
 const tabLabels = ["Peer Tutor Profile Information", "Tutee Profile Information"];
 
@@ -55,109 +55,6 @@ const initialTuteeProfileData: Tutee = {
   pictureUrl: ""
 };
 
-interface EditableProfileFieldProps {
-  label: string;
-  value: string | number;
-  onSave: (newValue: string | number) => void;
-}
-
-function EditableProfileField({ label, value, onSave }: EditableProfileFieldProps) {
-  const [editMode, setEditMode] = React.useState(false);
-  const [editedValue, setEditedValue] = React.useState(value);
-
-  // Update editedValue when value changes
-  React.useEffect(() => {
-    setEditedValue(value);
-  }, [value]);
-
-  const handleToggleEditMode = () => {
-    setEditMode(!editMode);
-  };
-
-  const handleSave = () => {
-    onSave(editedValue);
-    setEditMode(false);
-  };
-
-  return (
-    <>
-      <TextField
-        label={label}
-        value={editedValue}
-        onChange={(event) => setEditedValue(event.target.value)}
-        InputProps={{
-          readOnly: !editMode,
-        }}
-        fullWidth
-        multiline={label === "Bio Text"}
-        rows={label === "Bio Text" ? 4 : 1}
-      />
-      {editMode ? (
-        <Button onClick={handleSave}>Save</Button>
-      ) : (
-        <Button onClick={handleToggleEditMode}>Edit</Button>
-      )}
-    </>
-  );
-}
-
-function TuteeUpdatePage(props: any) {
-  const { tuteeProfileData, setTuteeProfileData, setTuteeUpdate } = props;
-
-  const handleInputChange = (field: keyof typeof tuteeProfileData) => (newValue: string | number) => {
-    setTuteeProfileData({ ...tuteeProfileData, [field]: newValue });
-  };
-
-  const handleGeneralUpdate = () => {
-    setTuteeUpdate(true);
-  };
-
-  return (
-    <Paper variant="outlined" style={{ width: '80%', margin: 'auto', marginTop: 50, display: 'flex' }}>
-      <Stack direction="column" style={{ padding: '20px' }}>
-        <Typography variant="h6" gutterBottom>
-          General Info
-        </Typography>
-        <Divider style={{ marginBottom: '20px' }} />
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <EditableProfileField
-              label="First Name"
-              value={tuteeProfileData.firstName}
-              onSave={handleInputChange('firstName')}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <EditableProfileField
-              label="Last Name"
-              value={tuteeProfileData.lastName}
-              onSave={handleInputChange('lastName')}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <EditableProfileField
-              label="Phone Number"
-              value={tuteeProfileData.phoneNumber}
-              onSave={handleInputChange('phoneNumber')}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <EditableProfileField
-              label="Major Abbreviation"
-              value={tuteeProfileData.majorAbbreviation}
-              onSave={handleInputChange('majorAbbreviation')}
-            />
-          </Grid>
-        </Grid>
-        <Button variant="contained" color="primary" onClick={handleGeneralUpdate}>
-          Update My General Information!
-        </Button>
-      </Stack>
-    </Paper>
-);
-
-}
-
 // All Database modifications are made in this component
 function ProfilePage() {
   const { data: session, status } = useSession();
@@ -167,15 +64,16 @@ function ProfilePage() {
   const [loadingWheelOpen, setLoadingWheelOpen] = React.useState(false);
   const [alertOpen, setAlertOpen] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState('');
-  const [popupOpen, setPopupOpen] = React.useState(false);
+  const [tutorPopupOpen, setTutorPopupOpen] = React.useState(false);
+  const [tuteePopupOpen, setTuteePopupOpen] = React.useState(false);
 
   // State Variable to tracking if database should be modified
   const [tutorUpdate, setTutorUpdate] = React.useState(false);
+  const [tuteeUpdate, setTuteeUpdate] = React.useState(false);
   const [transcriptUpdate, setTranscriptUpdate] = React.useState(false);
   const [coursePreferencesUpdate, setCoursePreferencesUpdate] = React.useState(false);
   const [locationPreferencesUpdate, setLocationPreferencesUpdate] = React.useState(false);
   const [timePreferencesUpdate, setTimePreferencesUpdate] = React.useState(false);
-  const [tuteeUpdate, setTuteeUpdate] = React.useState(false);
 
   // State variables for storing tutor and tutee data
   const [tutorProfileData, setTutorProfileData] = React.useState<Tutor>(initialTutorProfileData);
@@ -285,6 +183,8 @@ function ProfilePage() {
 
   const UpdateTutorInformation = () => {
 
+    setTutorUpdate(false);
+
     const newTutorInformation = {
       // Unique Key
       email_old: tutorProfileData.email,
@@ -317,7 +217,9 @@ function ProfilePage() {
 
     const newEligible = {
       email_old: tutorProfileData.email,
-      transcript: transcript
+      transcript: transcript,
+      first_name_old: tutorProfileData.firstName,
+      last_name_old: tutorProfileData.lastName
     }
 
     if (!newEligible.transcript) {
@@ -502,7 +404,7 @@ function ProfilePage() {
             if (tutorData?.data?.length > 0) {
               return (
                 <>
-                <TutorUpdatePage popupOpen={popupOpen} setPopupOpen={setPopupOpen} setTranscript={setTranscript} setTimeUpdate={setTimePreferencesUpdate} setLocationUpdate={setLocationPreferencesUpdate} setEligibleUpdate={setTranscriptUpdate} setCoursePreferencesUpdate={setCoursePreferencesUpdate} setTutorUpdate={setTutorUpdate} data={tutorProfileData} setData={setTutorProfileData} />
+                <TutorUpdatePage popupOpen={tutorPopupOpen} setPopupOpen={setTutorPopupOpen} setTranscript={setTranscript} setTimeUpdate={setTimePreferencesUpdate} setLocationUpdate={setLocationPreferencesUpdate} setEligibleUpdate={setTranscriptUpdate} setCoursePreferencesUpdate={setCoursePreferencesUpdate} setTutorUpdate={setTutorUpdate} data={tutorProfileData} setData={setTutorProfileData} />
                 </>
               );
             }
@@ -548,7 +450,7 @@ function ProfilePage() {
             if (tuteeData?.length > 0) {
               return (
                 <>
-                <TuteeUpdatePage setTuteeUpdate={setTuteeUpdate} tuteeProfileData={tuteeProfileData} setTuteeProfileData={setTuteeProfileData} />
+                <TuteeUpdatePage popupOpen={tuteePopupOpen} setPopupOpen={setTuteePopupOpen} setTuteeUpdate={setTuteeUpdate} data={tuteeProfileData} setData={setTuteeProfileData} />
                 </>
               );
             }

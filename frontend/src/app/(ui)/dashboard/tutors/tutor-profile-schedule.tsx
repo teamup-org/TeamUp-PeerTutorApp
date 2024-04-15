@@ -182,6 +182,7 @@ export default function TutorProfileSchedule({ tutor } : { tutor: Tutor | null }
           initialView="timeGridWeek"
           validRange={ function(currentDate){
             return {
+              start: currentDate,
               end: new Date(currentDate).setMonth(currentDate.getMonth() + 1),
             };
           }}

@@ -1,12 +1,12 @@
 import * as React from 'react'
 
-import { TextField, Grid, Autocomplete, Button, Typography } 
+import { TextField, Grid, Autocomplete } 
     from '@mui/material';
 
 import { TableFetch }
     from '@/app/_lib/data';
 
-export default function EditTutorInfo(props: any) {
+export default function EditTuteeInfo(props: any) {
 
     const { data, setData } = props;
 
@@ -54,7 +54,7 @@ export default function EditTutorInfo(props: any) {
                 fullWidth
             />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
             <TextField
                 label="Phone Number"
                 value={data.phoneNumber}
@@ -71,34 +71,6 @@ export default function EditTutorInfo(props: any) {
                 groupBy={ (option) => option[0] }
                 value={data.majorAbbreviation || null} onChange={handleMajorChange} 
                 renderInput={ (params) => <TextField {...params} label="Major" /> } 
-            />
-            </Grid>
-            <Grid item xs={6}>
-            <TextField
-                label="Pay Rate"
-                value={data.payRate}
-                onChange={(e) => {handleInputChange('payRate', e.target.value)}}
-                fullWidth
-            />
-            </Grid>
-            <Grid item xs={12}>
-            <TextField
-                label="Listing Title"
-                value={data.listingTitle}
-                onChange={(e) => {handleInputChange('listingTitle', e.target.value)}}
-                fullWidth
-            />
-            </Grid>
-            <Grid item xs={12}>
-            <TextField
-                label="Bio Text"
-                value={data.bioText}
-                InputProps={{
-                    readOnly: true,
-                }}
-                multiline
-                rows={4}
-                fullWidth
             />
             </Grid>
         </Grid>

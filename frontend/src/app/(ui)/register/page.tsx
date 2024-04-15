@@ -216,6 +216,7 @@ function TuteeForm(props: any) {
   ];
   
   const [seniority, setSeniority] = React.useState('');
+  const [majorAbbreviation, setMajorAbbreviation] = React.useState('');
 
   const { setTuteeRegistered, setAlertOpen, setAlertMessage } = props;
   
@@ -230,6 +231,9 @@ function TuteeForm(props: any) {
   // Form submission -----------------------------------------------------
 
   const tuteeMutationUpdate = TablePush("/tutee");
+  
+  const { data: majorData, isLoading: majorIsLoading } = 
+    TableFetch<Major[]>("major", []);
 
   const TuteeGeneralInfoErrorChecking = (formData: any) => {
       
@@ -250,6 +254,19 @@ function TuteeForm(props: any) {
     return('');
   }
 
+  const populateMajorOptions = () => {
+    if (majorData) 
+        return (
+        majorData.map( 
+            (major: Major) => (major.majorAbbreviation.toUpperCase()) 
+        )
+        ).sort( 
+        (a, b) => (-b.localeCompare(a)) 
+        );
+
+    return [];
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -259,7 +276,7 @@ function TuteeForm(props: any) {
       phone_number: formData.get('phoneNumber') as string,
       seniority_name: seniority,
       email: session?.user?.email as string,
-      major_abbreviation: formData.get('major') as string,
+      major_abbreviation: majorAbbreviation,
       picture_url: session?.user?.image as string
     };
 
@@ -277,6 +294,10 @@ function TuteeForm(props: any) {
     });
 
   };
+
+  const handleMajorChange = (event: any, value: string | null) => {
+    setMajorAbbreviation(value || "");
+};
 
   return (
     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
@@ -331,13 +352,17 @@ function TuteeForm(props: any) {
         </Select>
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6} md={6}>
           <InputLabel htmlFor="major">Undergrad Major (4 letters)</InputLabel>
-          <OutlinedInput
-            name="major"
-            id="major"
-            label="Major"
-          />
+          <Autocomplete 
+                fullWidth loading={majorIsLoading}
+                id="autocomplete-major" 
+                options={populateMajorOptions()} 
+                isOptionEqualToValue={ (option, value) => (option === value) }
+                groupBy={ (option) => option[0] }
+                value={majorAbbreviation} onChange={handleMajorChange}
+                renderInput={ (params) => <TextField {...params} label="Major" /> } 
+            />
         </Grid>
 
       </Grid>

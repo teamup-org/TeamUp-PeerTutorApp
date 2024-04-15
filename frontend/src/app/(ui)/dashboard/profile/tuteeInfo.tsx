@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Grid, TextField }
     from '@mui/material';
 
-export default function TutorInformation(props: any) {
+export default function TuteeInformation(props: any) {
 
   const { data } = props;
 
@@ -30,7 +30,7 @@ export default function TutorInformation(props: any) {
           fullWidth
         />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={6}>
         <TextField
           label="Phone Number"
           value={data.phoneNumber}
@@ -40,45 +40,13 @@ export default function TutorInformation(props: any) {
           fullWidth
         />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={6}>
         <TextField
           label="Major"
           value={data.majorAbbreviation}
           InputProps={{
             readOnly: true,
           }}
-          fullWidth
-        />
-        </Grid>
-        <Grid item xs={4}>
-        <TextField
-          label="Pay Rate"
-          value={data.payRate}
-          InputProps={{
-            readOnly: true,
-          }}
-          fullWidth
-        />
-        </Grid>
-        <Grid item xs={12}>
-        <TextField
-          label="Listing Title"
-          value={data.listingTitle}
-          InputProps={{
-            readOnly: true,
-          }}
-          fullWidth
-        />
-        </Grid>
-        <Grid item xs={12} sm={12}>
-        <TextField
-          label="Bio Text"
-          value={data.bioText}
-          InputProps={{
-            readOnly: true,
-          }}
-          multiline
-          rows={4}
           fullWidth
         />
         </Grid>
