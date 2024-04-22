@@ -9,105 +9,117 @@ import { Dialog, DialogTitle, DialogContent, Divider, Container, IconButton, Sta
 import { TutorInfoChecking, TuteeInfoChecking }
   from '@/app/_lib/utils'
 
-import EditTutorInfo 
+import  { EditTutorInfo } 
   from './editTutorInfo';
 
-import EditTuteeInfo 
+import { EditTuteeInfo } 
   from './editTuteeInfo';
 
-
+/**
+ * Transition animation for popup
+ */
 const Transition = React.forwardRef(function Transition(
-    props: TransitionProps & {
-        children: React.ReactElement<any, any>;
-    },
-    ref: React.Ref<unknown>,
-    ) {
-    return <Slide direction="up" ref={ref} {...props} />;
-    });
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>,
+  ) {
+  return <Slide direction="up" ref={ref} {...props} />;
+  });
 
-export default function GeneralInfoPopup(props: any) {
+/**
+ * Component for displaying popup after 'edit' button is pressed on Profile Page
+ * @param props 
+ * @returns 
+ */  
+export function GeneralInfoPopup(
+  {open, setOpen, data, setData, setSave, tutor}
+  :
+  {open: boolean, setOpen: Function, data: Tutor | Tutee, setData: Function, setSave: Function, tutor: boolean}
+) {
 
-    const { open, setOpen, data, setData, setSave, tutor } = props;
+  // State Variables for error checking
+  const [alertOpen, setAlertOpen] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState('');
 
-    // State Variables for error checking
-    const [alertOpen, setAlertOpen] = React.useState(false);
-    const [alertMessage, setAlertMessage] = React.useState('');
+  const title = `${data.firstName} ${data.lastName}'s General Information`
 
-    const title = `${data.firstName} ${data.lastName}'s General Information`
-
-    const handleDialogClose = () => {
-        setOpen(false);
-      };
-
-    const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === "clickaway") return;
-    
-        setAlertOpen(false);
+  const handleDialogClose = () => {
+    setOpen(false);
     };
 
-    const handleSave = () => {
+  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === "clickaway") return;
+  
+    setAlertOpen(false);
+  };
 
-        let error = '';
+  /**
+   * Error checks the input and saves new data to Tutor/Tutee variable
+   */
+  const handleSave = () => {
 
-        if (tutor) {
-          error = TutorInfoChecking(data);
-        }
-        else {
-          error = TuteeInfoChecking(data);
-        }
+    let error = '';
 
-        if (error) {
-          setAlertMessage(error);
-          setAlertOpen(true);
-        }
-        else {
-          setSave(true);
-          setOpen(false);
-        }
-    };
+    if (tutor) {
+      error = TutorInfoChecking(data);
+    }
+    else {
+      error = TuteeInfoChecking(data);
+    }
+
+    if (error) {
+      setAlertMessage(error);
+      setAlertOpen(true);
+    }
+    else {
+      setSave(true);
+      setOpen(false);
+    }
+  };
 
 
-    return (
-        <>
-        <Dialog 
-            open={open} onClose={handleDialogClose}
-            TransitionComponent={Transition} transitionDuration={250}  
-            aria-describedby="alert-tutor-profile"
-            maxWidth="xl" fullWidth
-        >
-            <DialogTitle sx={{ p: 1 }}> 
-            <Stack direction="row" spacing={2}>
-                <IconButton aria-label="close" onClick={handleDialogClose}> 
-                <CloseIcon />
-                </IconButton>
+  return (
+    <>
+    <Dialog 
+      open={open} onClose={handleDialogClose}
+      TransitionComponent={Transition} transitionDuration={250}  
+      aria-describedby="alert-tutor-profile"
+      maxWidth="xl" fullWidth
+    >
+      <DialogTitle sx={{ p: 1 }}> 
+      <Stack direction="row" spacing={2}>
+        <IconButton aria-label="close" onClick={handleDialogClose}> 
+        <CloseIcon />
+        </IconButton>
 
-                <Typography variant="h4" fontWeight="bold"> {title} </Typography>
-            </Stack>
-            </DialogTitle>
-            
-            <DialogContent dividers sx={{ pt: 4, pb: 8 }}>
-            <Container maxWidth="xl" sx={{ minWidth: 800 }}>
-                <Stack direction="column" spacing={4} alignItems="center" divider={ <Divider orientation="horizontal" flexItem /> }>
-                    {tutor ? <EditTutorInfo data={data} setData={setData} /> : 
-                             <EditTuteeInfo data={data} setData={setData} />}
-                    <Button onClick={handleSave}>
-                        <Typography color='secondary'> Save </Typography>
-                    </Button>
-                </Stack>
-            </Container>
-            </DialogContent>
+        <Typography variant="h4" fontWeight="bold"> {title} </Typography>
+      </Stack>
+      </DialogTitle>
+      
+      <DialogContent dividers sx={{ pt: 4, pb: 8 }}>
+      <Container maxWidth="xl" sx={{ minWidth: 800 }}>
+        <Stack direction="column" spacing={4} alignItems="center" divider={ <Divider orientation="horizontal" flexItem /> }>
+          {('listingTitle' in data) ? <EditTutorInfo data={data} setData={setData} /> : 
+               <EditTuteeInfo data={data} setData={setData} />}
+          <Button onClick={handleSave}>
+            <Typography color='secondary'> Save </Typography>
+          </Button>
+        </Stack>
+      </Container>
+      </DialogContent>
 
-        </Dialog>
+    </Dialog>
 
-        <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} open={alertOpen} autoHideDuration={5000} onClose={handleAlertClose}>
-        <Alert
-        onClose={handleAlertClose}
-        severity="error"
-        sx={{ width: '100%' }}
-        >
-        {alertMessage}
-        </Alert>
-        </Snackbar>
-        </>
-    );
+    <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} open={alertOpen} autoHideDuration={5000} onClose={handleAlertClose}>
+    <Alert
+    onClose={handleAlertClose}
+    severity="error"
+    sx={{ width: '100%' }}
+    >
+    {alertMessage}
+    </Alert>
+    </Snackbar>
+    </>
+  );
 }
