@@ -10,23 +10,19 @@ import { Login, HowToReg }
 
 import ResponsiveAppBar from './(ui)/app-bar'
 
-
+/**
+ * links for buttons in app bar
+ */
 const links = [
   {name: 'Login', href: '/login', icon: Login},
   {name: 'Register', href: '/register', icon: HowToReg},
 ];
 
-
+/**
+ * Component for landing page
+ * @returns 
+ */
 export default function LandingPage() {
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
 
   return (
     <>

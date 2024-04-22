@@ -90,7 +90,7 @@ export default function ProfilePage() {
   const [transcript, setTranscript] = React.useState<File>();
 
   /////////////////////////////////////////////////////////////////////////////////////////////
-  //               Database Queries                        //
+  //               Database Queries                                                          //
   /////////////////////////////////////////////////////////////////////////////////////////////
 
   const { data: tutorData, isLoading: tutorIsLoading, isFetching: tutorIsFetching, isSuccess: tutorIsSuccess, refetch: tutorRefetch } = 
@@ -104,7 +104,7 @@ export default function ProfilePage() {
   const tuteeMutationUpdate = TablePush("/tutee/update");
 
   /////////////////////////////////////////////////////////////////////////////////////////////
-  //               Listen for database modifications               //
+  //               Listen for database modifications                                         //
   /////////////////////////////////////////////////////////////////////////////////////////////
 
   React.useEffect(() => {
@@ -139,7 +139,7 @@ export default function ProfilePage() {
   }, [tuteeData]);
 
   /////////////////////////////////////////////////////////////////////////////////////////////
-  //               Helper Functions                        //
+  //               Helper Functions                                                          //
   /////////////////////////////////////////////////////////////////////////////////////////////
 
   /**
@@ -392,7 +392,7 @@ export default function ProfilePage() {
 
   
   /////////////////////////////////////////////////////////////////////////////////////////////
-  //               Button Functions                        //
+  //               Button Functions                                                          //
   /////////////////////////////////////////////////////////////////////////////////////////////
 
   const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
