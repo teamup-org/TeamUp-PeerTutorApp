@@ -98,6 +98,9 @@ declare global {
     numberOfRatings: number
   };
 
+  type TutorWithIndex = Tutor & { [key: string]: any };
+  type TutorKey = keyof Tutor;
+
   // REST API: /tutor
   type TutorQuery = {
     data: Tutor[],

@@ -10,7 +10,7 @@ import axios from "axios";
 // Base URL's to direct backend database queries to
 const development = "http://localhost:8080";            // For use in local development, forwards to a local instance on port 8080, in this case forwarding to Java Sprint Boot
 const deployment = "https://tamutheo.xyz/database_api"; // For use on deployment server, forwards to Spring Boot endpoint 'database-api'
-axios.defaults.baseURL = development;
+axios.defaults.baseURL = deployment;
 axios.defaults.headers['Content-Type'] = 'multipart/form-data';
 
 function objectToQueryString(obj: any) {
