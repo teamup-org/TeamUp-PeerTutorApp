@@ -8,7 +8,7 @@ import { TableFetch }
 
 /**
  * Component for first step of Tutor Registration, General Information Input Form
- * @param {Tutor} data - Stores all registration information for Tutor
+ * @param data - Stores all registration information for Tutor
  * @returns 
  */
 export function TutorInformation(
@@ -16,6 +16,17 @@ export function TutorInformation(
   :
   {data: [Tutor, Function]}
 ) {
+
+  /**
+   * Options for seniority
+   */
+  const seniorityOptions = [
+    { value: 'Freshman', label: 'Freshman' },
+    { value: 'Sophomore', label: 'Sophomore' },
+    { value: 'Junior', label: 'Junior' },
+    { value: 'Senior', label: 'Senior' },
+    { value: 'Graduate', label: 'Graduate Student' }
+  ];
 
   // Fetch all majors from database
   const { data: majorData, isLoading: majorIsLoading } = 
@@ -34,18 +45,14 @@ export function TutorInformation(
     return [];
   };
 
+  ///////////////////////////////////////////////
+  //        functions for input changes        //
+  ///////////////////////////////////////////////
+  
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setData((prevData: any) => ({ ...prevData, [name]: value }));
   };
-
-  const seniorityOptions = [
-    { value: 'Freshman', label: 'Freshman' },
-    { value: 'Sophomore', label: 'Sophomore' },
-    { value: 'Junior', label: 'Junior' },
-    { value: 'Senior', label: 'Senior' },
-    { value: 'Graduate', label: 'Graduate Student' }
-  ];
   
   const handleSeniorityChange = (event: SelectChangeEvent) => {
     setData((prevData: any) => ({ ...prevData, ['seniorityName']: event.target.value as Seniority}));

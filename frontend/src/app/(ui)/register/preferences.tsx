@@ -24,6 +24,11 @@ import type { DateSelectArg, EventClickArg, EventDropArg, EventAddArg }
 import { scheduleToTimes } 
   from '@/app/_lib/utils';
 
+/**
+ * Component for displaying time preferences on registration page
+ * @param data - Tutor Data 
+ * @returns 
+ */
 export function TimePreferences(
   {data : [data, setData]}
   :
@@ -122,6 +127,11 @@ export function TimePreferences(
   );
 }
 
+/**
+ * Component for displaying eligible courses and course preferences on registration page
+ * @param data - Tutor Data 
+ * @returns 
+ */
 export function CoursePreferences(
   {data : [data, setData]}
   :
@@ -181,6 +191,11 @@ export function CoursePreferences(
   
 }
 
+/**
+ * Component for displaying location preferences on registration page
+ * @param data - Tutor Data 
+ * @returns 
+ */
 export function LocationPreferences(
   {data : [data, setData]}
   :

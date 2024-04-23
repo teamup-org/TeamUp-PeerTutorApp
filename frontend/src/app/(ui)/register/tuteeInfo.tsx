@@ -9,6 +9,11 @@ import { Grid, Autocomplete, TextField, Box, InputLabel, Select, MenuItem, Butto
 import { TablePush, TableFetch }
   from '@/app/_lib/data';
 
+/**
+ * Component for displaying Tutee Registration Page
+ * @param data - Tutee Data 
+ * @returns 
+ */
 export function TuteeInformation(
   {data : [data, setData]
   }
@@ -17,7 +22,9 @@ export function TuteeInformation(
   }
 ) {
 
-  // Options for seniority
+  /**
+   * Options for seniority
+   */
   const seniorityOptions = [
     { value: 'freshman', label: 'Freshman' },
     { value: 'sophomore', label: 'Sophomore' },
@@ -43,7 +50,10 @@ export function TuteeInformation(
     return [];
   };
 
-  // Handle change functions
+  /////////////////////////////////////////////
+  //      functions for handling changes     //
+  /////////////////////////////////////////////
+
   const handleSeniorityChange = (event: SelectChangeEvent) => {
     setData((prevData: any) => ({ ...prevData, ['seniorityName']: event.target.value as Seniority}));
   };

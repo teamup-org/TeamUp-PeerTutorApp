@@ -111,45 +111,81 @@ const initialTuteeData: Tutee = {
 };
 
 export default function Registration() {
+  const { data: session, status } = useSession();
 
+  // State variables for tutor and tutee data
+  const [tutor, setTutor] = useState<Tutor>(initialTutorData);
+  const [tutee, setTutee] = useState<Tutee>(initialTuteeData);
+  const [transcript, setTranscript] = useState(null);
+
+  // State variables for controlling what data is being shown on page
+  const [tuteeConfirmation, setTuteeConfirmation] = useState(false);
+  const [registrationProcess, setRegistrationProcess] = useState(false);
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [tab, setTab] = React.useState(0);
+
+  // State variables for alert messages
   const [alertOpen, setAlertOpen] = useState(false);
   const [loadingWheelOpen, setLoadingWheelOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  const [transcript, setTranscript] = useState(null);
-  const [tuteeConfirmation, setTuteeConfirmation] = useState(false);
-  const [registrationProcess, setRegistrationProcess] = useState(false);
 
-  const { data: session, status } = useSession();
+  ////////////////////////////////////////////////////////////
+  //                   Database Functions                   //                                      
+  ////////////////////////////////////////////////////////////
 
-  const [activeStep, setActiveStep] = React.useState(0);
-  
-  const [tab, setTab] = React.useState(0);
+  const {data: tutorResult, isSuccess: tutorFinished, refetch: tutorRefetch } = TableFetch<TutorQuery>("tutor", [session], `email_contains=${session?.user?.email}`);
+  const {data: tuteeResult, isSuccess: tuteeFinished, refetch: tuteeRefetch } = TableFetch<TuteeQuery>("tutee", [session], `email_contains=${session?.user?.email}`);
 
-  const [tutor, setTutor] = useState<Tutor>(initialTutorData);
-  const [tutee, setTutee] = useState<Tutee>(initialTuteeData);
+  const tutorMutation = TablePush("/tutor");
+  const tuteeMutation = TablePush("/tutee");
+  const tutorMutationUpdate = TablePush("/tutor/update");
+  const tutorTimeMutationUpdate = TablePush("/tutor_time_preference/update");
 
-  // Button and Update Functions -------------------------------------------------------------
+  ////////////////////////////////////////////////////////////
+  //                    Alert Functions                     //                                      
+  ////////////////////////////////////////////////////////////
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
-  };
-
+  /**
+   * Sets successful alert message
+   */
   const successAlert = () => {
     setAlertOpen(true);
     setAlertMessage("");
   };
 
+  /**
+   * Sets error alert message
+   * @param message - Alert message to be displayed
+   */
   const errorAlert = (message: string) => {
     setAlertOpen(true);
     setAlertMessage(message);
   };
 
+  ////////////////////////////////////////////////////////////
+  //                     Button Functions                   //                                      
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Handling change between tutor and tutee registration
+   */
+  const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
+    setTab(newValue);
+  };
+
+  /**
+   * Handles back button on tutor registration
+   */
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  /**
+   * Handles next button on tutor registration, only applicable on tutor registration page
+   */
   const handleNext = () => {
   
+    // Progress from general information step
     if (activeStep === 0) {
 
       const requiredFields: TutorKey[] = ['firstName', 'lastName', 'phoneNumber', 'listingTitle', 'payRate', 'majorAbbreviation', 'bioText'];
@@ -171,6 +207,7 @@ export default function Registration() {
       setRegistrationProcess(true);
       
     }
+    // Progress from transcript step
     else if (activeStep === 1) {
 
       if (!transcript) {
@@ -179,12 +216,15 @@ export default function Registration() {
       }
 
     }
+    // Progress from tutor card step
     else if (activeStep === 2) {
 
+      // Creates the tutor in the database, only progress to next step after tutor is created
       TutorCreation();
       return;
 
     }
+    // Progress from preferences step
     else if (activeStep === 3) {
 
       const errors = PreferencesCheck(tutor);
@@ -198,15 +238,26 @@ export default function Registration() {
 
     }
     
+    // Advance registration step
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  // Checks to see if account is already registered --------------------------------------------------------------
+  /**
+   * Alert Message Closing Action
+   */
+  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === "clickaway") return;
 
-  const {data: tutorResult, isSuccess: tutorFinished, refetch: tutorRefetch } = TableFetch<TutorQuery>("tutor", [session], `email_contains=${session?.user?.email}`);
-  const {data: tuteeResult, isSuccess: tuteeFinished, refetch: tuteeRefetch } = TableFetch<TuteeQuery>("tutee", [session], `email_contains=${session?.user?.email}`);
+    setAlertOpen(false);
+  };
 
-  // Updates the tutor variable with the eligible courses
+  ////////////////////////////////////////////////////////////
+  //                 Tutor Updating Functions               //                                      
+  ////////////////////////////////////////////////////////////
+
+  /**
+   *  Updates the tutor variable with the eligible courses
+   */
   React.useEffect(() => {
 
     if (tutorResult) {
@@ -217,7 +268,9 @@ export default function Registration() {
 
   }, [tutorResult]);
 
-  // Updates the tutor variable with email and picture
+  /**
+   *  Updates the tutor variable with email and picture
+   */
   React.useEffect(() => {
     if (session) {
       if (session?.user) {
@@ -226,12 +279,9 @@ export default function Registration() {
     }
   },[session]);
 
-  const tutorMutation = TablePush("/tutor");
-  const tuteeMutation = TablePush("/tutee");
-  const tutorMutationUpdate = TablePush("/tutor/update");
-  const tutorTimeMutationUpdate = TablePush("/tutor_time_preference/update");
-
-  // Creates the tutor in the database
+  /**
+   *  Creates the tutor in the database
+   */
   const TutorCreation = () => {
 
     const tutorCreateData = {
@@ -273,7 +323,9 @@ export default function Registration() {
 
   };
 
-  // Makes sure tutor has selected course, location, and time preferences
+  /**
+   *  Makes sure tutor has selected course, location, and time preferences
+   */
   const PreferencesCheck = (tutor: Tutor) => {
 
     if (tutor.coursePreferences.length === 0 && tutor.eligibleCourses.length > 0) {
@@ -292,7 +344,9 @@ export default function Registration() {
 
   };
 
-  // Update the tutor preferences
+  /**
+   *  Updates the tutor course, location, and time preferences
+   */
   const UpdatePreferences = () => {
     UpdateTutorCoursePreferences();
     UpdateTutorLocationPreferences();
@@ -375,7 +429,9 @@ export default function Registration() {
   tutorTimeMutationUpdate.mutate(formatTimePreferences(tutor.timePreferences));
   };
 
-  // Tutee Registration
+  /**
+   *  Creates tutee in database
+   */
   const TuteeRegister = () => {
 
     const errors = TuteeInfoChecking(tutee);
@@ -406,12 +462,6 @@ export default function Registration() {
     });
 
   }
-
-  const handleAlertClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === "clickaway") return;
-
-    setAlertOpen(false);
-  };
 
   return (
     <>
@@ -632,6 +682,7 @@ export default function Registration() {
                     </>
                   );
                 }
+                // Tutee needs to be registered
                 else if (tuteeResult && tuteeResult?.length === 0) {
                   return (
                     <>
