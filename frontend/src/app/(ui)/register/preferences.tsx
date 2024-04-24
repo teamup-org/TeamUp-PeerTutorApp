@@ -101,6 +101,9 @@ export function TimePreferences(
 
   return (
     <div style={{ width: '80%', margin: 'auto' }}>
+      <div style={{ marginBottom: '15vh' }}>
+        <Typography variant="h6">Drag and drop the times you preferred!</Typography>
+        <Divider />
       <FullCalendar
         ref={scheduleRef}
         plugins={[ interactionPlugin, dayGridPlugin, timeGridPlugin ]}
@@ -123,6 +126,7 @@ export function TimePreferences(
         unselectAuto={false} editable selectable selectMirror selectOverlap={false} eventOverlap={false}
         eventClick={handleEventClick} select={handleDateSelect}
       />
+      </div>
     </div>
   );
 }
@@ -229,7 +233,9 @@ export function LocationPreferences(
   
   return (
     <div style={{ width: '80%', margin: 'auto' }}>
-      <div style={{ marginBottom: '2vh' }}>
+      <div style={{ marginBottom: '15vh' }}>
+        <Typography variant="h6">Select your location preferences!</Typography>
+        <Divider />
         <TableContainer>
         <Table stickyHeader>
           <TableHead>

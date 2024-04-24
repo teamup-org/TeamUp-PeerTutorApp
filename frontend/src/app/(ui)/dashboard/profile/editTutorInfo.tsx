@@ -8,14 +8,14 @@ import { TableFetch }
 
 /**
  * Component for showing Tutor general information data that can be edited
- * @param props 
- * @returns Element displaying editable fields for Tutor General Infomation to be used in Profile Page
+ * @param data - Tutor Data 
+ * @returns 
  */  
 export function EditTutorInfo(
-  {data, setData}
+  {data: [data, setData]}
   :
-  {data: Tutor, setData: Function}) 
-  {
+  {data: [Tutor, Function]}
+) {
     
   // Database Fetching for majors
   const { data: majorData, isLoading: majorIsLoading } = 
@@ -101,6 +101,7 @@ export function EditTutorInfo(
         label="Bio Text"
         value={data.bioText}
         multiline
+        onChange={(e) => {handleInputChange('bioText', e.target.value)}}
         rows={4}
         fullWidth
       />

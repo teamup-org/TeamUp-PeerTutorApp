@@ -16,14 +16,36 @@ import { CoursePreferences, LocationPreferences, TimePreferences }
   from './preferences';
 
 /**
- * 
- * @param props 
+ * Component for displaying tutor profile page
+ * @param popupOpen - State variable for tracking status of edit popup 
+ * @param timeUpdate - State variable for triggering time preferences update
+ * @param locationUpdate - State variable for triggering location preferences update
+ * @param eligibleUpdate - State variable for triggering eligible courses update
+ * @param coursePreferencesUpdate - State variable for triggering course preferences update
+ * @param tutorUpdate - State variable for triggering tutor information update
+ * @param data - Tutor Data
+ * @param transcript - Tutor Transcript
  * @returns 
  */
 export function TutorUpdatePage(
-  {popupOpen, setPopupOpen, setTimeUpdate, setLocationUpdate, setTranscript, data, setData, setTutorUpdate, setEligibleUpdate, setCoursePreferencesUpdate}
+  {popupOpen               : [popupOpen, setPopupOpen],
+   timeUpdate              : [timeUpdate, setTimeUpdate],
+   locationUpdate          : [locationUpdate, setLocationUpdate],
+   eligibleUpdate          : [eligibleUpdate, setEligibleUpdate],
+   coursePreferencesUpdate : [coursePreferencesUpdate, setCoursePreferencesUpdate],
+   tutorUpdate             : [tutorUpdate, setTutorUpdate],
+   data                    : [data, setData],
+   transcript              : [transcript, setTranscript]}
   :
-  {popupOpen: boolean, setPopupOpen: Function, setTimeUpdate: Function, setLocationUpdate: Function, setTranscript: Function, data: Tutor, setData: Function, setTutorUpdate: Function, setEligibleUpdate: Function, setCoursePreferencesUpdate: Function}
+  {popupOpen               : [boolean, Function],
+   timeUpdate              : [boolean, Function],
+   locationUpdate          : [boolean, Function],
+   eligibleUpdate          : [boolean, Function],
+   coursePreferencesUpdate : [boolean, Function],
+   tutorUpdate             : [boolean, Function],
+   data                    : [Tutor, Function],
+   transcript              : [Object | undefined, Function]
+  }
 ) {
   
   // Boolean for whether save button in popup window is pressed
@@ -34,6 +56,7 @@ export function TutorUpdatePage(
     if (save) {
     setTutorUpdate(true);
     setPopupOpen(false);
+    setSave(false);
     }
   },[save]);
 
@@ -59,7 +82,12 @@ export function TutorUpdatePage(
     <Stack direction="row" spacing={2} mx={2}>
       <Paper variant="outlined">
   
-      <GeneralInfoPopup setSave={setTutorUpdate} data={data} setData={setData} open={popupOpen} setOpen={setPopupOpen} tutor={true} />
+      <GeneralInfoPopup 
+        open={[popupOpen, setPopupOpen]}
+        data={[data, setData]}
+        save={[save, setSave]}
+        tutor={false}
+      />
   
       <Stack direction="column" p={2} style={{ flexGrow: 1 }}>
   
@@ -74,7 +102,9 @@ export function TutorUpdatePage(
         </Stack>
   
         <Divider style={{ marginBottom: '20px' }} />
-        <TutorInformation data={data} />
+        <TutorInformation 
+          data={[data, setData]}
+        />
   
       </Stack>
       </Paper>
@@ -85,7 +115,10 @@ export function TutorUpdatePage(
         Here is Your Current Course Information!! You can update your transcript or course preferences here!
         </Typography>
         <Divider style={{ marginBottom: '20px' }} />
-        <CoursePreferences setTranscript={setTranscript} data={data} setData={setData} />
+        <CoursePreferences 
+          data={[data, setData]}
+          transcript={[transcript, setTranscript]}
+        />
         <Button variant="contained" color="primary" onClick={handleEligibleCoursesUpdate}>
         Update My Transcript!
         </Button>
@@ -102,7 +135,9 @@ export function TutorUpdatePage(
         Update your Location Preferences Here!!
       </Typography>
       <Divider style={{ marginBottom: '20px' }} />
-      <LocationPreferences data={data} setData={setData}  />
+      <LocationPreferences 
+        data={[data, setData]}
+      />
       <Button variant="contained" color="primary" onClick={handleLocationPreferencesUpdate}>
         Update My Location Preferences!
       </Button>
@@ -115,7 +150,10 @@ export function TutorUpdatePage(
         Update your Time Preferences Here!!
       </Typography>
       <Divider style={{ marginBottom: '20px' }} />
-      <TimePreferences setTimeUpdate={setTimeUpdate} data={data} setData={setData}  />
+      <TimePreferences 
+        timeUpdate={[timeUpdate, setTimeUpdate]}
+        data={[data, setData]}
+      />
       </Stack>
     </Paper>
     </Stack>

@@ -29,13 +29,22 @@ const Transition = React.forwardRef(function Transition(
 
 /**
  * Component for displaying popup after 'edit' button is pressed on Profile Page
- * @param props 
+ * @param open - State variable for popup status
+ * @param data - Tutor or Tutee Data
+ * @param save - State variable for if save button is clicked
+ * @param tutor - 1 if Tutor Data is passed and 0 if Tutee Data is passed
  * @returns 
  */  
 export function GeneralInfoPopup(
-  {open, setOpen, data, setData, setSave, tutor}
+  {open : [open, setOpen],
+   data : [data, setData], 
+   save : [save, setSave],
+   tutor}
   :
-  {open: boolean, setOpen: Function, data: Tutor | Tutee, setData: Function, setSave: Function, tutor: boolean}
+  {open  : [boolean, Function], 
+   data  : [Tutor | Tutee, Function], 
+   save  : [boolean, Function], 
+   tutor : boolean}
 ) {
 
   // State Variables for error checking
@@ -100,8 +109,8 @@ export function GeneralInfoPopup(
       <DialogContent dividers sx={{ pt: 4, pb: 8 }}>
       <Container maxWidth="xl" sx={{ minWidth: 800 }}>
         <Stack direction="column" spacing={4} alignItems="center" divider={ <Divider orientation="horizontal" flexItem /> }>
-          {('listingTitle' in data) ? <EditTutorInfo data={data} setData={setData} /> : 
-               <EditTuteeInfo data={data} setData={setData} />}
+          {('listingTitle' in data) ? <EditTutorInfo data={[data, setData]} /> : 
+               <EditTuteeInfo data={[data, setData]} />}
           <Button onClick={handleSave}>
             <Typography color='secondary'> Save </Typography>
           </Button>

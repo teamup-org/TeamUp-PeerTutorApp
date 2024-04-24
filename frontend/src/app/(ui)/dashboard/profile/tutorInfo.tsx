@@ -5,14 +5,14 @@ import { Grid, TextField }
 
 /**
  * Component for displaying Tutor General Information on Profile Page that cannot be edited
- * @param props 
+ * @param data - Tutor Data 
  * @returns 
  */
 export function TutorInformation(
-  {data}
+  {data : [data, setData]}
   :
-  {data: Tutor}) 
-  {
+  {data : [Tutor, Function]}
+) {
 
   return (
   <>

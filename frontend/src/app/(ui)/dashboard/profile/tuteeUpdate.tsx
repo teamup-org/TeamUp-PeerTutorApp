@@ -14,13 +14,21 @@ import { TuteeInformation }
 
 /**
  * Component for displaying Tutee Tab on Profile Page
- * @param props 
+ * @param popupOpen - State variable for state of edit popup
+ * @param data - Tutee Data
+ * @param tuteeUpdate - State variable for sending trigger for tutee updates 
  * @returns 
  */
 export function TuteeUpdatePage(
-  {popupOpen, setPopupOpen, data, setData, setTuteeUpdate}
+  {popupOpen   : [popupOpen, setPopupOpen],
+   data        : [data, setData],
+   tuteeUpdate : [tuteeUpdate, setTuteeUpdate]
+  }
   :
-  {popupOpen: boolean, setPopupOpen: Function, data: Tutee, setData: Function, setTuteeUpdate: Function}
+  {popupOpen   : [boolean, Function],
+   data        : [Tutee, Function],
+   tuteeUpdate : [boolean, Function]
+  }
 ) {
   
   // Boolean for whether save button in popup window is pressed
@@ -31,6 +39,7 @@ export function TuteeUpdatePage(
     if (save) {
     setTuteeUpdate(true);
     setPopupOpen(false);
+    setSave(false);
     }
   },[save]);
 
@@ -41,7 +50,12 @@ export function TuteeUpdatePage(
   return (
     <Paper variant="outlined" style={{ width: '80%', margin: 'auto' }}>
 
-    <GeneralInfoPopup setSave={setTuteeUpdate} data={data} setData={setData} open={popupOpen} setOpen={setPopupOpen} tutor={false} />
+    <GeneralInfoPopup 
+      data={[data, setData]}
+      save={[save, setSave]}
+      open={[popupOpen, setPopupOpen]}
+      tutor={false} 
+    />
 
     <Stack direction="column" p={2} style={{ flexGrow: 1 }}>
 
@@ -56,7 +70,9 @@ export function TuteeUpdatePage(
       </Stack>
 
       <Divider style={{ marginBottom: '20px' }} />
-      <TuteeInformation data={data} />
+      <TuteeInformation 
+        data={[data, setData]} 
+      />
 
     </Stack>
     </Paper>

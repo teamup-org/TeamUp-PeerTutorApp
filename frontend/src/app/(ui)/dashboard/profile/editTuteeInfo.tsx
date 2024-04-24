@@ -8,14 +8,14 @@ import { TableFetch }
 
 /**
  * Component for showing Tutee data that can be edited
- * @param props 
- * @returns Element displaying editable fields for Tutee Infomation to be used in Profile Page
+ * @param data - Tutee Data 
+ * @returns
  */  
 export function EditTuteeInfo(
-  {data, setData}
+  {data: [data, setData]}
   :
-  {data: Tutee, setData: Function}) 
-  {
+  {data: [Tutee, Function]}
+) {
 
   // Database Fetching for majors
   const { data: majorData, isLoading: majorIsLoading } = 

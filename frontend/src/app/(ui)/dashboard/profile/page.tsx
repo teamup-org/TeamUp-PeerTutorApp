@@ -116,7 +116,7 @@ export default function ProfilePage() {
     { flag: timePreferencesUpdate, updateFunction: UpdateTutorTimePreferences },
     { flag: tuteeUpdate, updateFunction: UpdateTuteeInformation }
   ];
-  
+
   updates.forEach(({ flag, updateFunction }) => {
     if (flag) {
     updateFunction();
@@ -431,7 +431,16 @@ export default function ProfilePage() {
       if (tutorData?.data?.length > 0) {
         return (
         <>
-        <TutorUpdatePage popupOpen={tutorPopupOpen} setPopupOpen={setTutorPopupOpen} setTranscript={setTranscript} setTimeUpdate={setTimePreferencesUpdate} setLocationUpdate={setLocationPreferencesUpdate} setEligibleUpdate={setTranscriptUpdate} setCoursePreferencesUpdate={setCoursePreferencesUpdate} setTutorUpdate={setTutorUpdate} data={tutorProfileData} setData={setTutorProfileData} />
+        <TutorUpdatePage 
+          popupOpen={[tutorPopupOpen, setTutorPopupOpen]}
+          transcript={[transcript, setTranscript]}
+          timeUpdate={[timePreferencesUpdate, setTimePreferencesUpdate]}
+          locationUpdate={[locationPreferencesUpdate, setLocationPreferencesUpdate]}
+          eligibleUpdate={[transcriptUpdate, setTranscriptUpdate]}
+          coursePreferencesUpdate={[coursePreferencesUpdate, setCoursePreferencesUpdate]}
+          tutorUpdate={[tutorUpdate, setTutorUpdate]}
+          data={[tutorProfileData, setTutorProfileData]}
+        />
         </>
         );
       }
@@ -477,7 +486,11 @@ export default function ProfilePage() {
       if (tuteeData?.length > 0) {
         return (
         <>
-        <TuteeUpdatePage popupOpen={tuteePopupOpen} setPopupOpen={setTuteePopupOpen} setTuteeUpdate={setTuteeUpdate} data={tuteeProfileData} setData={setTuteeProfileData} />
+        <TuteeUpdatePage 
+          popupOpen={[tuteePopupOpen, setTuteePopupOpen]}
+          tuteeUpdate={[tuteeUpdate, setTuteeUpdate]}
+          data={[tuteeProfileData, setTuteeProfileData]}
+        />
         </>
         );
       }

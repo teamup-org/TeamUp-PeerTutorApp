@@ -5,14 +5,14 @@ import { Grid, TextField }
 
 /**
  * Component for displaying Tutee Information on Profile Page that cannot be edited
- * @param props 
+ * @param data - Tutee Data 
  * @returns 
  */
 export function TuteeInformation(
-  {data}
+  {data : [data, setData]}
   :
-  {data: Tutee}) 
-  {
+  {data : [Tutee, Function]}
+) {
   
   return (
   <>

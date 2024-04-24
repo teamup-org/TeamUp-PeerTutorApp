@@ -18,15 +18,19 @@ import type { DateSelectArg, EventClickArg }
   
 /**
  * Component for displaying the eligible courses and the course preferences
- * @function
- * @param props
- * @returns Element with table of eligible courses and checkboxes next to them for course preferences
+ * @param data - Tutor Data
+ * @param transcript - Tutor Transcript
+ * @returns 
  */
 export function CoursePreferences (
-  {data, setData, setTranscript} 
+  {data       : [data, setData],
+   transcript : [transcript, setTranscript]
+  } 
   : 
-  {data: Tutor, setData: Function, setTranscript: Function}) 
-  {
+  {data       : [Tutor, Function],
+   transcript : [Object | undefined, Function]
+  }
+) {
   
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -39,6 +43,9 @@ export function CoursePreferences (
     }
   };
 
+  /**
+   * Handles change in course preferences
+   */
   const handleCheckboxChange = (index: number, isChecked: boolean) => {
     const course = data?.eligibleCourses[index];
     const courseIdentifier = `${course.majorAbbreviation} ${course.courseNumber}`;
@@ -98,15 +105,15 @@ export function CoursePreferences (
 
 /**
  * Component for displaying tutor location preferences
- * @function 
- * @param props
- * @returns Element which lists all location preference options in a table with a checkbox next to each indicating preferred locations
+ * @param data - Tutor Data
+ * @returns 
  */
 export function LocationPreferences (
-  {data, setData}
+  {data : [data, setData]}
   :
-  {data: Tutor, setData: Function}) 
-  {
+  {data : [Tutor, Function]}
+) {
+
   const locationOptions: LocationType[] = [
     "in-person on-campus",
     "in-person off-campus",
@@ -157,14 +164,18 @@ export function LocationPreferences (
 
 /**
  * Component for displaying tutor time preferences
- * @param props
- * @returns Element using Full Calendar to display time preferences and allows users to remove and add times
+ * @param timeUpdate - State variable for tracking if there has been an update to time preferences
+ * @returns
  */
 export function TimePreferences (
-  {data, setData, setTimeUpdate}
+  {data       : [data, setData],
+   timeUpdate : [timeUpdate, setTimeUpdate]
+  }
   :
-  {data: Tutor, setData: Function, setTimeUpdate: Function}) 
-  {
+  {data       : [Tutor, Function],
+   timeUpdate : [boolean, Function]
+  }
+) {
   
   const scheduleRef = React.useRef<FullCalendar | null>(null);
   var selectedEvent: EventClickArg;
