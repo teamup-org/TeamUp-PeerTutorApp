@@ -7,7 +7,7 @@ Since this is a Next.js application, we have utilized the app router file struct
 
 Above is an image of our file structure for our frontend, found under the /frontend folder.
 #### Static Images
-![File Structure with /frontend/public folder highlighted](folderExample.png)
+![File Structure with /frontend/public folder highlighted](publicFolder.png)
 
 All static images and icons are stored under the /frontend/public folder, as highlighted above. This will allow any of the webpages to see and use these images
 
