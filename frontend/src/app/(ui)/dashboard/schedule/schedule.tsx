@@ -2,37 +2,23 @@
 
 import * as React from 'react';
 
-import { Stack, Dialog, DialogTitle, DialogContent }
+import { Stack }
   from '@mui/material';
 
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import { EventImpl } 
-  from '@fullcalendar/core/internal';
-import interactionPlugin, { Draggable, DateClickArg } from '@fullcalendar/interaction';
-import type { DateSelectArg, EventClickArg, EventInput } 
+
+import interactionPlugin from '@fullcalendar/interaction';
+import type { EventClickArg, EventInput } 
   from '@fullcalendar/core/index.js';
 
-import { toTitleCase, toTime }
+import { toTitleCase }
   from '@/app/_lib/utils';
 import EventItem from './event-item';
-// (isTutee, isConfirmed, isCancelled)
-// 000 tutor, not confirmed, not cancelled --> fresh appointment created by tutee (pending appointment)
-// 010 tutor, confirmed, not cancelled --> You confirmed appointment (good to go)
-// 011 tutor, confirmed, cancelled --> You confirmed appointment, but then you or tutee went back to cancel (cancelled)
 
-// 100 tutee, not confirmed, not cancelled --> fresh appointment created by you (pending appointment)
-// 110 tutee, confirmed, not cancelled --> tutor confirmed appointment (good to go)
-// 111 tutee, confirmed, cancelled --> tutor confirmed appointment, but then tutor or you went back to cancel (cancelled)
 
-// colors
-// pending -> yellow
-// confirmed -> green
-// cancelled -> grey
-
-// add tutor or tutee to calendar items
-
+// 
 function mapEventColor(isConfirmed: boolean, isCancelled: boolean) {
   if (!isConfirmed && !isCancelled) {
     return "#b4b4b8";
@@ -46,20 +32,31 @@ function mapEventColor(isConfirmed: boolean, isCancelled: boolean) {
 }
 
 
+/**
+ * Component for displaying the FullCalendar Schedule containing tutor and tutee appointments and requests.
+ * @param tutorEventData - Appointment list containing the signed-in user's queried tutor appointments
+ * @param tuteeEventData - Appointment list containing the signed-in users's queried tutee appointments
+ * @param refetch - Refetch functions for refreshing the tutor and tutee queries in the schedule page
+ * @returns 
+ */  
 export default function Schedule(
   { tutorEventData, tuteeEventData, refetch: [tutorRefetch, tuteeRefetch] } : 
   { tutorEventData: Appointment[], tuteeEventData: Appointment[], refetch: [Function, Function] }
 ){
   const currentTime = new Date();
+  
+  // State variables controlling the selected event and boolean status of the EventItem popup
   const [event, setEvent] = React.useState<Appointment>();
   const [eventOpen, setEventOpen] = React.useState(false);
 
+  // Handler function for opening the custom EventItem component popup
   const handleEventClick = (currentEvent: EventClickArg) => {
     currentEvent.jsEvent.preventDefault();
     setEventOpen(true);
     setEvent(currentEvent.event.extendedProps.data as Appointment);
   };
 
+  // Helper function for formatting events into schedule as FullCalendar Events
   const formatEvents = () => {
     return tutorEventData?.map<EventInput>((appointment: Appointment) => (
       { 

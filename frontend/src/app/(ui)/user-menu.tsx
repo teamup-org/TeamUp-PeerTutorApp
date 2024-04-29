@@ -1,20 +1,29 @@
 'use client';
 
+
 import * as React from 'react';
 
-import Image from 'next/image';
-
 import { useSession, signOut }
-from 'next-auth/react';
+  from 'next-auth/react';
 
 import { Box, Menu, MenuItem, Typography, Tooltip, IconButton, Avatar, Link }
-from '@mui/material';
+  from '@mui/material';
 
+
+// Settings for the Profile menu
 const settings = [ 'Profile', 'Log Out' ];
 
+
+/**
+ * @function React Component for user's Profile
+ * @returns JSX Component for user's Profile
+ */
 export default function UserMenu() {
+  // State variable for controlling the Menu's anchor
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
+
+  // Handler functions for opening and closing the Menu, and signing out
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -28,11 +37,9 @@ export default function UserMenu() {
     setAnchorElUser(null);
   };
 
-  const handleProfile = () => {
-    
-  };
 
   const { data: session, status } = useSession();
+
 
   return (
     <Box sx={{ flexGrow: 0 }}>
@@ -43,6 +50,7 @@ export default function UserMenu() {
           }
         </IconButton>
       </Tooltip>
+
       <Menu
         sx={{ mt: '45px' }}
         id="menu-appbar"
@@ -64,6 +72,7 @@ export default function UserMenu() {
             {settings[0]}
           </Typography>
         </MenuItem>
+        
         <MenuItem key={settings[1]} onClick={handleLogOut} >
           <Typography variant="inherit" textAlign="center">
             {settings[1]}

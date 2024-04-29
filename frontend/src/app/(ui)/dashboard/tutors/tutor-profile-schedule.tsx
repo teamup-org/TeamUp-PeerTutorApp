@@ -7,15 +7,13 @@ import { useSession }
 
 import { TransitionProps }
   from '@mui/material/transitions';
-import { Stack, Box, Typography, Snackbar, Alert, Slide }
+import { Stack, Snackbar, Alert, Slide }
   from '@mui/material';
-
-import theme from '@/app/(ui)/theme';
 
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
+import interactionPlugin from '@fullcalendar/interaction';
 import type { DateSelectArg, EventInput } 
   from '@fullcalendar/core/index.js';
 
@@ -23,9 +21,9 @@ import { TableFetch, TablePush }
   from '@/app/_lib/data';
 import { toTitleCase } 
   from '@/app/_lib/utils';
-import { dataTagSymbol } from '@tanstack/react-query';
 
-  
+
+// Mapping of week days to its corresponding numerical value
 const Day: { [key: string]: number } = { 
   "sunday": 0, 
   "monday": 1, 
@@ -36,6 +34,7 @@ const Day: { [key: string]: number } = {
   "saturday": 6 
 };
 
+// Transition element for popup components
 const AlertTransition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
@@ -46,15 +45,23 @@ const AlertTransition = React.forwardRef(function Transition(
 });
 
 
+/**
+ * Component for displaying a tutor's FullCalendar schedule on their profile
+ * @param tutor - A 'Tutor' value to query for appointments. Can be 'null' value as well when values are not initially populated
+ * @returns 
+ */  
 export default function TutorProfileSchedule({ tutor } : { tutor: Tutor | null }) {
   const calendar = React.createRef<FullCalendar>();
   const currentTime = new Date();
   const tutorName = toTitleCase(`${tutor?.firstName} ${tutor?.lastName}`);
   const tuteeEmail = useSession().data?.user?.email;
 
+  // State variables for selecting a time range on the FullCalendar schedule component and controlling alert popups
   const [selectedTime, setSelectedTime] = React.useState<String[]>();
   const [alertOpen, setAlertOpen] = React.useState(false);
 
+
+  // Appointment Queries for selected tutor and user's tutee profile
   const { data: tutorEvents } = TableFetch<AppointmentQuery>("appointment", [tutor, "tutor"], 
     `tutor_email_contains=${tutor?.email}`, 
     `is_cancelled_equals=${false}`,
@@ -82,8 +89,10 @@ export default function TutorProfileSchedule({ tutor } : { tutor: Tutor | null }
     // `start_date_time_greater_than_or_equals=${new Date()}`
   );
 
+  // Mutation handler for creating appointment requests
   const tutorTimeRequest = TablePush("appointment");
 
+  // Getter function for mapping tutor and tutee's appointment information to FullCalendar Event format as one large array
   const getEvents = () => {
     if (tutor && tutorEvents && tuteeEvents && userTutorEvents && userTuteeEvents)
     return tutor.timePreferences.map<EventInput>((timePreference: TutorTimePreference) => (
@@ -136,6 +145,7 @@ export default function TutorProfileSchedule({ tutor } : { tutor: Tutor | null }
     );
   };
 
+  // Handler functions
   const handleDateSelect = (arg: DateSelectArg) => {
     setSelectedTime([arg.startStr, arg.endStr]);
   };
@@ -173,7 +183,7 @@ export default function TutorProfileSchedule({ tutor } : { tutor: Tutor | null }
 
   return (
     <Stack direction="row" width="100%" spacing={4} justifyContent="center">
-
+      
       <Stack direction="column" spacing={2} width="100%">
         <FullCalendar 
           ref={calendar}

@@ -1,16 +1,19 @@
 'use client';
 
+
 import { Nunito_Sans }
-from 'next/font/google';
+  from 'next/font/google';
 
 import { createTheme, responsiveFontSizes }
-from '@mui/material/styles';
+  from '@mui/material/styles';
 import { red }
-from '@mui/material/colors';
+  from '@mui/material/colors';
+
 
 const nunito_sans = Nunito_Sans({ subsets: ['latin'], weight: ['600', '700', '800', '900', '1000'], });
 
-// Add custom palette colors here. Must use module augmentation when in Typescript
+
+// Add custom palette colors here. Must use module augmentation when using Typescript
 declare module '@mui/material/styles' {
   interface Palette {
     tertiary: Palette['primary'];
@@ -40,6 +43,8 @@ declare module '@mui/material/Pagination' {
   }
 }
 
+
+// MUI theme used for all MUI components on the website
 const theme = responsiveFontSizes(createTheme({
   palette: {
     primary: {
@@ -159,5 +164,6 @@ const theme = responsiveFontSizes(createTheme({
     },
   },
 }));
+
 
 export default theme;

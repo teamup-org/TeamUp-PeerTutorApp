@@ -19,24 +19,37 @@ function valueLabelFormat(value: number) {
   return `$${value}`;
 }
 
+
+// Interval between knobs on the Tutor Pay Rate slider component
 const minKnobDistance = 10;
 
+// Sorting options when querying tutors
 const sortOptions = [
-  { label: "Rating", query: "average_rating_descending" },
-  { label: "Lowest Payrate", query: "pay_rate_ascending" },
+  { label: "Rating",          query: "average_rating_descending" },
+  { label: "Lowest Payrate",  query: "pay_rate_ascending" },
   { label: "Highest Payrate", query: "pay_rate_descending" }
 ];
 
+// Seniority options when querying tutors
 const seniorityOptions: { label: Seniority, query: string }[] = [
-  { label: "All", query: "freshman, sophomore, junior, senior, graduate" }, 
-  { label: "Freshman", query: "freshman" }, 
+  { label: "All",       query: "freshman, sophomore, junior, senior, graduate" }, 
+  { label: "Freshman",  query: "freshman" }, 
   { label: "Sophomore", query: "sophomore" }, 
-  { label:"Junior", query: "junior" }, 
-  { label: "Senior", query: "senior" }, 
-  { label: "Graduate", query: "graduate" }
+  { label:"Junior",     query: "junior" }, 
+  { label: "Senior",    query: "senior" }, 
+  { label: "Graduate",  query: "graduate" }
 ];
 
 
+/**
+ * Component for displaying tutor filter box on Tutor Page
+ * @param rate - State variable and setter function for the tutor's pay rate
+ * @param sort - State variable and setter function for the tutor sort query (i.e. Rating, Lowest Payrate, Highest Payrate)
+ * @param major - State variable and setter function for the tutor's major
+ * @param course - State variable and setter function for the tutor's courses
+ * @param seniority - State variable and setter function for the tutor's seniority
+ * @returns 
+ */  
 export default function TutorFilter(
   { 
     rate: [rate, setRate], 
@@ -55,7 +68,8 @@ export default function TutorFilter(
   }
 ){
   const [slider, setSlider] = React.useState([0, 200]);
-
+  
+  // Handler functions for setting state variables
   const handleRateChange = (
     event: Event,
     newValue: number | number[],
@@ -99,6 +113,7 @@ export default function TutorFilter(
     TableFetch<Course[]>("course", [major], `major_abbreviation_contains=${major}`);
 
 
+  // Functions to populate the Autocomplete MUI components with selectable values
   const populateMajorOptions = () => {
     if (majorData) 
       return (
@@ -131,6 +146,7 @@ export default function TutorFilter(
       <Stack direction="column" spacing={3} divider={ <Divider orientation="horizontal" flexItem /> }>
         <Typography variant="h4" textAlign="center"> Filters </Typography>
 
+        {/* Sort Box */}
         <FormControl fullWidth>
           <InputLabel id="select-sort-label"> Sort By </InputLabel>
           <Select labelId="select-sort-label" id="select-sort" value={sort} label="Sort By" onChange={handleSortChange}>
@@ -138,6 +154,7 @@ export default function TutorFilter(
           </Select>
         </FormControl>
 
+        {/* Payrate slider */}
         <Stack direction="column" spacing={2}>
           <Typography variant="body1" fontWeight="bold"> Hourly Rate </Typography>
           <Box px={1}>
@@ -150,7 +167,9 @@ export default function TutorFilter(
           </Box>
         </Stack>
 
+        {/* Major and Course Autocomplete Boxes */}
         <Stack direction="row" spacing={2}>
+          {/* Major */}
           <Stack direction="column" width="50%" spacing={1}>
             <Typography fontWeight="bold"> Tutor&apos;s Major </Typography>
             <Autocomplete 
@@ -164,6 +183,7 @@ export default function TutorFilter(
             />
           </Stack>
 
+          {/* Course */}
           <Stack direction="column" width="50%" spacing={1}>
             <Typography fontWeight="bold"> Tutor&apos;s Course </Typography>
             <Autocomplete 
@@ -179,6 +199,7 @@ export default function TutorFilter(
           </Stack>
         </Stack>
 
+        {/* Seniority Box */}
         <FormControl fullWidth>
           <InputLabel id="select-seniority-label"> Seniority </InputLabel>
           <Select labelId="select-seniority-label" id="select-seniority" value={seniority} label="Seniority" onChange={handleSeniorityChange}>

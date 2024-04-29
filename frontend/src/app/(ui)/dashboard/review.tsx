@@ -11,6 +11,7 @@ import { toDate, toTitleCase } from '@/app/_lib/utils';
 import { TablePush } from '@/app/_lib/data';
 
 
+// Skeleton Review variable
 const temp: Review = 
 { 
   appointmentId: 0, numberStars: 0, reviewText: "", reviewDateString: "",
@@ -19,6 +20,14 @@ const temp: Review =
 }
 
 
+/**
+ * Component for displaying a Review or Review box popup. Is used for both displaying a tutor's profile reviews and typing in a custom review for pending reviews
+ * @param review - The tutor Review to be formatted for the tutor's review section on their profile
+ * @param editable - The boolean state controlling whether this component is to display a tutor review or to be an editable box for writing a pending tutor review
+ * @param pendingReview - State variable and setter function for the selected pending review to be updated
+ * @param refetch - The refetch function for the pending tutor reviews query. Used to refresh the pending tutor reviews when the selected pending review is sent
+ * @returns 
+ */  
 export default function Review(
   { review = temp, editable = false, pendingReview: [pendingReview, setPendingReview] = [null, null], refetch }: 
   { review?: Review, editable?: boolean, pendingReview?: [PendingReview | null, Function | null], refetch?: Function }
@@ -32,8 +41,10 @@ export default function Review(
   const today = new Date();
 
 
+  // Mutation handler for /tutor_review
   const mutation = TablePush("/tutor_review");
 
+  // Handler for POST-ing pending tutor review
   const handleUserReviewSubmission = () => {
     pendingReview &&
     mutation.mutate(

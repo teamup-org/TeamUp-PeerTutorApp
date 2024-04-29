@@ -20,6 +20,7 @@ export function toTitleCase(sentence: string | null | undefined) {
   return words.join(" ");
 }
 
+// Format a stringified number (1234567890) to phone number format (123-456-7890)
 export function toPhoneNumber(phone: string | null | undefined) {
   if (!phone) return "";
 
@@ -28,6 +29,7 @@ export function toPhoneNumber(phone: string | null | undefined) {
   return phone;
 }
 
+// Format date object or string representation of an ISO time (i.e. 2024-04-28T13:00:31Z) to a custom styled format (1:00 PM)
 export function toTime(time: string | Date) {
   const dateTime = new Date(time);
 

@@ -14,13 +14,15 @@ All static images and icons are stored under the /frontend/public folder, as hig
 #### Global Functions and Definitions (Types/Classes)
 ![Files Structure with /frontend/src/app/_lib folder expanded](_lib.png)
 
-The /frontend/src/app/_lib folder contains all global functions and definitions that can we be imported into any other page.
+The /frontend/src/app/_lib folder contains all global functions and definitions that can be imported into any other page.
 
-Under the _lib folder, /data.ts stores all of database manipulation and fetching functions.
+Under the _lib folder, /data.ts stores all of our database manipulation and fetching functions.
 
-/utils.ts contains all of the global functions that might be useful to various different pages.
+/utils.ts contains all of the global helper functions that might be useful for various different pages.
 
 /definitions.d.ts contains all of the class and type declarations that are implicitly imported into all files in the project.
+
+/placeholder-data.ts contains any placeholder database data for testing locally.
 
 #### Webpages and Routing
 ![File Structure with /frontend/src/app/(ui) folder expanded](routePaths.png)

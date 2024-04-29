@@ -17,10 +17,15 @@ import { TableFetch }
 from '@/app/_lib/data';
 
 
+// Values displayed in button group for the total amount of tutors queried
 const tutorsPerPageOptions = [ 5, 10, 15 ];
 
-
+/**
+ * @function React Component for Tutor Page
+ * @returns JSX Component for Tutor Page
+ */
 export default function TutorPage() {
+  // State variables for filter fields used in tutor-filter.tsx and 
   const [search, setSearch] = React.useState<string>("");
     const [searchQuery, setSearchQuery] = React.useState("");
   const [sort, setSort] = React.useState("average_rating_descending");
@@ -31,6 +36,7 @@ export default function TutorPage() {
   const [selectedTutor, setSelectedTutor] = React.useState<Tutor | null>(null);
     const [profileOpen, setProfileOpen] = React.useState(false);
 
+  // State variables and handler functions for pagination
   const [tutorsPerPage, setTutorsPerPage] = React.useState(5);
   const handleTutorsPerPageChange = (event: any, value: number) => {
     setTutorsPerPage(value);
@@ -86,10 +92,7 @@ export default function TutorPage() {
     )
   };
 
-  /*React.useEffect(() => {
-    tutorRefetch();
-  }, [searchQuery]);*/
-
+  // Search bar adornments
   const startSearchAdornment: React.JSX.Element = (
     <IconButton onClick={ () => setSearchQuery(search) }> 
       <SearchIcon /> 
@@ -132,6 +135,7 @@ export default function TutorPage() {
           {/* Right side of grid */}
           <Grid item xs={12} md={8}>
             <Stack direction="column" spacing={2} height="100%">
+              {/* Search Bar */}
               <TextField 
                 id="outlined-tutor-search" label="Search"
                 variant="outlined" fullWidth
@@ -142,6 +146,7 @@ export default function TutorPage() {
 
               { printTutors() }
 
+              {/* Pagination Row at bottom of screen */}
               <Stack direction="row" width="100%" height="100%" alignItems="end">
                 <Box display="flex" flexGrow={1} justifyContent="center">
                   <Pagination 

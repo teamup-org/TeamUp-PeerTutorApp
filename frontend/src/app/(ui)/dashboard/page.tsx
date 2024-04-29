@@ -21,6 +21,7 @@ import PendingReview from './pending-review';
 import Review from './review';
 
 
+// Transition component for popup elements
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
@@ -31,11 +32,17 @@ const Transition = React.forwardRef(function Transition(
 });
 
 
+/**
+ * @function React Component for Tutor Page
+ * @returns JSX Component for Tutor Page
+ */
 export default function DashboardPage() {
+  // State variable for selected pending review
   const [selectedPendingReview, setSelectedPendingReview] = React.useState<PendingReview | null>(null);
 
   const userEmail = useSession().data?.user?.email;
 
+  // Get pending reviews for user's profile
   const { data: pendingReviewData, isLoading: loading, refetch } = TableFetch<PendingReview[]>("tutor_review/pending_reviews", [userEmail], `tutee_email=${userEmail}`);
 
 
@@ -45,11 +52,14 @@ export default function DashboardPage() {
         <Stack direction="column">
 
           <Grid container direction="row" columnSpacing={4} height={400}>
+            {/* Left side of Dashboard */}
             <Grid item md={7}>
               <Skeleton sx={{ height: '100%' }} animation={false} />
             </Grid>
 
+            {/* Right side of Dashboard */}
             <Grid item md={5} height="100%">
+              {/* Pending Reviews */}
               <Paper elevation={4} sx={{ p: 2, height: '100%' }}>
                 <Stack direction="column" spacing={2} height="100%">
                   <Typography align="center" variant="h4" borderBottom={1} borderColor="divider"> Pending Tutor Reviews </Typography>
@@ -67,12 +77,14 @@ export default function DashboardPage() {
               </Paper>
             </Grid>
           </Grid>
-
+          
+          {/* Bottom of Dashboard */}
           <Skeleton sx={{ height: 300 }} animation={false} />
 
         </Stack>
       </Container>
       
+      {/* Popup Dialogue for writing a review */}
       <Dialog 
         open={selectedPendingReview ? true : false} onClose={() => setSelectedPendingReview(null)}
         TransitionComponent={Transition} keepMounted 

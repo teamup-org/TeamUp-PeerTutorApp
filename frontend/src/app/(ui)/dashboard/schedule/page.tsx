@@ -7,20 +7,21 @@ import { useSession }
 
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Box, Container, Paper, Stack, Tabs, Tab } 
-from '@mui/material';
+  from '@mui/material';
 
 import ListIcon from '@mui/icons-material/List';
 
 import { DataGrid, GridColDef } 
-from '@mui/x-data-grid';
+  from '@mui/x-data-grid';
 
 import { toPhoneNumber, toAppointmentTime } 
-from '@/app/_lib/utils';
+  from '@/app/_lib/utils';
 import { TableFetch } 
-from '@/app/_lib/data';
+  from '@/app/_lib/data';
 import Schedule from './schedule';
 
 
+// Column definitions for the MUI DataGrid component
 const columns: GridColDef[] = [
   {
     field: 'fullName',
@@ -66,17 +67,27 @@ const columns: GridColDef[] = [
 ];
 
 
+/**
+ * @function React Component for the Schedule Page
+ * @returns JSX Component for the Schedule Page
+ */
 export default function SchedulePage() {
   const session = useSession();
 
+
+  // GET queries for the signed in user's tutor and tutee appointments
   const { data: tutorAppointments, refetch: tutorRefetch } = TableFetch<AppointmentQuery>("appointment", [session, "tutor"], `tutor_email_contains=${session?.data?.user?.email}`);
   const { data: tuteeAppointments, refetch: tuteeRefetch } = TableFetch<AppointmentQuery>("appointment", [session, "tutee"], `tutee_email_contains=${session?.data?.user?.email}`);
 
+
+  // State variable and handler function for changing the current view from schedule to list
   const [tab, setTab] = React.useState(0);
   const handleTabChange = (event: React.SyntheticEvent<Element, Event>, value: any) => {
     setTab(value);
   };
 
+
+  // Row data for the MUI DataGrid List
   const rows = tutorAppointments?.data?.map((appointment: Appointment, index) => (
     {
       id: index,

@@ -58,44 +58,6 @@ export function TableUpdate(tableName: string) {
   });
 }
 
-
-// ============== DATABASE TUTOR QUERIES ==============
-// active_status_name_equals
-// average_rating_greater_than_or_equals
-// average_rating_less_than_or_equals
-// bio_text_contains
-// contains
-// email_contains
-// first_name_contains
-// last_name_contains
-// listing_title_contains
-// major_abbreviation_contains
-// number_of_ratings_greater_than_or_equals
-// number_of_ratings_less_than_or_equals
-// pay_rate_greater_than_or_equals
-// pay_rate_less_than_or_equals
-// phone_number_contains
-// picture_url_contains
-// seniority_name_in
-// sort_by
-
-// ---------------------------------tutor_eligible_course parameters
-// eligible_course_grade_in
-// eligible_course_number_equals
-// eligible_course_number_greater_than_or_equals
-// eligible_course_number_less_than_or_equals
-// eligible_course_major_abbreviation_contains
-// ---------------------------------tutor_course_preference parameters
-// course_preference_grade_in
-// course_preference_number_equals
-// course_preference_number_greater_than_or_equals
-// course_preference_number_less_than_or_equals
-// course_preference_major_abbreviation_contains
-// ---------------------------------tutor_location_preference parameters
-// location_name_in
-// page_number
-// number_entries_per_page
-
 export const useTutorCreate = () => {
   return useMutation({
     mutationFn: async (fields: any) => { const response = axios.post('/tutor?' + objectToQueryString(fields));

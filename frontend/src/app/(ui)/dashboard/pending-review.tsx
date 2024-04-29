@@ -12,12 +12,20 @@ import { toTitleCase, toDate }
   from '@/app/_lib/utils';
 
 
+/**
+ * Component for displaying a pending tutor review
+ * @param pendingReview - 'PendingReview' variable containing the pending review information
+ * @param setPendingReview - Setter function for pendingReview
+ * @returns 
+ */  
 export default function PendingReview( { pendingReview, setPendingReview } : { pendingReview: PendingReview, setPendingReview: Function } ) {
+  // State variable for controlling whether the pending review is opened
   const [open, setOpen] = React.useState(false);
   
   const tutorName = toTitleCase(`${pendingReview.tutorFirstName} ${pendingReview.tutorLastName}`);
   const tutorInfo = `${pendingReview.tutorMajorAbbreviation.toUpperCase()} | ${toTitleCase(pendingReview.tutorSeniority)}`;
 
+  // Handler function for setting the pending review
   const handleRatingBox = () => {
     setPendingReview(pendingReview);
   };

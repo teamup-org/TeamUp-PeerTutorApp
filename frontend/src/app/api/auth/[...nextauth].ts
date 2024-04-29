@@ -5,8 +5,12 @@ import GoogleProvider from 'next-auth/providers/google';
 import type { NextAuthOptions }
   from 'next-auth';
 
+
+// Next-Auth configuration; Define Authentication logic here. The Google Provider has been already defined
 export const authConfig: NextAuthOptions = {
   providers: [
+    // IF WRITING CUSTOM CREDENTIALS PROVIDER UNCOMMENT CODE AND USE AS A BASIS
+
     /*CredentialsProvider({
       name: "Sign In",
       credentials: {

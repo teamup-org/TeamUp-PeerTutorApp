@@ -16,6 +16,7 @@ import { toTitleCase }
   from '@/app/_lib/utils';
 
 
+// Transition component for Dialogue popup
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
@@ -25,7 +26,12 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
+/**
+ * Component for displaying a tutor's profile popup containing separate schedule and review components
+ * @param tutor - A 'Tutor' value to pull rating information from and also use to query for appointments and reviews. Can be 'null' value as well when values are not initially populated
+ * @param open - State variable and setter function to control when profile is opened or closed
+ * @returns 
+ */  
 export default function TutorProfile(
   { tutor: tutor, open: [open, setOpen] } : { tutor: Tutor | null, open: [boolean, Function] }
 ){

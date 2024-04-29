@@ -19,6 +19,12 @@ export const metadata: Metadata = {
   description: "A peer tutoring service for matching tutors with tutees",
 };
 
+
+/**
+ * Layout component for all children under /dashboard/*. Initializes the top App Bar with links and profile settings
+ * @param children - Child components passed from React
+ * @returns 
+ */  
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       {/* Material UI - Proper rendering and touch zooming for all devices */}
-      <head><meta name="viewport" content="initial-scale=1, width=device-width" /></head>
+      <head> <meta name="viewport" content="initial-scale=1, width=device-width" /> </head>
       
       <body>
         <QueryProvider>

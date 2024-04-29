@@ -10,16 +10,16 @@ import { Login, HowToReg }
 
 import ResponsiveAppBar from './(ui)/app-bar'
 
-/**
- * links for buttons in app bar
- */
+
+// Links for buttons in app bar on the landing page
 const links = [
   {name: 'Login', href: '/login', icon: Login},
   {name: 'Register', href: '/register', icon: HowToReg},
 ];
 
+
 /**
- * Component for landing page
+ * @function React Component for Landing Page
  * @returns 
  */
 export default function LandingPage() {

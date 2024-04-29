@@ -15,22 +15,34 @@ import DoneIcon from '@mui/icons-material/Done';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle';
 import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
-import { Box, Stack, Avatar, Typography, Button, Divider, Tooltip, Dialog, DialogContent }
+import { Stack, Avatar, Typography, Button, Divider, Tooltip, Dialog, DialogContent }
   from '@mui/material';
 
-import { toTitleCase, toPhoneNumber, toAppointmentTime, toAppointmentDateOnly, toAppointmentTimeOnly } 
+import { toTitleCase, toPhoneNumber, toAppointmentDateOnly, toAppointmentTimeOnly } 
   from '@/app/_lib/utils';
 import { TableUpdate }
   from '@/app/_lib/data';
 
+
+/**
+ * Component for displaying the EventItem popup on the Schedule Page
+ * @param appointment - Appointment data for the selected appointment
+ * @param event - State variable and setter function for controlling the popup's open state
+ * @param refetch - Refetch functions for tutor and tutee appointment queries
+ * @returns 
+ */  
 export default function EventItem(
   { appointment, event: [eventOpen, setEventOpen], refetch: [tutorRefetch, tuteeRefetch] }: 
   { appointment: Appointment | undefined, event: [boolean, Function], refetch: [Function, Function] }
 ){
   const [startDate, endDate] = [new Date(appointment ? appointment.startDateTimeString : ""), new Date(appointment ? appointment.endDateTimeString : "")];
   
+
+  // Mutation variable for appointment/update
   const updateSchedule = TableUpdate("appointment/update");
 
+
+  // Handler functions for confirming and cancelling appointments
   const handleConfirm = () => {
     appointment &&
     updateSchedule.mutate({
@@ -57,6 +69,8 @@ export default function EventItem(
     });
   };
 
+
+  // Data to be displayed on the appointment event
   const appointmentDateOnly = toAppointmentDateOnly(startDate, endDate);
   const appointmentTimeOnly = toAppointmentTimeOnly(startDate, endDate);
   const sessionEmail = useSession().data?.user?.email;
@@ -72,6 +86,7 @@ export default function EventItem(
   var seniority = toTitleCase(appointment?.tutorSeniorityName);
   var target = "Your Tutor";
 
+  // Change data to tutee if the signed in user is the current tutor on the appointment
   if (sessionEmail === appointment?.tutorEmail) {
     avatar = appointment?.tuteePictureUrl;
     name = toTitleCase(`${appointment?.tuteeFirstName} ${appointment?.tuteeLastName}`);

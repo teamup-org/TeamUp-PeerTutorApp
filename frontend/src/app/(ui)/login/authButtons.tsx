@@ -1,4 +1,7 @@
 
+// Define Authentication provider buttons here from Next-Auth.js
+
+
 import Image from 'next/image';
 
 import { signIn } 
@@ -10,6 +13,10 @@ import { Button, Typography }
 import googleLogo from '@/../public/google.png';
 
 
+/**
+ * @function React Component for the Google Login Provider
+ * @returns JSX Component for the Google Login Provider
+ */
 export function GoogleSignInButton() {
   return (
     <Button onClick={() => signIn("google")} variant="contained">

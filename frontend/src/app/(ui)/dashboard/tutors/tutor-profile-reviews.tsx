@@ -9,11 +9,13 @@ import Review from '../review';
 import { TableFetch } from '@/app/_lib/data';
 
 
+// Sorting options when querying tutor reviews
 const sortOptions = [
   { label: "Top Reviews", query: "number_stars_descending" }, 
   { label: "Most Recent", query: "review_date_descending" },
 ];
 
+// Filtering options when querying tutor reviews 
 const filterOptions = [
   { label: "All Stars", query: "05" }, 
   { label: "5 Stars", query: "55" }, 
@@ -23,6 +25,8 @@ const filterOptions = [
   { label: "1 Stars", query: "11" }, 
 ];
 
+
+// Helper function for calculating a tutor's rating distribution
 const calculateRatingDistribution = (tutor: Tutor) => {
   const totalRatings = Math.max(tutor.numberOfRatings, 1);
 
@@ -39,22 +43,33 @@ const calculateRatingDistribution = (tutor: Tutor) => {
   return dist;
 };
 
+
+/**
+ * Component for displaying a tutor profile's reviews
+ * @param tutor - A 'Tutor' value to pull rating information from and also use to query for reviews. Can be 'null' value as well when values are not initially populated
+ * @returns 
+ */  
 export default function TutorProfileReviews({ tutor }: { tutor: Tutor | null }) {
+  // State variables for sort, filter, and rating distrubition
   const [sort, setSort] = React.useState(sortOptions[0].query);
   const [filter, setFilter] = React.useState(filterOptions[0].query);
   const [starWeights, setStarWeights] = React.useState<number[][]>([[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]);
+    // Only initialize rating distribution when tutor is non-null
     React.useEffect(() => {
       if (tutor) setStarWeights(calculateRatingDistribution(tutor));
     }, [tutor]);
 
+  // State variable for pagination
   const [page, setPage] = React.useState(1);
 
+  // Mapping function for printing out sorting/filtering options
   const mapOptions = (options: {label: string, query: string}[]) => {
     return options.map((option, index) => (
       <MenuItem key={index} value={option.query}> {option.label} </MenuItem>
     ));
   };
 
+  // Map function for printing out rating distribution
   const mapStars = () => {
     return starWeights.toReversed().map((weight: number[], index) => (
       <Stack key={index} direction="row" spacing={1} alignItems="center">
@@ -67,6 +82,8 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor | null }) 
     ));
   };
 
+
+  // Handler Functions
   const handleSortChange = (event: SelectChangeEvent) => {
     setSort(event.target.value);
   };
@@ -75,6 +92,8 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor | null }) 
     setFilter(event.target.value);
   };
 
+
+  // Data Query Function
   const { data: reviewData, isLoading: reviewIsLoading, isFetching: reviewIsFetching, refetch: reviewRefetch } = 
     TableFetch<ReviewQuery>("tutor_review", [sort, filter, tutor, page], 
       `tutor_email_contains=${tutor?.email}`,
@@ -85,10 +104,16 @@ export default function TutorProfileReviews({ tutor }: { tutor: Tutor | null }) 
       `sort_by=${sort}`
     );
   
+  // Reinitialize current page when a new query is made. Lowers page number to last page of the new query or to 1 if page is 0
   React.useEffect(() => {
-    setPage(Math.max(Math.min(page, (reviewData ? reviewData?.metaData?.totalNumberPages : page)), 1));
+    setPage( 
+      Math.max(
+        Math.min(page, (reviewData ? reviewData?.metaData?.totalNumberPages : page))
+      , 1) 
+    );
   }, [page, reviewData]);
 
+  // Print a tutor's reviews from query results
   const printReviews = () => {
     if (reviewData && reviewData?.data?.length > 0) { 
       return reviewData.data.map((review: Review, index: number) => (
