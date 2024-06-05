@@ -9,11 +9,11 @@ import { Login, HowToReg }
   from '@mui/icons-material'
 
 import ResponsiveAppBar from './(ui)/app-bar'
-
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 // Links for buttons in app bar on the landing page
 const links = [
-  {name: 'Login', href: '/login', icon: Login},
+  {name: 'Login', href: '/api/auth/login', icon: Login},
   {name: 'Register', href: '/register', icon: HowToReg},
 ];
 
@@ -23,6 +23,7 @@ const links = [
  * @returns 
  */
 export default function LandingPage() {
+  const { user } = useUser();
 
   return (
     <>
@@ -58,6 +59,16 @@ export default function LandingPage() {
           <Divider variant="middle" orientation="horizontal" sx={{ width: '75%' }} /> 
 
           <Box width="50%" mx="auto" textAlign="center" pb={4}> 
+            {!user && (
+              <>
+                <h1>not signed in</h1>
+              </>
+            )}
+            {user && (
+              <>
+                <h1>Signed in</h1>
+              </>
+            )}
             <Typography align="center" mt={2} sx={{ fontSize: '40px', fontWeight: 'bold'}}> 
               Our Mission
             </Typography>
