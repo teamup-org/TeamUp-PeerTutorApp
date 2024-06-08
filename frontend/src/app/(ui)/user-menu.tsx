@@ -9,6 +9,8 @@ import { useSession, signOut }
 import { Box, Menu, MenuItem, Typography, Tooltip, IconButton, Avatar, Link }
   from '@mui/material';
 
+import { useUser } from "@auth0/nextjs-auth0/client";
+
 
 // Settings for the Profile menu
 const settings = [ 'Profile', 'Log Out' ];
