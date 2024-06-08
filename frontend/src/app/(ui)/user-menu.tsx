@@ -3,9 +3,6 @@
 
 import * as React from 'react';
 
-import { useSession, signOut }
-  from 'next-auth/react';
-
 import { Box, Menu, MenuItem, Typography, Tooltip, IconButton, Avatar, Link }
   from '@mui/material';
 
@@ -35,20 +32,19 @@ export default function UserMenu() {
   };
 
   const handleLogOut = async () => {
-    await signOut();
-    setAnchorElUser(null);
+    // await signOut();
+    // setAnchorElUser(null);
   };
 
 
-  const { data: session, status } = useSession();
-
+  const { user } = useUser();
 
   return (
     <Box sx={{ flexGrow: 0 }}>
       <Tooltip title="Open settings">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          { session && 
-            <Avatar src={session?.user?.image?.toString()} alt="" />
+          { user && 
+            <Avatar src={user?.image?.toString()} alt="" />
           }
         </IconButton>
       </Tooltip>
