@@ -12,7 +12,6 @@ import axios from 'axios';
 const links = [
   {name: 'Login', href: '/login', icon: Login},
   {name: 'Register', href: '/register', icon: HowToReg},
-  {name: 'Chat with AI', href: '/ai-chat', icon: Chat},
 ];
 
 export default function LandingPage() {
