@@ -14,7 +14,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 // Links for buttons in app bar on the landing page
 const links = [
   {name: 'Login', href: '/api/auth/login', icon: Login},
-  {name: 'Logout', href: '/api/auth/logout', icon: Logout},
+  // {name: 'Logout', href: '/api/auth/logout', icon: Logout},
   {name: 'Register', href: '/api/auth/signup', icon: HowToReg},
 ];
 
