@@ -60,16 +60,6 @@ export default function LandingPage() {
           <Divider variant="middle" orientation="horizontal" sx={{ width: '75%' }} /> 
 
           <Box width="50%" mx="auto" textAlign="center" pb={4}> 
-            {!user && (
-              <>
-                <h1>not signed in</h1>
-              </>
-            )}
-            {user && (
-              <>
-                <h1>Signed in</h1>
-              </>
-            )}
             <Typography align="center" mt={2} sx={{ fontSize: '40px', fontWeight: 'bold'}}> 
               Our Mission
             </Typography>
