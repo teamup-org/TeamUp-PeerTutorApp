@@ -40,6 +40,7 @@ export default function DashboardPage() {
   const [selectedPendingReview, setSelectedPendingReview] = React.useState<PendingReview | null>(null);
 
   const { user } = useUser();
+  const userName = user?.name
   const userEmail = user?.email;
 
 

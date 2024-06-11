@@ -272,7 +272,7 @@ export default function Registration() {
    */
   React.useEffect(() => {
       if (user) {
-        setTutor({...tutor, email: user?.email || '', pictureUrl: user?.image || ''});
+        setTutor({...tutor, email: user?.email || '', pictureUrl: user?.picture || ''});
       }
   },[user]);
 
@@ -291,7 +291,7 @@ export default function Registration() {
       major_abbreviation: tutor.majorAbbreviation,
       pay_rate: tutor.payRate,
       phone_number: tutor.phoneNumber,
-      picture_url: user?.image,
+        picture_url: user?.picture,
       seniority_name: tutor.seniorityName,
       transcript: transcript,
 
@@ -443,7 +443,7 @@ export default function Registration() {
       first_name: tutee.firstName,
       last_name: tutee.lastName,
       major_abbreviation: tutee.majorAbbreviation,
-      picture_url: user?.image,
+      picture_url: user?.picture,
       phone_number: tutee.phoneNumber,
       seniority_name: tutee.seniorityName
     }

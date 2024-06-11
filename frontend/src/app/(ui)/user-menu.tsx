@@ -7,6 +7,7 @@ import { Box, Menu, MenuItem, Typography, Tooltip, IconButton, Avatar, Link }
   from '@mui/material';
 
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { useRouter } from 'next/router';
 
 
 // Settings for the Profile menu
@@ -31,9 +32,9 @@ export default function UserMenu() {
     setAnchorElUser(null);
   };
 
-  const handleLogOut = async () => {
-    // await signOut();
-    // setAnchorElUser(null);
+  const handleLogOut = () => {
+    // const router = useRouter();
+    // router.push('/api/auth/logout')
   };
 
 
@@ -71,7 +72,7 @@ export default function UserMenu() {
           </Typography>
         </MenuItem>
         
-        <MenuItem key={settings[1]} onClick={handleLogOut} >
+        <MenuItem key={settings[1]} component={Link} href={'/api/auth/logout'} >
           <Typography variant="inherit" textAlign="center">
             {settings[1]}
           </Typography>
