@@ -26,6 +26,12 @@ const links = [
 export default function LandingPage() {
   const { user } = useUser();
 
+  if(user) {
+    links.pop();
+    links.pop();
+    links.push({name: 'Logout', href: '/api/auth/logout', icon: Logout});
+  }
+
   return (
     <>
       <header>

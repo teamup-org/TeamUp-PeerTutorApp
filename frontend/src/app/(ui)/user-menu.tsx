@@ -7,12 +7,9 @@ import { Box, Menu, MenuItem, Typography, Tooltip, IconButton, Avatar, Link }
   from '@mui/material';
 
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { useRouter } from 'next/router';
-
 
 // Settings for the Profile menu
 const settings = [ 'Profile', 'Log Out' ];
-
 
 /**
  * @function React Component for user's Profile
@@ -31,12 +28,6 @@ export default function UserMenu() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  const handleLogOut = () => {
-    // const router = useRouter();
-    // router.push('/api/auth/logout')
-  };
-
 
   const { user } = useUser();
 

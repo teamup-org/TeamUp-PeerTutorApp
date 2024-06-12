@@ -40,13 +40,10 @@ export default function DashboardPage() {
   const [selectedPendingReview, setSelectedPendingReview] = React.useState<PendingReview | null>(null);
 
   const { user } = useUser();
-  const userName = user?.name
   const userEmail = user?.email;
-
 
   // Get pending reviews for user's profile
   const { data: pendingReviewData, isLoading: loading, refetch } = TableFetch<PendingReview[]>("tutor_review/pending_reviews", [userEmail], `tutee_email=${userEmail}`);
-
 
   return (
     <Box position="relative" sx={{top: 50}}>
