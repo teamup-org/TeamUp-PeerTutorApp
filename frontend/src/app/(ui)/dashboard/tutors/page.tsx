@@ -2,6 +2,7 @@
 
 
 import * as React from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
@@ -36,6 +37,9 @@ export default function TutorPage() {
   const [selectedTutor, setSelectedTutor] = React.useState<Tutor | null>(null);
   const [profileOpen, setProfileOpen] = React.useState(false);
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   // State variables and handler functions for pagination
   const [tutorsPerPage, setTutorsPerPage] = React.useState(5);
   const handleTutorsPerPageChange = (event: any, value: number) => {
@@ -52,6 +56,13 @@ export default function TutorPage() {
     setSearch(event.target.value);
   };
 
+  // Set the search state if the URL contains the query parameter
+  React.useEffect(() => {
+    const searchParam = searchParams.get('query');
+    if (searchParam !== null) {
+      setSearchQuery(searchParam);
+    }
+  }, [searchParams, setSearchQuery]);
 
   // Database Fetching
   const { data: tutorData, isLoading: tutorIsLoading, isFetching: tutorIsFetching } = 

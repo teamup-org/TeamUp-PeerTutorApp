@@ -9,7 +9,7 @@ import { Login, Logout, HowToReg, Search }
   from '@mui/icons-material'
 
 import ResponsiveAppBar from './(ui)/app-bar'
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { useRouter } from 'next/navigation';
 
@@ -21,6 +21,7 @@ import { useRouter } from 'next/navigation';
 export default function LandingPage() {
   const { user } = useUser();
   const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Links for buttons in app bar on the landing page
   const links : Link[] = [];
@@ -33,11 +34,23 @@ export default function LandingPage() {
   }
 
   const handleCourseClick = (course) => {
-    const next = `/dashboard/tutors?major=${course}`;
+    const next = `/dashboard/tutors?major=${encodeURIComponent(course)}`;
     if (!user) {
       router.push(`/api/auth/login?next=${encodeURIComponent(next)}`);
     } else {
       router.push(next);
+    }
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    if (searchQuery.trim() !== '') {
+      const next = `/dashboard/tutors?query=${encodeURIComponent(searchQuery)}`;
+      if (!user) {
+        router.push(`/api/auth/login?next=${encodeURIComponent(next)}`);
+      } else {
+        router.push(next);
+      }
     }
   };
 
@@ -94,19 +107,23 @@ export default function LandingPage() {
             <Typography variant="h5" align="center" mb={2} sx={{ fontWeight: 'bold', fontSize: '2rem' }}>
               Find the perfect tutor right here!
             </Typography>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="What do you want to learn?"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ mb: 4 }}
-            />
+            <form onSubmit={handleSearchSubmit} style={{ width: '100%' }}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                placeholder="What do you want to learn?"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ mb: 4 }}
+              />
+            </form>
           </Box>
 
           <Box width="75%" mx="auto" textAlign="center" pb={4}>
