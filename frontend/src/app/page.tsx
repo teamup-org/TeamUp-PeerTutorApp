@@ -3,20 +3,15 @@
 
 import Link from 'next/link';
 
-import { Box, Typography, Button, Divider, Stack }
+import { Box, Typography, Button, Divider, Stack, TextField, InputAdornment, Grid, Paper }
   from '@mui/material'
-import { Login, Logout, HowToReg }
+import { Login, Logout, HowToReg, Search }
   from '@mui/icons-material'
 
 import ResponsiveAppBar from './(ui)/app-bar'
+import React, { useEffect, useState } from 'react';
 import { useUser } from "@auth0/nextjs-auth0/client";
-
-// Links for buttons in app bar on the landing page
-const links = [
-  {name: 'Login', href: '/api/auth/login', icon: Login},
-  // {name: 'Logout', href: '/api/auth/logout', icon: Logout},
-  {name: 'Register', href: '/api/auth/signup', icon: HowToReg},
-];
+import { useRouter } from 'next/navigation';
 
 
 /**
@@ -25,12 +20,39 @@ const links = [
  */
 export default function LandingPage() {
   const { user } = useUser();
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
 
-  if(user) {
-    links.pop();
-    links.pop();
+  // Links for buttons in app bar on the landing page
+  const links : Link[] = [];
+  if (!user) {
+    links.push({name: 'Login', href: '/api/auth/login', icon: Login});
+    links.push({name: 'Register', href: '/api/auth/signup', icon: HowToReg});
+  }
+  else {
     links.push({name: 'Logout', href: '/api/auth/logout', icon: Logout});
   }
+
+  const handleCourseClick = (course) => {
+    const next = `/dashboard/tutors?major=${encodeURIComponent(course)}`;
+    if (!user) {
+      router.push(`/api/auth/login?next=${encodeURIComponent(next)}`);
+    } else {
+      router.push(next);
+    }
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    if (searchQuery.trim() !== '') {
+      const next = `/dashboard/tutors?query=${encodeURIComponent(searchQuery)}`;
+      if (!user) {
+        router.push(`/api/auth/login?next=${encodeURIComponent(next)}`);
+      } else {
+        router.push(next);
+      }
+    }
+  };
 
   return (
     <>
@@ -77,6 +99,57 @@ export default function LandingPage() {
             <Typography variant="h5" align="center" mt={2} sx={{ fontWeight: 'bold'}}> 
               By handling bookings and scheduling on their behalf, the tool allows enrolled tutors to focus on teaching while getting discovered by relevant tutees seeking specific course guidance. 
             </Typography>
+          </Box>
+
+          <Divider variant="middle" orientation="horizontal" sx={{ width: '75%' }} />
+
+          <Box width="50%" mx="auto" textAlign="center">
+            <Typography variant="h5" align="center" mb={2} sx={{ fontWeight: 'bold', fontSize: '2rem' }}>
+              Find the perfect tutor right here!
+            </Typography>
+            <form onSubmit={handleSearchSubmit} style={{ width: '100%' }}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                placeholder="What do you want to learn?"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ mb: 4 }}
+              />
+            </form>
+          </Box>
+
+          <Box width="75%" mx="auto" textAlign="center" pb={4}>
+            <Grid container spacing={4}>
+              {['CSCE', 'MATH', 'PHYS', 'ENGL', 'HIST', 'BIOL'].map((course, index) => (
+                <Grid item xs={12} md={4} key={index}>
+                  <div onClick={() => handleCourseClick(course)}>
+                    <Paper 
+                      elevation={3} 
+                      sx={{ 
+                        width: '100%', 
+                        height: 200, 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center', 
+                        cursor: 'pointer',
+                        backgroundImage: `url(/${course.toLowerCase()}.png)`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'
+                      }}
+                    >
+                    </Paper>
+                  </div>
+                </Grid>
+              ))}
+            </Grid>
           </Box>
         </Stack>
       </main>

@@ -18,9 +18,6 @@ import { TableFetch }
   from '@/app/_lib/data';
 
 
-
-
-
 export default function SignIn() {
   ////////////////
   const { user } = useUser();
@@ -103,4 +100,4 @@ export default function SignIn() {
       </Paper>
     </Container>
   );
-  }
+}
