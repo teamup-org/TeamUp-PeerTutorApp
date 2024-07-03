@@ -236,7 +236,7 @@ export default function TutorProfileSchedule({ tutor } : { tutor: Tutor | null }
           { tutorTimeRequest.isSuccess ?
           "Request Successfully Sent!"
           :
-          "Request Failed"
+          "Request Failed! You have not registered as a tutee."
           }
         </Alert>
       </Snackbar>

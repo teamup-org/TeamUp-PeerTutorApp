@@ -2,9 +2,6 @@
 
 import * as React from 'react';
 
-import { useSession }
-  from 'next-auth/react';
-
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 import { Skeleton, Button, Typography, Avatar, Paper, Tab, Tabs, Snackbar, Alert, CircularProgress } 
@@ -360,7 +357,7 @@ export default function ProfilePage() {
       // Create the final object with email and time intervals for each day
       const result: any = {};
     
-      result.tutor_email = session?.user?.email;
+      result.tutor_email = user?.email;
     
       timePreferences.forEach((timePreference) => {
       const { tutorEmail, weekdayName } = timePreference;
