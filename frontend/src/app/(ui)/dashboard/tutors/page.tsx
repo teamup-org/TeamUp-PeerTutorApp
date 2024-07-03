@@ -72,10 +72,10 @@ export default function TutorPage() {
     `sort_by=${sort}`,
     `pay_rate_greater_than_or_equals=${rate[0]}`,
     `pay_rate_less_than_or_equals=${rate[1]}`,
-    `course_preference_major_abbreviation_contains=${major ? major : ""}`,
-    `course_preference_number_equals=${course ? course : ""}`,
     `seniority_name_in=${seniority}`,
     `contains=${searchQuery}`,
+    ...(major ? [`course_preference_major_abbreviation_contains=${major}`] : []),
+    ...(course ? [`course_preference_number_equals=${course}`] : []),
   );
   
   // Listen to page or tutorData change. Restrains page number to less than total pages from pagination data
