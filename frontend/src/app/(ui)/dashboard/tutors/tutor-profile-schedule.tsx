@@ -199,7 +199,7 @@ export default function TutorProfileSchedule({
   };
 
   const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value.split(/\s+/).length <= 200) {
+    if (event.target.value.split(/\s+/).length <= 50) {
       setTuteeRequestComment(event.target.value);
     }
   };
@@ -213,7 +213,7 @@ export default function TutorProfileSchedule({
         variant="outlined"
         value={tuteeRequestComment}
         onChange={handleCommentChange}
-        helperText={`${tuteeRequestComment.split(/\s+/).length}/200 words`}
+        helperText={`${tuteeRequestComment.split(/\s+/).length}/50 words`}
       />
 
       <Stack direction="column" spacing={2} width="100%">
@@ -269,7 +269,7 @@ export default function TutorProfileSchedule({
           >
             {tutorTimeRequest.isSuccess
               ? "Request Successfully Sent!"
-              : "Request Failed"}
+              : "Request Failed, Reason: You arent a registered tutee yet!"}
           </Alert>
         </Snackbar>
       </Stack>
