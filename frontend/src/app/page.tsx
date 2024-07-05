@@ -7,6 +7,7 @@ import { Box, Typography, Button, Divider, Stack, Drawer, TextField, List, ListI
 import { Login, HowToReg, Chat, ArrowBackIos, Send}
   from '@mui/icons-material'
 import ResponsiveAppBar from './(ui)/app-bar'
+import AIChatBox from './(ui)/aichat-box'
 import axios from 'axios';
 import {convertFieldResponseIntoMuiTextFieldProps} from "@mui/x-date-pickers/internals";
 
@@ -24,12 +25,10 @@ export default function LandingPage() {
   const handleClose = () => setOpen(false);
 
   const sendMessage = async () => {
-    setConversation([...conversation, { role: 'user', content: message }]);
-    const messageLength = message.length;
-    console.log("Sending message of length (tokens):", messageLength);
+    setConversation(prevConversation => [...prevConversation, { role: 'user', content: message }]);
 
     try {
-      const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_OPENAI_API_URL}`, {
         model: 'gpt-3.5-turbo',
         messages: [
           { role: 'system', content: 'You are a helpful assistant.'},
@@ -39,13 +38,11 @@ export default function LandingPage() {
       }, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer **Change this for API Key`,
+          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`,
         },
       });
-      console.log("Received response:", response.data);
-      setConversation([...conversation, {role: 'ai', content: response.data.choices[0].message.content}]);
+      setConversation(prevConversation => [...prevConversation, {role: 'ai', content: response.data.choices[0].message.content}]);
     } catch (error) {
-      console.log("Caught Error");
       console.error(error);
     } finally {
       setMessage('');
@@ -57,55 +54,11 @@ export default function LandingPage() {
         <header>
           <ResponsiveAppBar links={links} settings={[]} />
         </header>
-        <Drawer anchor="right" open={open} onClose={handleClose}>
-          <Box sx={{ width: 300, p: 2, display: 'flex', flexDirection:'column', height: '100vh' }}>
-            <Box sx={{display: 'flex', alignItems: 'center'}}>
-              <IconButton sx={{color: 'black'}} aria-label="backarrow" onClick={handleClose}>
-                <ArrowBackIos/>
-              </IconButton>
-              <Typography color='primary' variant="h6">AI Assistant</Typography>
-            </Box>
-            <Divider sx={{backgroundColor: 'lightgray'}}/>
 
-            <Box sx={{ flexGrow:1, overflowY: 'auto', minHeight:0}}>
-              <List>
-                {conversation.map((message, index) => (
-                    <ListItem key={index}>
-                      <ListItemText
-                          primary={message.content}
-                          secondary={message.role}
-                          sx={{p: 1, borderRadius: '20px', backgroundColor: message.role ==='user' ? 'black' : 'lightgray', color: message.role === 'user' ? 'white' : 'black', display: 'flex'}}
-                      />
-                    </ListItem>
-                ))}
-              </List>
-            </Box>
+        <AIChatBox
+            open={open} handleClose={handleClose} conversation={conversation} message={message} setMessage={setMessage} sendMessage={sendMessage}
+        />
 
-            <Box sx={{display: 'flex', mt: 'auto', alignItems: 'flex-end'}}>
-              <TextField
-                  value={message}
-                  onChange={e => setMessage(e.target.value)}
-                  placeholder={"Message..."}
-                  sx={{p:1, borderRadius: '20px', flexGrow:1}}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      sendMessage();
-                    }
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton sx={{color: 'black'}}>
-                            <Send onClick={sendMessage}/>
-                          </IconButton>
-                        </InputAdornment>
-                    ),
-                  }}
-              />
-            </Box>
-          </Box>
-        </Drawer>
         <main>
           <Stack direction="column" width="100%" height="100%" spacing={8} alignItems="center">
             <Stack bgcolor="#e0e0e0" width="100%" sx={{ flexDirection: {xs: "column", md: "row"} }} justifyContent="center" alignItems="center" p={4} spacing={4}>
