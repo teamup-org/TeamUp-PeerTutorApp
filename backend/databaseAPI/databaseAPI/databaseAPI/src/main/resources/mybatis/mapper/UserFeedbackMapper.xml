@@ -1,0 +1,12 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="xyz.tamutheo.databaseAPI.userFeedback.UserFeedbackMapper">
+
+    <insert id="save" parameterType="xyz.tamutheo.databaseAPI.userFeedback.UserFeedbackModel">
+        INSERT INTO user_feedback (user_id, rating, feedback1, feedback2, feedback3, feedback4, feedback5, feedback6, feedback7)
+        VALUES (#{userId}, #{rating}, #{feedback1}, #{feedback2}, #{feedback3}, #{feedback4}, #{feedback5}, #{feedback6}, #{feedback7})
+    </insert>
+
+</mapper>
