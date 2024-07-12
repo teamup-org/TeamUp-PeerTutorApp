@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserFeedbackModel {
+    private Long id;
     private String userId;
     private int rating;
     private String feedback1;

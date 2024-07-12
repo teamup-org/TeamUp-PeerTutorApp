@@ -4,7 +4,7 @@
 
 <mapper namespace="xyz.tamutheo.databaseAPI.userFeedback.UserFeedbackMapper">
 
-    <insert id="save" parameterType="xyz.tamutheo.databaseAPI.userFeedback.UserFeedbackModel">
+    <insert id="save" parameterType="xyz.tamutheo.databaseAPI.userFeedback.UserFeedbackModel" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO user_feedback (user_id, rating, feedback1, feedback2, feedback3, feedback4, feedback5, feedback6, feedback7)
         VALUES (#{userId}, #{rating}, #{feedback1}, #{feedback2}, #{feedback3}, #{feedback4}, #{feedback5}, #{feedback6}, #{feedback7})
     </insert>

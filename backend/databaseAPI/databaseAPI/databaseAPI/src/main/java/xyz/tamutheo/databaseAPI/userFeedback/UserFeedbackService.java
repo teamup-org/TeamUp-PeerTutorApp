@@ -14,6 +14,7 @@ public class UserFeedbackService {
     }
 
     public boolean getPopupStatus(String userId) {
-        return false;
+        // For now, always return true for testing
+        return true;
     }
 }
