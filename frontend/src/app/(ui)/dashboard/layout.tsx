@@ -14,7 +14,7 @@ const links: Link[] = [
   { name: "Dashboard", href: "/dashboard", icon: Dashboard },
   { name: "Peer Tutors", href: "/dashboard/tutors", icon: School },
   { name: "My Schedule", href: "/dashboard/schedule", icon: CalendarMonth },
-  { name: "Help/Contact us", href: "/dashboard/schedule", icon: ContactMail },
+  { name: "Help/Contact us", href: "/dashboard/help", icon: ContactMail },
 ];
 
 // Settings to appear in the App Bar's profile icon menu
