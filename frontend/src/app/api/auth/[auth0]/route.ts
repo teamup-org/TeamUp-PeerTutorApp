@@ -1,5 +1,6 @@
-import { handleAuth, handleLogin, handleLogout } from '@auth0/nextjs-auth0';
+import { handleAuth, handleLogin, handleLogout, handleCallback } from '@auth0/nextjs-auth0';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse, NextRequest } from 'next/server';
 
 const dynamicHandleLogin = (req: NextApiRequest, res: NextApiResponse) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
@@ -20,4 +21,10 @@ export const GET = handleAuth({
     logout: handleLogout({
         returnTo: "/",
     }),
+    onError(request: NextRequest) {
+        const url = request.nextUrl.clone();
+        url.pathname = '/';
+        return NextResponse.redirect(url);
+    },
 });
+
