@@ -173,9 +173,9 @@ export default function Schedule({
         viewDidMount={(info) => {
           setView(info.view.type);
 
-          info.view.type === "dayGridMonth"
-            ? setEvents(formatMonth())
-            : setEvents(formatEvents());
+          info.view.type === "timeGridDay"
+            ? setEvents(formatEvents())
+            : setEvents(formatMonth());
         }}
       />
       <EventItem

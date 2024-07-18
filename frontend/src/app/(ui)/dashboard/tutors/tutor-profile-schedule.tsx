@@ -62,7 +62,7 @@ export default function TutorProfileSchedule({
 
   //This array allows us to save the comment the tutee makes for the allocated time slot.
   const [tuteeRequestComment, setTuteeRequestComment] = React.useState("");
-
+  const [CommentTitle, setCommentTitle] = React.useState("");
   // Appointment Queries for selected tutor and user's tutee profile
   const { data: tutorEvents } = TableFetch<AppointmentQuery>(
     "appointment",
@@ -179,6 +179,7 @@ export default function TutorProfileSchedule({
           ),
 
           tutee_request_comment: tuteeRequestComment,
+          Comment_Title: CommentTitle,
         },
         {
           onSettled: (data, error, variables, context) => {
@@ -203,6 +204,11 @@ export default function TutorProfileSchedule({
       setTuteeRequestComment(event.target.value);
     }
   };
+  const handleTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.split(/\s+/).length <= 50) {
+      setCommentTitle(event.target.value);
+    }
+  };
 
   return (
     <Stack direction="column" width="100%" spacing={4} justifyContent="center">
@@ -214,6 +220,15 @@ export default function TutorProfileSchedule({
         value={tuteeRequestComment}
         onChange={handleCommentChange}
         helperText={`${tuteeRequestComment.split(/\s+/).length}/50 words`}
+      />
+      <TextField
+        label="Title"
+        multiline
+        fullWidth
+        variant="outlined"
+        value={CommentTitle}
+        onChange={handleTitle}
+        helperText={`${CommentTitle.split(/\s+/).length}/10 words`}
       />
 
       <Stack direction="column" spacing={2} width="100%">
