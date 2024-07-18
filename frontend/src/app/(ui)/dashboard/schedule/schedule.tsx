@@ -55,7 +55,10 @@ export default function Schedule({
         title: toTitleCase(
           `Tutee: ${appointment.tuteeFirstName} ${appointment.tuteeLastName}`
         ),
-        description: `Topic: ${
+
+        description: `Title: ${
+          appointment.CommentTitle ? appointment.CommentTitle : "None"
+        }\nThe View is : ${view}Topic: ${
           appointment.tuteeRequestComment
             ? appointment.tuteeRequestComment
             : "No details"
@@ -72,13 +75,9 @@ export default function Schedule({
           title: toTitleCase(
             `Tutor: ${appointment.tutorFirstName} ${appointment.tutorLastName}`
           ),
-          description: toTitleCase(
-            `Topic: ${
-              appointment.tuteeRequestComment
-                ? appointment.tuteeRequestComment
-                : "No details"
-            }`
-          ),
+          description: `Title: ${
+            appointment.CommentTitle ? appointment.CommentTitle : "None"
+          }`,
           start: appointment.startDateTimeString,
           end: appointment.endDateTimeString,
           data: appointment,
@@ -100,6 +99,9 @@ export default function Schedule({
         title: toTitleCase(
           `Tutee: ${appointment.tuteeFirstName} ${appointment.tuteeLastName}`
         ),
+        description: `The View is : ${view} Title: ${
+          appointment.CommentTitle ? appointment.CommentTitle : "None"
+        }`,
 
         start: appointment.startDateTimeString,
         end: appointment.endDateTimeString,
@@ -173,9 +175,9 @@ export default function Schedule({
         viewDidMount={(info) => {
           setView(info.view.type);
 
-          info.view.type === "timeGridDay"
-            ? setEvents(formatEvents())
-            : setEvents(formatMonth());
+          info.view.type === "dayGridMonth"
+            ? setEvents(formatMonth())
+            : setEvents(formatEvents());
         }}
       />
       <EventItem

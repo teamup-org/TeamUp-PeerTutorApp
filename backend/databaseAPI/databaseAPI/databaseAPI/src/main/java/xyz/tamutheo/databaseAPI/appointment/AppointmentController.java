@@ -10,20 +10,22 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/appointment")
 public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
-    @PostMapping(value = {"", "/"})
-    public void create(@RequestParam(name = "appointment_size_name", defaultValue = "single") String appointmentSizeName,
-                       @RequestParam(name = "end_date_time") String endDateTimeString,
-                       @RequestParam(name = "location_name") String locationName,
-                       @RequestParam(name = "tutee_email") String tuteeEmail,
-                       @RequestParam(name = "tutor_email") String tutorEmail,
-                       @RequestParam(name = "tutee_request_comment", required = false) String tuteeRequestComment,
-                       @RequestParam(name = "start_date_time") String startDateTimeString) {
+
+    @PostMapping(value = { "", "/" })
+    public void create(
+            @RequestParam(name = "appointment_size_name", defaultValue = "single") String appointmentSizeName,
+            @RequestParam(name = "end_date_time") String endDateTimeString,
+            @RequestParam(name = "location_name") String locationName,
+            @RequestParam(name = "tutee_email") String tuteeEmail,
+            @RequestParam(name = "tutor_email") String tutorEmail,
+            @RequestParam(name = "tutee_request_comment", required = false) String tuteeRequestComment,
+            @RequestParam(name = "Comment_Title", required = false) String CommentTitle,
+            @RequestParam(name = "start_date_time") String startDateTimeString) {
         AppointmentModel appointmentModel = AppointmentModel.builder()
                 .appointmentSizeName(appointmentSizeName)
                 .endDateTimeString(endDateTimeString)
@@ -31,23 +33,26 @@ public class AppointmentController {
                 .tuteeEmail(tuteeEmail)
                 .tuteeRequestComment(tuteeRequestComment)
                 .tutorEmail(tutorEmail)
+                .CommentTitle(CommentTitle)
                 .startDateTimeString(startDateTimeString)
                 .build();
         this.appointmentService.create(appointmentModel);
     }
-    @GetMapping(value = {"", "/"})
-    public PaginationContainerModel read(@RequestParam(name = "appointment_id_equals", required = false) Integer appointmentIdEquals,
-                                         @RequestParam(name = "appointment_size_name_contains", required = false) String appointmentSizeNameContains,
-                                         @RequestParam(name = "cancellation_reason_contains", required = false) String cancellationReasonContains,
-                                         @RequestParam(name = "end_date_time_less_than_or_equals", required = false) String endDateTimeLessThanOrEquals,
-                                         @RequestParam(name = "is_cancelled_equals", required = false) Boolean isCancelledEquals,
-                                         @RequestParam(name = "is_confirmed_equals", required = false) Boolean isConfirmedEquals,
-                                         @RequestParam(name = "location_name_in", required = false) String locationNameIn,
-                                         @RequestParam(name = "tutee_email_contains", required = false) String tuteeEmailContains,
-                                         @RequestParam(name = "tutor_email_contains", required = false) String tutorEmailContains,
-                                         @RequestParam(name = "start_date_time_greater_than_or_equals", required = false) String startDateTimeGreaterThanOrEquals,
-                                         @RequestParam(name = "page_number", required = false, defaultValue = "1") Integer pageNumber,
-                                         @RequestParam(name = "number_entries_per_page", required = false) Integer numberEntriesPerPage) {
+
+    @GetMapping(value = { "", "/" })
+    public PaginationContainerModel read(
+            @RequestParam(name = "appointment_id_equals", required = false) Integer appointmentIdEquals,
+            @RequestParam(name = "appointment_size_name_contains", required = false) String appointmentSizeNameContains,
+            @RequestParam(name = "cancellation_reason_contains", required = false) String cancellationReasonContains,
+            @RequestParam(name = "end_date_time_less_than_or_equals", required = false) String endDateTimeLessThanOrEquals,
+            @RequestParam(name = "is_cancelled_equals", required = false) Boolean isCancelledEquals,
+            @RequestParam(name = "is_confirmed_equals", required = false) Boolean isConfirmedEquals,
+            @RequestParam(name = "location_name_in", required = false) String locationNameIn,
+            @RequestParam(name = "tutee_email_contains", required = false) String tuteeEmailContains,
+            @RequestParam(name = "tutor_email_contains", required = false) String tutorEmailContains,
+            @RequestParam(name = "start_date_time_greater_than_or_equals", required = false) String startDateTimeGreaterThanOrEquals,
+            @RequestParam(name = "page_number", required = false, defaultValue = "1") Integer pageNumber,
+            @RequestParam(name = "number_entries_per_page", required = false) Integer numberEntriesPerPage) {
         List<String> locationNameInList = null;
         if (locationNameIn != null) {
             locationNameInList = Arrays.asList(locationNameIn.split(", "));
@@ -69,13 +74,14 @@ public class AppointmentController {
                 numberEntriesPerPage);
     }
 
-    //    @PutMapping(value = {"", "/"})
-    @RequestMapping(value = {"/update"})
+    // @PutMapping(value = {"", "/"})
+    @RequestMapping(value = { "/update" })
     public void update(@RequestParam(name = "appointment_id_old") Integer appointmentIdOld,
-                       @RequestParam(name = "cancellation_reason_new", required = false) String cancellationReasonNew,
-                       @RequestParam(name = "is_cancelled_new", required = false) Boolean isCancelledNew,
-                       @RequestParam(name = "is_confirmed_new", required = false) Boolean isConfirmedNew,
-                       @RequestParam(name = "tutee_request_comment_new", required = false) String tuteeRequestCommentNew) {
+            @RequestParam(name = "cancellation_reason_new", required = false) String cancellationReasonNew,
+            @RequestParam(name = "is_cancelled_new", required = false) Boolean isCancelledNew,
+            @RequestParam(name = "is_confirmed_new", required = false) Boolean isConfirmedNew,
+            @RequestParam(name = "tutee_request_comment_new", required = false) String tuteeRequestCommentNew,
+            @RequestParam(name = "Comment_Title_new", required = false) String CommentTitleNew) {
         AppointmentModel appointmentModelOld = AppointmentModel.builder()
                 .appointmentId(appointmentIdOld)
                 .build();
@@ -84,6 +90,7 @@ public class AppointmentController {
                 .isCancelled(isCancelledNew)
                 .isConfirmed(isConfirmedNew)
                 .tuteeRequestComment(tuteeRequestCommentNew)
+                .CommentTitle(CommentTitleNew)
                 .build();
         this.appointmentService.update(appointmentModelOld, appointmentModelNew);
     }

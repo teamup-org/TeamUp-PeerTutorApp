@@ -19,6 +19,7 @@ public class AppointmentModel {
     String appointmentSizeName;
     String cancellationReason;
     String endDateTimeString;
+    String CommentTitle;
     @JsonIgnore
     LocalDateTime endDateTimeValue;
     Boolean isCancelled;

@@ -142,6 +142,7 @@ declare global {
     // Appointment Information
     appointmentSizeName: "single" | "group",
     cancellationReason: string,
+    CommentTitle:string,
     tuteeRequestComment: string,
     startDateTimeString: Date,
     endDateTimeString: Date,
