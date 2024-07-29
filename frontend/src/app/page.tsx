@@ -97,7 +97,7 @@ export default function LandingPage() {
             </header>
 
             <AIChatBox
-                chatOpen={chatOpen} handleChatClose={handleChatClose} conversation={conversation} message={message} setMessage={setMessage} sendMessage={sendMessage}
+                open={chatOpen} handleClose={handleChatClose} conversation={conversation} message={message} setMessage={setMessage} sendMessage={sendMessage}
             />
 
             <main>
