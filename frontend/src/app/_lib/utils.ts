@@ -157,3 +157,34 @@ export function TuteeInfoChecking (formData: any) {
 
   return('');
 }
+
+export async function getYouTubeVideos(searchQuery: string) {
+  const API_KEY = "AIzaSyCqgKx1HGGW8t19JZeKWqwcFWRzu1gH_o8"
+  const url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=${searchQuery}&type=video&safeSearch=strict&key=${API_KEY}`;
+
+  try {
+    const data = await fetch(url);
+
+    if (!data.ok) {
+      throw new Error('Failed to fetch YouTube videos');
+    }
+
+    return await data.json();
+  } catch (error) {
+    throw new Error("Failed to fetch YouTube videos");
+  }
+}
+
+export type Video = {
+  id: {
+    kind: string,
+    videoId: string,
+  };
+  snippet: {
+    title: string
+  };
+};
+
+export type YouTubeResponse = {
+  items: Video[]
+};
