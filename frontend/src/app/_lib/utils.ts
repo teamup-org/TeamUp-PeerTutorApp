@@ -185,3 +185,22 @@ export type Video = {
 export type YouTubeResponse = {
   items: Video[]
 };
+
+export async function AIChatRequest(message: string) {
+  const aiRequestPath = `/api/aiChat`;
+  try {
+    const response = await fetch(aiRequestPath, {
+      method: 'POST',
+      body: JSON.stringify({ message }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch AI response');
+    }
+
+    const aiResponse = await response.json();
+    return aiResponse.choices[0].message.content;
+  } catch (error) {
+    throw new Error('Failed to fetch AI response');
+  }
+}
