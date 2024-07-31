@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { TableFetch } from '@/app/_lib/data'
-import { Grid } from '@mui/material';
+import { Grid, Box, Container, Typography, Paper } from '@mui/material';
 import { getYouTubeVideos, Video, YouTubeResponse } from '@/app/_lib/utils';
 import { useState, useEffect } from 'react';
 
@@ -30,6 +30,12 @@ export default function Recommendations() {
   const subjects = tuteeAppointments.data.map(appointment => appointment.tuteeRequestComment).filter(subject => subject && subject.trim() !== '');
 
   return (
+    <Box pt={4} bgcolor="background.default">
+      <Container maxWidth="lg">
+        <Paper variant="outlined" sx={{ p: 4 }}>
+          <Typography variant="h4" component="h2" gutterBottom>
+            Videos recommended for you:
+          </Typography>
           <Grid container spacing={3}>
             {videos.items.map((video: Video) => (
               <Grid item xs={12} sm={6} md={4} key={video.id.videoId}>
@@ -44,6 +50,9 @@ export default function Recommendations() {
               </Grid>
             ))}
           </Grid>
+        </Paper>
+      </Container>
+    </Box>
   );
 }
 
