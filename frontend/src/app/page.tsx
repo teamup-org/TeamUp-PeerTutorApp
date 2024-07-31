@@ -3,15 +3,16 @@
 
 import Link from 'next/link';
 
-import { Box, Typography, Button, Divider, Stack, TextField, InputAdornment, Grid, Paper }
+import { Box, Typography, Button, Divider, Stack, TextField, InputAdornment, Grid, Paper, Fab }
   from '@mui/material'
-import { Login, Logout, HowToReg, Search }
+import { Login, Logout, HowToReg, Search, Chat }
   from '@mui/icons-material'
 
 import ResponsiveAppBar from './(ui)/app-bar'
 import React, { useEffect, useState } from 'react';
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { useRouter } from 'next/navigation';
+import AIChatBox from './(ui)/aichat-box'
 
 
 /**
@@ -54,11 +55,16 @@ export default function LandingPage() {
     }
   };
 
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const handleChatOpen = () => setIsChatOpen(true);
+  const handleChatClose = () => setIsChatOpen(false);
+
   return (
     <>
       <header>
         <ResponsiveAppBar links={links} settings={[]} />
       </header>
+      <AIChatBox isChatOpen={isChatOpen} handleChatClose={handleChatClose}/>
       <main>
         <Stack direction="column" width="100%" height="100%" spacing={8} alignItems="center">
           <Stack bgcolor="#e0e0e0" width="100%" sx={{ flexDirection: {xs: "column", md: "row"} }} justifyContent="center" alignItems="center" p={4} spacing={4}>
@@ -153,6 +159,9 @@ export default function LandingPage() {
           </Box>
         </Stack>
       </main>
+      <Fab color="primary" aria-label="chat" onClick={handleChatOpen} sx={{ position: 'fixed', bottom: 16, right: 16,}}>
+        <Chat />
+      </Fab>
     </>
   );
 }
