@@ -64,7 +64,13 @@ export default function LandingPage() {
               <ResponsiveAppBar links={links} settings={[]} />
             </header>
 
+<<<<<<< HEAD
             <AIChatBox isChatOpen={isChatOpen} handleChatClose={handleChatClose}/>
+=======
+            <AIChatBox
+                open={chatOpen} handleClose={handleChatClose} conversation={conversation} message={message} setMessage={setMessage} sendMessage={sendMessage}
+            />
+>>>>>>> 9c89a5478300deb2ea19f807ccb11335caa74edf
 
             <main>
                 <Stack direction="column" width="100%" height="100%" spacing={8} alignItems="center">
