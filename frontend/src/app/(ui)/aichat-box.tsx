@@ -1,25 +1,45 @@
 'use client';
 
-import * as React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import {Box, Divider, Drawer, IconButton, InputAdornment, List, ListItem, ListItemText, TextField, Typography} from "@mui/material";
 import {ArrowBackIos, Send} from "@mui/icons-material";
 
-//Try to add interface to definitions.d.ts
+import {AIChatRequest} from '@/app/_lib/utils';
+
+
 interface AIChatBoxProps {
-    open: boolean;
-    handleClose: () => void;
-    conversation: { content:string, role: string}[];
-    message: string;
-    setMessage: (message:string) => void;
-    sendMessage: () => void;
+    isChatOpen: boolean;
+    handleChatClose: () => void;
 }
 
-export default function AIChatBox({ open, handleClose, conversation, message, setMessage, sendMessage } : AIChatBoxProps) {
+export default function AIChatBox( {isChatOpen, handleChatClose} : AIChatBoxProps) {
+
+    const [message, setMessage] = useState('');
+    const [conversation, setConversation] = useState<{ content: string; role: string; }[]>([]);
+
+    const sendMessage = async () => {
+        setConversation(prevConversation => [...prevConversation, {role: 'user', content: message}]);
+
+        try {
+            const aiResponse = await AIChatRequest(message);
+
+            setConversation(prevConversation => [...prevConversation, {
+                role: 'ai',
+                content: aiResponse
+            }]);
+        } catch (error) {
+            console.error('Error sending message:', error);
+        } finally {
+            setMessage('');
+        }
+    };
+
     return (
-        <Drawer anchor="right" open={open} onClose={handleClose}>
+        <Drawer anchor="right" open={isChatOpen} onClose={handleChatClose}>
             <Box sx={{width: 300, p: 2, display: 'flex', flexDirection: 'column', height: '100vh'}}>
                 <Box sx={{display: 'flex', alignItems: 'center'}}>
-                    <IconButton sx={{color: 'black'}} aria-label="backarrow" onClick={handleClose}>
+                    <IconButton sx={{color: 'black'}} aria-label="backarrow" onClick={handleChatClose}>
                         <ArrowBackIos/>
                     </IconButton>
                     <Typography color='primary' variant="h6">AI Assistant</Typography>

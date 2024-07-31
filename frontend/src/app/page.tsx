@@ -3,9 +3,9 @@
 
 import Link from 'next/link';
 
-import { Box, Typography, Button, Divider, Stack, TextField, InputAdornment, Grid, Paper, Drawer, List, ListItem, ListItemText, Fab, IconButton }
+import { Box, Typography, Button, Divider, Stack, TextField, InputAdornment, Grid, Paper, Fab}
   from '@mui/material'
-import { Login, Logout, HowToReg, Search, Chat, ArrowBackIos, Send }
+import { Login, Logout, HowToReg, Search, Chat}
   from '@mui/icons-material'
 
 import ResponsiveAppBar from './(ui)/app-bar'
@@ -13,8 +13,6 @@ import React, { useEffect, useState } from 'react';
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { useRouter } from 'next/navigation';
 import AIChatBox from './(ui)/aichat-box'
-import axios from 'axios';
-
 
 /**
  * @function React Component for Landing Page
@@ -56,39 +54,9 @@ export default function LandingPage() {
         }
     };
 
-    const [chatOpen, setChatOpen] = useState(false);
-    const [message, setMessage] = useState('');
-    const [conversation, setConversation] = useState<{ content: string; role: string; }[]>([]);
-
-    const handleChatOpen = () => setChatOpen(true);
-    const handleChatClose = () => setChatOpen(false);
-
-    const sendMessage = async () => {
-        setConversation(prevConversation => [...prevConversation, {role: 'user', content: message}]);
-        try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_OPENAI_API_URL}`, {
-                model: 'gpt-3.5-turbo',
-                messages: [
-                    {role: 'system', content: 'You are a helpful assistant.'},
-                    {role: 'user', content: message},
-                ],
-                max_tokens: 60,
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`,
-                },
-            });
-            setConversation(prevConversation => [...prevConversation, {
-                role: 'ai',
-                content: response.data.choices[0].message.content
-            }]);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setMessage('');
-        }
-    };
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    const handleChatOpen = () => setIsChatOpen(true);
+    const handleChatClose = () => setIsChatOpen(false);
 
     return (
         <>
@@ -96,9 +64,7 @@ export default function LandingPage() {
               <ResponsiveAppBar links={links} settings={[]} />
             </header>
 
-            <AIChatBox
-                chatOpen={chatOpen} handleChatClose={handleChatClose} conversation={conversation} message={message} setMessage={setMessage} sendMessage={sendMessage}
-            />
+            <AIChatBox isChatOpen={isChatOpen} handleChatClose={handleChatClose}/>
 
             <main>
                 <Stack direction="column" width="100%" height="100%" spacing={8} alignItems="center">
