@@ -186,8 +186,8 @@ export type YouTubeResponse = {
   items: Video[]
 };
 
-export async function AIChatRequest(message: string) {
-  const aiRequestPath = `/api/aiChat`;
+export async function AIChatRequest(message: string, prompt: string) {
+  const aiRequestPath = `/api/aiChat?prompt=${prompt}`;
   try {
     const response = await fetch(aiRequestPath, {
       method: 'POST',

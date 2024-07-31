@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import axios from 'axios';
 import {Box, Divider, Drawer, IconButton, InputAdornment, List, ListItem, ListItemText, TextField, Typography} from "@mui/material";
 import {ArrowBackIos, Send} from "@mui/icons-material";
 
@@ -22,7 +21,8 @@ export default function AIChatBox( {isChatOpen, handleChatClose} : AIChatBoxProp
         setConversation(prevConversation => [...prevConversation, {role: 'user', content: message}]);
 
         try {
-            const aiResponse = await AIChatRequest(message);
+            const prompt = 'You are a helpful assistant.';
+            const aiResponse = await AIChatRequest(message, prompt);
 
             setConversation(prevConversation => [...prevConversation, {
                 role: 'ai',
