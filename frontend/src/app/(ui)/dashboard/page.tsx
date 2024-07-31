@@ -18,6 +18,7 @@ import { toTitleCase }
   from '@/app/_lib/utils';
 import PendingReview from './pending-review';
 import Review from './review';
+import Recommendations from './recommendations';
 
 
 // Transition component for popup elements
@@ -78,8 +79,7 @@ export default function DashboardPage() {
           </Grid>
           
           {/* Bottom of Dashboard */}
-          <Skeleton sx={{ height: 300 }} animation={false} />
-
+          <Recommendations />
         </Stack>
       </Container>
       

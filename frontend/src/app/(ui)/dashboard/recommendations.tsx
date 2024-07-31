@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { TableFetch } from '@/app/_lib/data';
-import { Box, Container, Paper, Grid, Typography } from '@mui/material';
+import { TableFetch } from '@/app/_lib/data'
+import { Grid } from '@mui/material';
 import { getYouTubeVideos, Video, YouTubeResponse } from '@/app/_lib/utils';
 import { useState, useEffect } from 'react';
 
-export default function RecommendationPage() {
+export default function Recommendations() {
   const { user } = useUser();
   const [videos, setVideos] = useState<YouTubeResponse>({ items: [] });
   const { data: tuteeAppointments, error } = TableFetch("appointment", [user, "tutee"], `tutee_email_contains=${user?.email}`);
@@ -30,9 +30,6 @@ export default function RecommendationPage() {
   const subjects = tuteeAppointments.data.map(appointment => appointment.tuteeRequestComment).filter(subject => subject && subject.trim() !== '');
 
   return (
-    <Box position="static" p={4}>
-      <Container maxWidth="lg" sx={{ minWidth: 750 }}>
-        <Paper variant="outlined" sx={{ px: 4, pb: 4 }}>
           <Grid container spacing={3}>
             {videos.items.map((video: Video) => (
               <Grid item xs={12} sm={6} md={4} key={video.id.videoId}>
@@ -47,8 +44,6 @@ export default function RecommendationPage() {
               </Grid>
             ))}
           </Grid>
-        </Paper>
-      </Container>
-    </Box>
   );
 }
+
