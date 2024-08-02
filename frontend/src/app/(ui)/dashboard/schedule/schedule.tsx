@@ -50,6 +50,7 @@ export default function Schedule({
   }, [view, tutorEventData, tuteeEventData]); // Update when view or event data changes
 
   const formatEvents = () => {
+    //This is if it's in the view of "Day or week"
     return tutorEventData
       ?.map<EventInput>((appointment: Appointment) => ({
         title: toTitleCase(

@@ -213,15 +213,6 @@ export default function TutorProfileSchedule({
   return (
     <Stack direction="column" width="100%" spacing={4} justifyContent="center">
       <TextField
-        label="Discussion/Clarification"
-        multiline
-        fullWidth
-        variant="outlined"
-        value={tuteeRequestComment}
-        onChange={handleCommentChange}
-        helperText={`${tuteeRequestComment.split(/\s+/).length}/50 words`}
-      />
-      <TextField
         label="Title"
         multiline
         fullWidth
@@ -229,6 +220,15 @@ export default function TutorProfileSchedule({
         value={CommentTitle}
         onChange={handleTitle}
         helperText={`${CommentTitle.split(/\s+/).length}/10 words`}
+      />
+      <TextField
+        label="Discussion/Clarification"
+        multiline
+        fullWidth
+        variant="outlined"
+        value={tuteeRequestComment}
+        onChange={handleCommentChange}
+        helperText={`${tuteeRequestComment.split(/\s+/).length}/50 words`}
       />
 
       <Stack direction="column" spacing={2} width="100%">
