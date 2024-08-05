@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {Box, Divider, Drawer, IconButton, InputAdornment, List, ListItem, ListItemText, TextField, Typography} from "@mui/material";
-import {ArrowBackIos, Send} from "@mui/icons-material";
+import {ArrowBackIos, Send, Campaign} from "@mui/icons-material";
 
 import {AIChatRequest} from '@/app/_lib/utils';
 
@@ -13,9 +13,16 @@ interface AIChatBoxProps {
 }
 
 export default function AIChatBox( {isChatOpen, handleChatClose} : AIChatBoxProps) {
-
     const [message, setMessage] = useState('');
     const [conversation, setConversation] = useState<{ content: string; role: string; }[]>([]);
+    const utteranceRef = useRef<SpeechSynthesisUtterance| null>(null);
+    const [aiChatResponse, setaiChatResponse] = useState('');
+
+    const textToSpeech = () => {
+        const utterance = new SpeechSynthesisUtterance(aiChatResponse);
+        utteranceRef.current = utterance;
+        speechSynthesis.speak(utterance);
+    };
 
     const sendMessage = async () => {
         setConversation(prevConversation => [...prevConversation, {role: 'user', content: message}]);
@@ -28,6 +35,7 @@ export default function AIChatBox( {isChatOpen, handleChatClose} : AIChatBoxProp
                 role: 'ai',
                 content: aiResponse
             }]);
+            setaiChatResponse(aiResponse);
         } catch (error) {
             console.error('Error sending message:', error);
         } finally {
@@ -83,6 +91,9 @@ export default function AIChatBox( {isChatOpen, handleChatClose} : AIChatBoxProp
                                 <InputAdornment position="end">
                                     <IconButton sx={{color: 'black'}}>
                                         <Send onClick={sendMessage}/>
+                                    </IconButton>
+                                    <IconButton sx={{color: 'black'}}>
+                                        <Campaign onClick={textToSpeech}/>
                                     </IconButton>
                                 </InputAdornment>
                             ),
