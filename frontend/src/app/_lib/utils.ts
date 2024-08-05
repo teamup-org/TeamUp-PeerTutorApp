@@ -159,7 +159,10 @@ export function TuteeInfoChecking (formData: any) {
 }
 
 export async function getYouTubeVideos(searchQuery: string) {
-  const url = `/api/videos?searchQuery=${searchQuery}`;
+  const prompt: string = "Provide a short string to input into the YouTube API to find videos based on given discussion topics.";
+  const response: string = await AIChatRequest(searchQuery, prompt);
+  console.log(response);
+  const url = `/api/videos?searchQuery=${response}`;
 
   try {
     const response = await fetch(url);
