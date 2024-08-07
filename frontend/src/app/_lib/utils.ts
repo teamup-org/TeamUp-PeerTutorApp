@@ -158,8 +158,39 @@ export function TuteeInfoChecking (formData: any) {
   return('');
 }
 
-export async function AIChatRequest(message) {
-  const aiRequestPath = `/api/aiChat`;
+export async function getYouTubeVideos(searchQuery: string) {
+  const prompt: string = "Provide a short string to input into the YouTube API to find videos based on given discussion topics.";
+  const response: string = await AIChatRequest(searchQuery, prompt);
+  console.log(response);
+  const url = `/api/videos?searchQuery=${response}`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Failed to fetch YouTube videos');
+    }
+    return await response.json();
+  } catch (error) {
+    throw new Error('Failed to fetch YouTube videos');
+  }
+}
+
+export type Video = {
+  id: {
+    kind: string,
+    videoId: string,
+  };
+  snippet: {
+    title: string
+  };
+};
+
+export type YouTubeResponse = {
+  items: Video[]
+};
+
+export async function AIChatRequest(message: string, prompt: string) {
+  const aiRequestPath = `/api/aiChat?prompt=${prompt}`;
   try {
     const response = await fetch(aiRequestPath, {
       method: 'POST',
